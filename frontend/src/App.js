@@ -11,7 +11,7 @@ function App() {
         .then(response => setHello(response.data))
         .catch(error => console.log(error))
   }, []);
-
+  console.log('pengsoo check')
   return (
       <div>
         백엔드에서 가져온 데이터입니다 : {hello.id}
