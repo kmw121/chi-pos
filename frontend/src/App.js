@@ -1,22 +1,24 @@
 // src/main/frontend/src/App.js
 
-import React, {useEffect, useState} from 'react';
-import axios from 'axios';
-
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import AllRoute from "./components/Route/AllRoute";
 function App() {
-  const [hello, setHello] = useState('')
-
   useEffect(() => {
-    axios.get('/api/user')
-        .then(response => setHello(response.data))
-        .catch(error => console.log(error))
+    async function testApiCall() {
+      try {
+        const res = await axios.get("api/user");
+        console.log(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    testApiCall();
   }, []);
-  console.log('pengsoo check')
   return (
-      <div>
-        백엔드에서 가져온 데이터입니다 : {hello.id}
-          백엔드에서 가져온 데이터입니다 : {hello.name}
-      </div>
+    <>
+      <AllRoute />
+    </>
   );
 }
 
