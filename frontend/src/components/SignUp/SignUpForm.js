@@ -6,17 +6,10 @@ import {
   RegisterNumber2Title,
   RegisterNumber2TitleCircle,
   RegisterNumber2TitleText,
+  RegisterBottomSection,
+  RegisterBottomCancelBtn,
+  RegisterBottomOkBtn,
 } from "../components";
-// const SignUpContainer = styled.div`
-//   max-width: 1200px;
-//   width: 100%;
-//   min-height: 60rem;
-//   display: flex;
-//   flex-direction: column;
-//   margin: 0 auto;
-//   padding: 50px 20px 30px 40px;
-//   align-items: center;
-// `;
 
 const SignUpContentText = styled.div`
   padding: 5px;
@@ -105,9 +98,9 @@ function SignUpForm() {
       formReg.username;
     console.log("모두 만족", allFine);
     console.log(formReg);
+    console.log("post로 보낼 회원정보", form);
   };
   useEffect(() => {
-    console.log(`${form.password === form.passwordAgain}`);
     if (
       form.password !== "" &&
       form.passwordAgain !== "" &&
@@ -123,11 +116,9 @@ function SignUpForm() {
       <RegisterNumber2Title>
         <RegisterNumber2TitleCircle>✩</RegisterNumber2TitleCircle>
         <RegisterNumber2TitleText>
-          &nbsp; 정보를 입력해주세요.
+          &nbsp; 회원 정보를 입력해주세요.
         </RegisterNumber2TitleText>
       </RegisterNumber2Title>
-
-      {/* <SignUpContainer> */}
       <SignUpContentText>E-MAIL</SignUpContentText>
       <SignUpInput
         value={form.username}
@@ -156,11 +147,12 @@ function SignUpForm() {
         value={form.nickName}
         placeholder="ex ) 둘리"
       />
-      <div>
-        <button onClick={onGoBack}>취소</button>
-        <button onClick={onSubmit}>회원가입</button>
-      </div>
-      {/* </SignUpContainer> */}
+      <RegisterBottomSection>
+        <RegisterBottomCancelBtn onClick={onGoBack}>
+          취소
+        </RegisterBottomCancelBtn>
+        <RegisterBottomOkBtn onClick={onSubmit}>회원가입</RegisterBottomOkBtn>
+      </RegisterBottomSection>
     </RegisterContainerDiv>
   );
 }
