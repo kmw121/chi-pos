@@ -1,7 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { AiOutlineClose } from "react-icons/ai";
 import getPreventScrolling from "../../util/getPreventScrolling";
+import {
+  RegisterBottomCancelBtn,
+  RegisterBottomSection,
+  RegisterBottomOkBtn,
+} from "../components";
 const ModalBackground = styled.div`
   box-sizing: border-box;
   display: block;
@@ -34,7 +39,7 @@ const ModalHeader = styled.div`
 `;
 const ModalMain = styled.div`
   background: #fff;
-  height: 100%;
+  height: 70%;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
@@ -55,6 +60,31 @@ const ModalInnerBox = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-direction: column;
+`;
+const IdInput = styled.input`
+  width: 70%;
+  height: 38px;
+  font-size: 18px;
+  border: 0;
+  border-radius: 8px;
+  outline: none;
+  padding-left: 10px;
+  background-color: rgb(233, 233, 233);
+  margin-bottom: 30px;
+  text-align: center;
+`;
+const PwInput = styled.input`
+  width: 70%;
+  height: 38px;
+  font-size: 18px;
+  border: 0;
+  border-radius: 8px;
+  outline: none;
+  padding-left: 10px;
+  background-color: rgb(233, 233, 233);
+  text-align: center;
+  margin-bottom: 40px;
 `;
 function SignInForm({ onToggle }) {
   useEffect(() => {
@@ -63,6 +93,14 @@ function SignInForm({ onToggle }) {
       document.body.style.overflow = "auto";
     };
   }, []);
+  const [emailValue, setEmailValue] = useState("");
+  const [pwValue, setPwValue] = useState("");
+  const onEmailValue = (e) => {
+    setEmailValue(e.target.value);
+  };
+  const onPwValue = (e) => {
+    setPwValue(e.target.value);
+  };
   return (
     <>
       <ModalBackground onClick={onToggle} />
@@ -73,16 +111,32 @@ function SignInForm({ onToggle }) {
             alt="logo here"
             src="./logo/Spring.png"
           />
-          <AiOutlineClose onClick={onToggle} style={{ cursor: "pointer" }} />
+          <AiOutlineClose
+            onClick={onToggle}
+            style={{ cursor: "pointer", width: "30px", height: "30px" }}
+          />
         </ModalHeader>
         <ModalMain>
-          <ModalWelcome>Hola에 오신 것을 환영합니다!</ModalWelcome>
+          <ModalWelcome>'프로젝트 이름'에 오신 것을 환영합니다!</ModalWelcome>
           <ModalInnerBox>
-            {`HERE
-              INPUT
-              들어
-              가요`}
+            <IdInput
+              onChange={onEmailValue}
+              value={emailValue}
+              placeholder="E-MAIL"
+            />
+            <PwInput
+              onChange={onPwValue}
+              value={pwValue}
+              placeholder="PASSWORD"
+              type="password"
+            />
           </ModalInnerBox>
+          <RegisterBottomSection>
+            <RegisterBottomCancelBtn onClick={onToggle}>
+              취소
+            </RegisterBottomCancelBtn>
+            <RegisterBottomOkBtn>로그인</RegisterBottomOkBtn>
+          </RegisterBottomSection>
         </ModalMain>
       </ModalContainer>
     </>
