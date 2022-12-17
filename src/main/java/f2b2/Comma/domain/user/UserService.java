@@ -1,6 +1,7 @@
-package f2b2.Comma.user;
+package f2b2.Comma.domain.user;
 
-import lombok.NoArgsConstructor;
+import f2b2.Comma.handler.exception.CustomException;
+import f2b2.Comma.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,13 +17,13 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User save(User user){
-        User save = userRepository.save(user);
-        return userRepository.findById(save.getId()).get();
+        User userEntity = userRepository.save(user);
+        return userRepository.findById(userEntity.getId()).get();
     }
 
     public User find(Long id){
         User user = userRepository.findById(id).orElseThrow(()->{
-            return new RuntimeException("아");
+            return new CustomException("존재하지 않는 회원입니다.");
         });
 
         return user;
