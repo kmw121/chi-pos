@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import AllRoute from "./components/Route/AllRoute";
+import AllRoute from "./Route/AllRoute";
 function App() {
   useEffect(() => {
     async function testApiCall() {
