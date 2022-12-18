@@ -2,8 +2,30 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.6'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id "com.github.node-gradle.node" version "3.2.1"
 }
 
+apply plugin: 'com.github.node-gradle.node'
+
+node {
+	// 2
+	version = '12.22.12'
+	npmVersion = '6.14.16'
+
+	// 3
+	download = true
+
+	// 4
+	nodeProjectDir = file("${project.projectDir}/frontend")
+}
+
+
+// 5
+task buildAdmin(type: NpmTask) {
+	args = ['run', 'build']
+}
+
+processResources.dependsOn 'buildAdmin'
 
 
 
