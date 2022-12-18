@@ -1,8 +1,8 @@
 import React from "react";
-import MainPage from "../Main/MainPage";
-import RegisterPage from "../Register/RegisterPage";
+import MainPage from "../components/Main/MainPage";
+import RegisterPage from "../components/Register/RegisterPage";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import SignUpPage from "../SignUp/SignUpPage";
+import SignUpPage from "../components/SignUp/SignUpPage";
 function AllRoute() {
   return (
     <BrowserRouter>

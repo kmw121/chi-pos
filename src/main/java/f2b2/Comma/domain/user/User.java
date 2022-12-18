@@ -1,4 +1,4 @@
-package f2b2.Comma.user;
+package f2b2.Comma.domain.user;
 
 import lombok.Data;
 
@@ -13,5 +13,8 @@ public class User {
     @Id
     @GeneratedValue
     private Long id;
-    private String name;
+    private String username;
+    private String password;
+    private String nickName;
+
 }

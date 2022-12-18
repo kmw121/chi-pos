@@ -3,9 +3,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "../App.css";
 
-export default function Editor() {
-  const [value, setValue] = useState("");
-
+export default function Editor({ editorValue, setEditorValue }) {
   const modules = {
     toolbar: [
       [{ header: [1, 2, 3, false] }],
@@ -15,13 +13,13 @@ export default function Editor() {
       ["clean"],
     ],
   };
-
+  console.log(editorValue);
   return (
     <ReactQuill
       modules={modules}
       theme="snow"
-      value={value}
-      onChange={setValue}
+      value={editorValue}
+      onChange={setEditorValue}
     />
   );
 }
