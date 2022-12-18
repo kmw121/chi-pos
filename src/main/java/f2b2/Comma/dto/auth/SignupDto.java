@@ -15,8 +15,6 @@ public class SignupDto {
     @NotBlank(message ="비밀번호를 입력해주세요.")
     private String password;
     @NotBlank
-    private String email;
-    @NotBlank
     private String nickName;
 
     public User toEntity(){
