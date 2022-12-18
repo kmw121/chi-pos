@@ -22,7 +22,6 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@Valid SignupDto signupDto, BindingResult bindingResult){
         User user = signupDto.toEntity();
-        System.out.println("dd");
         userService.save(user);
         return new ResponseEntity<>(new CMRespDto<>(1,"회원가입 성공", user),HttpStatus.OK);
     }
