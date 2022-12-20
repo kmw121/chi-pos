@@ -5,31 +5,38 @@ import RegisterNumber2 from "./RegisterNumber2";
 import RegisterBottomBtn from "./RegisterBottomBtn";
 import { RegisterContainerDiv } from "../components";
 function RegisterContainer() {
-  // Register number1 안에있는 state들 여기에다 선언 후 props로 내려서
-  // state management 해야됨.
-  // submitform에 state 담아서 props로 RegisterBottomBtn 컴포넌트에 전달할것.
+  const [dataForm, steDataForm] = useState({
+    category: "",
+    people: "",
+    howto: "",
+    duration: "",
+    selectedStack: [],
+    contactOption: "카카오톡 오픈채팅",
+    contactPlaceholder: "카카오톡 오픈채팅",
+    contactAddress: "",
+    datePickerValue: new Date(),
+  });
   const [titleText, setTitleText] = useState("");
   const [editorValue, setEditorValue] = useState("");
-  // const submitForm = {
-  //   category: "",
-  //   people: "",
-  //   howto: "",
-  //   duration: "",
-  //   stack: selectedStack,
-  //   startDate: datePickerValue,
-  //   contact: "",
-  //   title: "",
-  //   detail: "",
-  // };
-
+  const submitForm = {
+    id: null,
+    category: dataForm.category,
+    people: dataForm.people,
+    howto: dataForm.howto,
+    duration: dataForm.duration,
+    stack: dataForm.selectedStack.map((stack) => stack.number),
+    startDate: dataForm.datePickerValue,
+    contact: dataForm.contactOption,
+    contactAddress: dataForm.contactAddress,
+    title: titleText,
+    detail: editorValue,
+  };
   return (
     <RegisterContainerDiv>
-      <RegisterNumber1 />
+      <RegisterNumber1 dataForm={dataForm} setDataForm={steDataForm} />
       <RegisterNumber2 titleText={titleText} setTitleText={setTitleText} />
       <Editor editorValue={editorValue} setEditorValue={setEditorValue} />
-      <RegisterBottomBtn
-      //  submitForm={submitForm}
-      />
+      <RegisterBottomBtn submitForm={submitForm} />
     </RegisterContainerDiv>
   );
 }

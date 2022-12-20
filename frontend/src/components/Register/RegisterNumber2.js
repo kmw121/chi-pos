@@ -9,7 +9,6 @@ import {
 function RegisterNumber2({ titleText, setTitleText }) {
   const onChangeInputV = (e) => {
     setTitleText(e.target.value);
-    console.log(`input value : ${titleText}`);
   };
 
   return (
