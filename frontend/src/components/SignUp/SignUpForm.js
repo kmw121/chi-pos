@@ -3,24 +3,40 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import {
   RegisterContainerDiv,
-  RegisterNumber2Title,
   RegisterNumber2TitleCircle,
   RegisterNumber2TitleText,
   RegisterBottomSection,
   RegisterBottomCancelBtn,
   RegisterBottomOkBtn,
+  SignUpFormTitle,
+  SignUpFormLabel,
+  SignUpFormLi,
+  SignUpFormUl,
 } from "../components";
 
-const SignUpContentText = styled.div`
-  padding: 5px;
-  margin-bottom: 15px;
-`;
 const SignUpInput = styled.input`
-  width: 40%;
+  width: 80%;
   height: 40px;
   font-size: 20px;
   padding-left: 15px;
   margin-bottom: 10px;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+`;
+const SignUpInputContainer = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+`;
+const SignUpInputImg = styled.input`
+  height: 40px;
+  font-size: 20px;
+  padding-left: 15px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
 `;
 function SignUpForm() {
   const [formReg, setFormReg] = useState({
@@ -35,10 +51,16 @@ function SignUpForm() {
     passwordAgain: "",
     nickName: "",
   });
+  const [imgFiles, setImgFiles] = useState("");
+  const onLoadFile = (e) => {
+    const file = e.target.files;
+    console.log(file);
+    setImgFiles(file);
+  };
   const reg_email =
     /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
   const reg_password = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{5,15}$/;
-  const reg_nickName = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,15}$/;
+  const reg_nickName = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$/;
   const navigate = useNavigate();
   const onGoBack = () => {
     navigate(-1);
@@ -111,42 +133,96 @@ function SignUpForm() {
       });
     }
   }, [form.passwordAgain]);
+
+  const encodeFileToBase64 = (fileBlob) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(fileBlob);
+    return new Promise((resolve) => {
+      reader.onload = () => {
+        setImgFiles(reader.result);
+        resolve();
+      };
+    });
+  };
+
   return (
     <RegisterContainerDiv>
-      <RegisterNumber2Title>
+      <SignUpFormTitle>
         <RegisterNumber2TitleCircle>✩</RegisterNumber2TitleCircle>
         <RegisterNumber2TitleText>
           &nbsp; 회원 정보를 입력해주세요.
         </RegisterNumber2TitleText>
-      </RegisterNumber2Title>
-      <SignUpContentText>E-MAIL</SignUpContentText>
-      <SignUpInput
-        value={form.username}
-        onChange={onChangeUsername}
-        placeholder="ex ) ABCD1234@naver.com"
-      />
-      <SignUpContentText>비밀번호</SignUpContentText>
-      <SignUpInput
-        onChange={onChangePassword}
-        value={form.password}
-        maxLength="15"
-        type="password"
-        placeholder=""
-      />
-      <SignUpContentText>비밀번호 확인</SignUpContentText>
-      <SignUpInput
-        onChange={onChangePasswordAgain}
-        value={form.passwordAgain}
-        maxLength="15"
-        type="password"
-        placeholder=""
-      />
-      <SignUpContentText>닉네임</SignUpContentText>
-      <SignUpInput
-        onChange={onChangeNickName}
-        value={form.nickName}
-        placeholder="ex ) 둘리"
-      />
+      </SignUpFormTitle>
+      <SignUpFormUl>
+        <SignUpFormLi>
+          <SignUpFormLabel>
+            <span>이메일</span>
+            <button style={{ marginRight: "4.55rem" }}>중복확인</button>
+          </SignUpFormLabel>
+          <SignUpInput
+            value={form.username}
+            onChange={onChangeUsername}
+            placeholder="ex ) ABCD1234@naver.com"
+          />
+        </SignUpFormLi>
+        <SignUpFormLi>
+          <SignUpFormLabel>
+            <span>닉네임</span>{" "}
+            <button style={{ marginRight: "4.55rem" }}>중복확인</button>
+          </SignUpFormLabel>
+          <SignUpInput
+            onChange={onChangeNickName}
+            value={form.nickName}
+            placeholder=""
+          />
+        </SignUpFormLi>
+      </SignUpFormUl>
+      <SignUpFormUl>
+        <SignUpFormLi>
+          <SignUpFormLabel>비밀번호</SignUpFormLabel>
+          <SignUpInput
+            onChange={onChangePassword}
+            value={form.password}
+            maxLength="15"
+            type="password"
+            placeholder=""
+          />
+        </SignUpFormLi>
+        <SignUpFormLi>
+          <SignUpFormLabel>비밀번호 확인</SignUpFormLabel>
+          <SignUpInput
+            onChange={onChangePasswordAgain}
+            value={form.passwordAgain}
+            maxLength="15"
+            type="password"
+            placeholder=""
+          />
+        </SignUpFormLi>
+      </SignUpFormUl>
+      <SignUpFormUl>
+        <SignUpFormLi>
+          <SignUpFormLabel>프로필 사진</SignUpFormLabel>
+          <SignUpInputContainer>
+            {" "}
+            <SignUpInputImg
+              onChange={(e) => {
+                encodeFileToBase64(e.target.files[0]);
+              }}
+              type="file"
+              accept="img/*"
+            />
+            <div className="img_box">
+              {imgFiles && (
+                <img
+                  style={{ width: "60px", height: "60px" }}
+                  src={imgFiles}
+                  alt="preview-img"
+                />
+              )}
+            </div>
+          </SignUpInputContainer>
+        </SignUpFormLi>
+      </SignUpFormUl>
       <RegisterBottomSection>
         <RegisterBottomCancelBtn onClick={onGoBack}>
           취소

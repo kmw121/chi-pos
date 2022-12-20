@@ -15,7 +15,7 @@ import {
 } from "../components";
 import { getYear, getMonth } from "date-fns";
 
-function RegisterNumber1() {
+function RegisterNumber1({ dataForm, setDataForm }) {
   const optionCategory = [
     { value: "스터디", label: "스터디" },
     { value: "프로젝트", label: "프로젝트" },
@@ -37,6 +37,11 @@ function RegisterNumber1() {
     { value: "온라인", label: "온라인" },
     { value: "오프라인", label: "오프라인" },
   ];
+  const optionContact = [
+    { value: "카카오톡 오픈채팅", label: "카카오톡 오픈채팅" },
+    { value: "이메일", label: "이메일" },
+    { value: "구글폼", label: "구글폼" },
+  ];
   const optionDuration = [
     { value: "기간 미정", label: "기간 미정" },
     { value: "1개월", label: "1개월" },
@@ -47,35 +52,56 @@ function RegisterNumber1() {
     { value: "6개월", label: "6개월" },
     { value: "장기", label: "장기" },
   ];
+  let stackNumber = 1;
   const stackArray = stacks
     .map((stack) => stack.name)
     .map((a) => {
       return {
         value: a,
         label: a,
+        number: stackNumber++,
       };
     });
-  const [selectedStack, setSelectedStack] = useState("");
-  const onSelectedStack = (stack) => {
-    setSelectedStack(stack);
-  };
-  console.log("selectedStack : ", selectedStack);
   const optionStack = stackArray;
-  const optionContact = [
-    { value: "카카오톡 오픈채팅", label: "카카오톡 오픈채팅" },
-    { value: "이메일", label: "이메일" },
-    { value: "구글폼", label: "구글폼" },
-  ];
-  const [contactOption, setContactOption] = useState("카카오톡 오픈채팅");
-  const [contactPlaceholder, setContactPlaceholder] =
-    useState("카카오톡 오픈채팅");
-  const [datePickerValue, setDatePickerValue] = useState(new Date());
+  const onChangeCategory = (value) => {
+    setDataForm((prev) => {
+      return { ...prev, category: value.value };
+    });
+  };
+  const onChangeHowto = (value) => {
+    setDataForm((prev) => {
+      return { ...prev, howto: value.value };
+    });
+  };
+  const onChangeDuration = (value) => {
+    setDataForm((prev) => {
+      return { ...prev, duration: value.value };
+    });
+  };
+  const onChangePeople = (value) => {
+    setDataForm((prev) => {
+      return { ...prev, people: value.value };
+    });
+  };
+  const onSelectedStack = (value) => {
+    setDataForm((prev) => {
+      return { ...prev, selectedStack: value };
+    });
+  };
   const onChangeDatePickerValue = (date) => {
-    setDatePickerValue(date);
+    setDataForm((prev) => {
+      return { ...prev, datePickerValue: date };
+    });
   };
   const onChangeContact = (value) => {
-    setContactOption(value);
-    setContactPlaceholder(value);
+    setDataForm((prev) => {
+      return { ...prev, contactOption: value, contactPlaceholder: value };
+    });
+  };
+  const onChangeContactAddress = (e) => {
+    setDataForm((prev) => {
+      return { ...prev, contactAddress: e.target.value };
+    });
   };
   const today = new Date();
   const year = today.getFullYear();
@@ -99,7 +125,6 @@ function RegisterNumber1() {
     "12월",
   ];
 
-  console.log(typeof datePickerValue, datePickerValue);
   return (
     <section>
       <RegisterNumber1Title>
@@ -111,21 +136,37 @@ function RegisterNumber1() {
       <RegisterNumber1Ul>
         <RegisterNumber1Li>
           <RegisterNumber1Label>모집 구분</RegisterNumber1Label>
-          <Select placeholder="스터디/프로젝트" options={optionCategory} />
+          <Select
+            onChange={onChangeCategory}
+            placeholder="스터디/프로젝트"
+            options={optionCategory}
+          />
         </RegisterNumber1Li>
         <RegisterNumber1Li>
           <RegisterNumber1Label>모집 인원</RegisterNumber1Label>
-          <Select placeholder="인원 미정~10명 이상" options={optionPeople} />
+          <Select
+            onChange={onChangePeople}
+            placeholder="인원 미정~10명 이상"
+            options={optionPeople}
+          />
         </RegisterNumber1Li>
       </RegisterNumber1Ul>
       <RegisterNumber1Ul>
         <RegisterNumber1Li>
           <RegisterNumber1Label>진행 방식</RegisterNumber1Label>
-          <Select placeholder="온라인/오프라인" options={optionHowTo} />
+          <Select
+            onChange={onChangeHowto}
+            placeholder="온라인/오프라인"
+            options={optionHowTo}
+          />
         </RegisterNumber1Li>
         <RegisterNumber1Li>
           <RegisterNumber1Label>진행 기간</RegisterNumber1Label>
-          <Select placeholder="기간 미정~6개월 이상" options={optionDuration} />
+          <Select
+            onChange={onChangeDuration}
+            placeholder="기간 미정~6개월 이상"
+            options={optionDuration}
+          />
         </RegisterNumber1Li>
       </RegisterNumber1Ul>
       <RegisterNumber1Ul>
@@ -133,7 +174,6 @@ function RegisterNumber1() {
           <RegisterNumber1Label>기술 스택</RegisterNumber1Label>
           <Select
             onChange={onSelectedStack}
-            value={selectedStack}
             isMulti
             placeholder="프로젝트 사용 스택"
             options={optionStack}
@@ -142,7 +182,7 @@ function RegisterNumber1() {
         <RegisterNumber1Li>
           <RegisterNumber1Label>시작 예정일</RegisterNumber1Label>
           <DatePicker
-            selected={datePickerValue}
+            selected={dataForm.datePickerValue}
             onChange={onChangeDatePickerValue}
             showPopperArrow={false}
             fixedHeight
@@ -218,14 +258,16 @@ function RegisterNumber1() {
             placeholder="연락 방법"
             options={optionContact}
             value={optionContact.find((op) => {
-              return op.value === contactOption;
+              return op.value === dataForm.contactOption;
             })}
             onChange={(value) => {
               onChangeContact(value.value);
             }}
           />
           <RegisterNumber1ContactInput
-            placeholder={`${contactPlaceholder} 주소를 입력해 주세요.`}
+            placeholder={`${dataForm.contactPlaceholder} 주소를 입력해 주세요.`}
+            value={dataForm.contactAddress}
+            onChange={onChangeContactAddress}
           />
         </RegisterNumber1Li>
         <RegisterNumber1Li>

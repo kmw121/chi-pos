@@ -13,7 +13,6 @@ export default function Editor({ editorValue, setEditorValue }) {
       ["clean"],
     ],
   };
-  console.log(editorValue);
   return (
     <ReactQuill
       modules={modules}
