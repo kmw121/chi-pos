@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { AiOutlineClose } from "react-icons/ai";
 import getPreventScrolling from "../../util/getPreventScrolling";
 import {
@@ -7,6 +7,16 @@ import {
   RegisterBottomSection,
   RegisterBottomOkBtn,
 } from "../components";
+const boxFade = keyframes`
+0% {
+  opacity: 0;
+  transform: translate(-50%, -100%);
+}
+100% {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+`;
 const ModalBackground = styled.div`
   box-sizing: border-box;
   display: block;
@@ -27,6 +37,7 @@ const ModalContainer = styled.div`
   transform: translate(-50%, -50%);
   margin: 0 auto;
   z-index: 1000;
+  animation: ${boxFade} 0.3s linear;
 `;
 const ModalHeader = styled.div`
   background: #f8f9fa;

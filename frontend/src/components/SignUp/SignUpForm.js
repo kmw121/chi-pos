@@ -13,7 +13,9 @@ import {
   SignUpFormLi,
   SignUpFormUl,
 } from "../components";
-
+import Select from "react-select";
+import { stacks } from "../../stack";
+import axios from "axios";
 const SignUpInput = styled.input`
   width: 80%;
   height: 40px;
@@ -39,24 +41,39 @@ const SignUpInputImg = styled.input`
   justify-content: center;
 `;
 function SignUpForm() {
+  let stackNumber = 1;
+  const stackArray = stacks
+    .map((stack) => stack.name)
+    .map((a) => {
+      return {
+        value: a,
+        label: a,
+        number: stackNumber++,
+      };
+    });
+  const optionStack = stackArray;
   const [formReg, setFormReg] = useState({
     username: false,
     password: false,
     passwordAgain: false,
     nickName: false,
   });
+  const [imgPreview, setImgPreview] = useState("");
+  const [files, setFiles] = useState([]);
   const [form, setForm] = useState({
     username: "",
     password: "",
     passwordAgain: "",
     nickName: "",
+    stack: [],
+    //  file: files[0],
   });
-  const [imgFiles, setImgFiles] = useState("");
-  const onLoadFile = (e) => {
-    const file = e.target.files;
-    console.log(file);
-    setImgFiles(file);
-  };
+  const [dupCheck, setDupCheck] = useState({
+    username: false,
+    nickName: false,
+  });
+  // console.log(typeof imgFiles);
+  // console.log("form : ", form);
   const reg_email =
     /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
   const reg_password = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{5,15}$/;
@@ -75,6 +92,11 @@ function SignUpForm() {
       return { ...prev, username: reg_email.test(e.target.value) };
     };
     setFormReg(usernameReg);
+  };
+  const onSelectedStack = (value) => {
+    setForm((prev) => {
+      return { ...prev, stack: value.map((a) => a.number) };
+    });
   };
   const onChangePassword = (e) => {
     const setPassword = (prev) => {
@@ -112,15 +134,61 @@ function SignUpForm() {
     };
     setFormReg(nickNameReg);
   };
-  const onSubmit = () => {
-    const allFine =
-      formReg.nickName &&
-      formReg.password &&
-      formReg.passwordAgain &&
-      formReg.username;
-    console.log("모두 만족", allFine);
-    console.log(formReg);
-    console.log("post로 보낼 회원정보", form);
+  const onSubmit = async () => {
+    // 이 함수 util이나 hook으로 만들어서 쓸까? -> 고민해볼것.
+    try {
+      const formdata = new FormData();
+      formdata.append("uploadImage", files[0]);
+      const config = {
+        Headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const res = await axios.post(
+        "http://3.39.164.180:8080/signup",
+        form,
+        config
+      );
+      if (res.data.code === 1) {
+        console.log(res);
+        alert("어쩔말하는콩순이~");
+        navigate("/");
+      } else {
+        if (res.data.code === -1) {
+          alert("저쩔말하는콩순이");
+          console.log(res);
+        }
+      }
+    } catch (err) {
+      throw new Error(err);
+    }
+  };
+
+  const onDupCheckEmail = async () => {
+    setDupCheck((prev) => {
+      return { ...prev, username: true };
+    });
+    try {
+      const res = await axios.post("http://3.39.164.180:8080/signup", {
+        username: form.username,
+      });
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const onDupCheckNickName = async () => {
+    setDupCheck((prev) => {
+      return { ...prev, nickName: true };
+    });
+    try {
+      const res = await axios.post("http://3.39.164.180:8080/signup", {
+        nickName: form.nickName,
+      });
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
   };
   useEffect(() => {
     if (
@@ -133,13 +201,15 @@ function SignUpForm() {
       });
     }
   }, [form.passwordAgain]);
-
+  console.log(typeof files, files);
+  //이미지 미리보기 코드
   const encodeFileToBase64 = (fileBlob) => {
     const reader = new FileReader();
+    setFiles(fileBlob);
     reader.readAsDataURL(fileBlob);
     return new Promise((resolve) => {
       reader.onload = () => {
-        setImgFiles(reader.result);
+        setImgPreview(reader.result);
         resolve();
       };
     });
@@ -157,23 +227,35 @@ function SignUpForm() {
         <SignUpFormLi>
           <SignUpFormLabel>
             <span>이메일</span>
-            <button style={{ marginRight: "4.55rem" }}>중복확인</button>
+            <button
+              onClick={onDupCheckEmail}
+              style={{ marginRight: "4.55rem" }}
+            >
+              중복확인
+            </button>
           </SignUpFormLabel>
           <SignUpInput
             value={form.username}
             onChange={onChangeUsername}
             placeholder="ex ) ABCD1234@naver.com"
+            disabled={dupCheck.username}
           />
         </SignUpFormLi>
         <SignUpFormLi>
           <SignUpFormLabel>
-            <span>닉네임</span>{" "}
-            <button style={{ marginRight: "4.55rem" }}>중복확인</button>
+            <span>닉네임</span>
+            <button
+              onClick={onDupCheckNickName}
+              style={{ marginRight: "4.55rem" }}
+            >
+              중복확인
+            </button>
           </SignUpFormLabel>
           <SignUpInput
             onChange={onChangeNickName}
             value={form.nickName}
             placeholder=""
+            disabled={dupCheck.nickName}
           />
         </SignUpFormLi>
       </SignUpFormUl>
@@ -201,9 +283,16 @@ function SignUpForm() {
       </SignUpFormUl>
       <SignUpFormUl>
         <SignUpFormLi>
+          <Select
+            onChange={onSelectedStack}
+            isMulti
+            placeholder="프로젝트 사용 스택"
+            options={optionStack}
+          />
+        </SignUpFormLi>
+        <SignUpFormLi>
           <SignUpFormLabel>프로필 사진</SignUpFormLabel>
           <SignUpInputContainer>
-            {" "}
             <SignUpInputImg
               onChange={(e) => {
                 encodeFileToBase64(e.target.files[0]);
@@ -212,10 +301,10 @@ function SignUpForm() {
               accept="img/*"
             />
             <div className="img_box">
-              {imgFiles && (
+              {imgPreview && (
                 <img
                   style={{ width: "60px", height: "60px" }}
-                  src={imgFiles}
+                  src={imgPreview}
                   alt="preview-img"
                 />
               )}
