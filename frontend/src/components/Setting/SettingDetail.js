@@ -32,6 +32,7 @@ function SettingDetail() {
       return { ...prev, value };
     });
   };
+
   return (
     <>
       <MainHead />
