@@ -5,6 +5,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import SignUpPage from "../components/SignUp/SignUpPage";
 import MyPostsPage from "../components/MyPosts/MyPostsPage";
 import Setting from "../components/Setting/Setting";
+import StudyPage from "../components/Study/StudyPage";
 function AllRoute() {
   return (
     <BrowserRouter>
@@ -14,6 +15,7 @@ function AllRoute() {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/myPosts" element={<MyPostsPage />} />
         <Route path="/setting" element={<Setting />} />
+        <Route path="/study" element={<StudyPage />} />
       </Routes>
     </BrowserRouter>
   );

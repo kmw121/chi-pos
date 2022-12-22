@@ -12,34 +12,14 @@ import {
   SignUpFormLabel,
   SignUpFormLi,
   SignUpFormUl,
+  SignUpInput,
+  SignUpInputContainer,
+  SignUpInputImg,
 } from "../components";
 import Select from "react-select";
 import { stacks } from "../../stack";
 import axios from "axios";
-const SignUpInput = styled.input`
-  width: 80%;
-  height: 40px;
-  font-size: 20px;
-  padding-left: 15px;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  display: flex;
-  justify-content: center;
-`;
-const SignUpInputContainer = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-`;
-const SignUpInputImg = styled.input`
-  height: 40px;
-  font-size: 20px;
-  padding-left: 15px;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  display: flex;
-  justify-content: center;
-`;
+
 function SignUpForm() {
   let stackNumber = 1;
   const stackArray = stacks
@@ -51,7 +31,6 @@ function SignUpForm() {
         number: stackNumber++,
       };
     });
-  const optionStack = stackArray;
   const [formReg, setFormReg] = useState({
     username: false,
     password: false,
@@ -66,14 +45,11 @@ function SignUpForm() {
     passwordAgain: "",
     nickName: "",
     stack: [],
-    //  file: files[0],
   });
   const [dupCheck, setDupCheck] = useState({
     username: false,
     nickName: false,
   });
-  // console.log(typeof imgFiles);
-  // console.log("form : ", form);
   const reg_email =
     /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
   const reg_password = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{5,15}$/;
@@ -136,58 +112,104 @@ function SignUpForm() {
   };
   const onSubmit = async () => {
     // 이 함수 util이나 hook으로 만들어서 쓸까? -> 고민해볼것.
-    try {
-      const formdata = new FormData();
-      formdata.append("uploadImage", files[0]);
-      const config = {
-        Headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      };
-      const res = await axios.post(
-        "http://3.39.164.180:8080/signup",
-        form,
-        config
-      );
-      if (res.data.code === 1) {
-        console.log(res);
-        alert("어쩔말하는콩순이~");
-        navigate("/");
-      } else {
-        if (res.data.code === -1) {
-          alert("저쩔말하는콩순이");
+    if (
+      formReg.username &&
+      formReg.nickName &&
+      formReg.passwordAgain &&
+      formReg.password &&
+      dupCheck.nickName &&
+      dupCheck.username &&
+      form.stack.length
+    ) {
+      try {
+        const formdata = new FormData();
+        //이부분 리팩토링 필요.
+        formdata.append("file", files);
+        formdata.append("username", form.username);
+        formdata.append("password", form.password);
+        formdata.append("nickName", form.nickName);
+        formdata.append("stack", form.stack);
+
+        const res = await axios({
+          method: "POST",
+          url: `http://3.39.164.180:8080/signup`,
+          mode: "cors",
+          headers: { "Content-Type": "multipart/form-data" },
+          data: formdata,
+        });
+        if (res.data.code === 1) {
           console.log(res);
+          alert("어쩔말하는콩순이~");
+          navigate("/");
+        } else {
+          if (res.data.code === -1) {
+            alert("저쩔말하는콩순이");
+            console.log(res);
+          }
         }
+      } catch (err) {
+        console.log(err);
+        throw new Error(err);
       }
-    } catch (err) {
-      throw new Error(err);
+    } else {
+      alert("회원 정보를 확인해주세요 ! ");
     }
   };
 
   const onDupCheckEmail = async () => {
-    setDupCheck((prev) => {
-      return { ...prev, username: true };
-    });
-    try {
-      const res = await axios.post("http://3.39.164.180:8080/signup", {
-        username: form.username,
-      });
-      console.log(res);
-    } catch (err) {
-      console.log(err);
+    if (formReg.username) {
+      try {
+        const res = await axios.post("http://3.39.164.180:8080/dupUsername", {
+          username: form.username,
+        });
+        if (res.data.code === -1) {
+          if (
+            window.confirm(`사용할 수 있는 이메일입니다.
+  사용하시겠습니까?`)
+          ) {
+            setDupCheck((prev) => {
+              return { ...prev, username: true };
+            });
+            alert("닉네임을 설정하셨습니다.");
+          } else {
+            alert("취소되었습니다.");
+          }
+        } else if (res.data.code === 1) {
+          alert("이미 존재하는 닉네임입니다.");
+        }
+      } catch (err) {
+        throw new Error(err);
+      }
+    } else {
+      alert("이메일 형식을 확인해주세요!");
     }
   };
   const onDupCheckNickName = async () => {
-    setDupCheck((prev) => {
-      return { ...prev, nickName: true };
-    });
-    try {
-      const res = await axios.post("http://3.39.164.180:8080/signup", {
-        nickName: form.nickName,
-      });
-      console.log(res);
-    } catch (err) {
-      console.log(err);
+    if (formReg.nickName) {
+      try {
+        const res = await axios.post("http://3.39.164.180:8080/dupNickName", {
+          nickName: form.nickName,
+        });
+        if (res.data.code === -1) {
+          if (
+            window.confirm(`사용할 수 있는 닉네임입니다.
+  사용하시겠습니까?`)
+          ) {
+            setDupCheck((prev) => {
+              return { ...prev, nickName: true };
+            });
+            alert("닉네임을 설정하셨습니다.");
+          } else {
+            alert("취소되었습니다.");
+          }
+        } else if (res.data.code === 1) {
+          alert("이미 존재하는 닉네임입니다.");
+        }
+      } catch (err) {
+        throw new Error(err);
+      }
+    } else {
+      alert("닉네임은 2글자 이상입니다.");
     }
   };
   useEffect(() => {
@@ -201,7 +223,6 @@ function SignUpForm() {
       });
     }
   }, [form.passwordAgain]);
-  console.log(typeof files, files);
   //이미지 미리보기 코드
   const encodeFileToBase64 = (fileBlob) => {
     const reader = new FileReader();
@@ -214,7 +235,7 @@ function SignUpForm() {
       };
     });
   };
-
+  console.log("유효성 : ", formReg);
   return (
     <RegisterContainerDiv>
       <SignUpFormTitle>
@@ -287,7 +308,7 @@ function SignUpForm() {
             onChange={onSelectedStack}
             isMulti
             placeholder="프로젝트 사용 스택"
-            options={optionStack}
+            options={stackArray}
           />
         </SignUpFormLi>
         <SignUpFormLi>
