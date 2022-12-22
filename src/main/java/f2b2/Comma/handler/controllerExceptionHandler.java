@@ -15,12 +15,12 @@ public class controllerExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<?> apiException(CustomException e) {
-        return new ResponseEntity<>(new CMRespDto<>(-1, e.getMessage(), null), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new CMRespDto<>(-1, e.getMessage(), null), HttpStatus.OK);
     }
 
     @ExceptionHandler(CustomValidationException.class)
     public ResponseEntity<?> apiException(CustomValidationException e) {
-        return new ResponseEntity<>(new CMRespDto<>(-1, e.getMessage(), e.getErrorMap()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new CMRespDto<>(-1, e.getMessage(), e.getErrorMap()), HttpStatus.OK);
     }
 
 }

@@ -3,6 +3,7 @@ package f2b2.Comma.dto.auth;
 import f2b2.Comma.domain.user.User;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Email;
@@ -16,11 +17,16 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
+@Component
 public class SignupDto {
 
+    private static String uploadFolder;
 
     @Value("${file.path}")
-    private String uploadFolder;
+    public void setUploadFolder(String uploadFolder) {
+        this.uploadFolder = uploadFolder;
+    }
+
     @Email(message = "올바른 이메일 형식이 아닙니다.")
     @NotBlank(message = "이메일을 입력해주세요.")
     private String username;
@@ -39,11 +45,11 @@ public class SignupDto {
         user.setNickName(this.nickName);
         user.setPassword(this.password);
 
-
+        System.out.println(uploadFolder);
         if(file!=null){
             UUID uuid = UUID.randomUUID();
             String imageFileName = uuid +"_"+file.getOriginalFilename();
-
+            System.out.println(imageFileName);
             Path imageFilePath = Paths.get(uploadFolder+imageFileName);
 
             try{
@@ -51,7 +57,11 @@ public class SignupDto {
             }catch (Exception e){
                 e.printStackTrace();
             }
+            System.out.println(imageFilePath);
             user.setImageUrl(imageFilePath.toString());
+        }
+        else{
+            user.setImageUrl("nonUrl");
         }
 
         return user;

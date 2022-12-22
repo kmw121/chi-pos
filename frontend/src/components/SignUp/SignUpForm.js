@@ -169,7 +169,7 @@ function SignUpForm() {
       return { ...prev, username: true };
     });
     try {
-      const res = await axios.post("http://3.39.164.180:8080/signup", {
+      const res = await axios.post("http://localhost:8080/signup", {
         username: form.username,
       });
       console.log(res);
@@ -182,7 +182,7 @@ function SignUpForm() {
       return { ...prev, nickName: true };
     });
     try {
-      const res = await axios.post("http://3.39.164.180:8080/signup", {
+      const res = await axios.post("http://localhost:8080/signup", {
         nickName: form.nickName,
       });
       console.log(res);

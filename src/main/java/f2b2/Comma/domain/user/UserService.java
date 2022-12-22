@@ -44,6 +44,13 @@ public class UserService {
         return user;
     }
 
+    public User findByNickName(String nickName){
+        User user = userRepository.findByNickName(nickName).orElseThrow(()->{
+            return new CustomException("존재하지 않는 회원입니다.");
+        });
+        return user;
+    }
+
     @Transactional(readOnly = true)
     public List<User> findAll(){
         return userRepository.findAll();

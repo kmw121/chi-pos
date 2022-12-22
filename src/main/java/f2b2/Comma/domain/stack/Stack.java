@@ -14,7 +14,10 @@ public class Stack {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String stackName;
+    private String category;
+    private String isPopular;
+    private String name;
+
 
     @JsonIgnoreProperties({"user","stack"})
     @OneToMany(mappedBy = "stack")
