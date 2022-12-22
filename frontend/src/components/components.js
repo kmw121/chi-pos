@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export const Banner = styled.div`
   width: 100vw;
@@ -452,6 +452,10 @@ export const SignUpFormLi = styled.li`
   flex: 1 1;
   margin: 0;
 `;
+/////////////////////////////////////////////////////////////
+//////////////////////MY POST////////////////////////////////
+/////////////////////////////////////////////////////////////
+
 export const MyPostsContainer = styled.section`
   padding-top: 5rem;
 `;
@@ -493,7 +497,7 @@ export const SettingContainer = styled.div`
 export const SettingImgBox = styled.div`
   display: flex;
 `;
-export const SettingImg = styled.img`
+export const SettingImg = styled.div`
   display: block;
   height: 10rem;
   width: 10rem;
@@ -588,4 +592,268 @@ export const SettingWithdrawalBtn = styled.button`
   outline: none;
   border: none;
   cursor: pointer;
+`;
+
+/////////////////////////////////////////////
+////////////////SIGN UP//////////////////////
+/////////////////////////////////////////////
+
+export const SignUpInput = styled.input`
+  width: 80%;
+  height: 40px;
+  font-size: 20px;
+  padding-left: 15px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+`;
+export const SignUpInputContainer = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+`;
+export const SignUpInputImg = styled.input`
+  height: 40px;
+  font-size: 20px;
+  padding-left: 15px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+`;
+
+/////////////////////////////////////////////
+////////////////SIGN IN//////////////////////
+/////////////////////////////////////////////
+
+export const boxFade = keyframes`
+0% {
+  opacity: 0;
+  transform: translate(-50%, -100%);
+}
+100% {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+`;
+export const ModalBackground = styled.div`
+  box-sizing: border-box;
+  display: block;
+  position: fixed;
+  inset: 0px;
+  background: rgba(77, 77, 77, 0.5);
+  z-index: 999;
+`;
+export const ModalContainer = styled.div`
+  width: 800px;
+  height: 550px;
+  box-shadow: 0 2px 12px 0 rgb(0 0 0 / 9%);
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+  z-index: 1000;
+  animation: ${boxFade} 0.3s linear;
+`;
+export const ModalHeader = styled.div`
+  background: #f8f9fa;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 8px 8px 0 0;
+  height: 3rem;
+`;
+export const ModalMain = styled.div`
+  background: #fff;
+  height: 70%;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+export const ModalWelcome = styled.h1`
+  display: block;
+  font-size: 2em;
+  margin-block-start: 0.67em;
+  margin-block-end: 0.67em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
+`;
+export const ModalInnerBox = styled.div`
+  margin-top: 4rem;
+  width: 60%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+`;
+export const IdInput = styled.input`
+  width: 70%;
+  height: 38px;
+  font-size: 18px;
+  border: 0;
+  border-radius: 8px;
+  outline: none;
+  padding-left: 10px;
+  background-color: rgb(233, 233, 233);
+  margin-bottom: 30px;
+  text-align: center;
+`;
+export const PwInput = styled.input`
+  width: 70%;
+  height: 38px;
+  font-size: 18px;
+  border: 0;
+  border-radius: 8px;
+  outline: none;
+  padding-left: 10px;
+  background-color: rgb(233, 233, 233);
+  text-align: center;
+  margin-bottom: 40px;
+`;
+/////////////////////////////////////////////
+//////////////////STUDY//////////////////////
+/////////////////////////////////////////////
+
+export const StudyContainer = styled.div`
+  max-width: 900px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 5rem;
+`;
+export const StudyHeadSection = styled.section`
+  display: flex;
+  flex-direction: column;
+  margin-top: 3rem;
+`;
+export const StudyHeadTitle = styled.div`
+  margin-top: 2.5rem;
+  font-weight: 800;
+  font-size: 3rem;
+  line-height: 126.5%;
+  letter-spacing: -0.005em;
+  color: #000;
+`;
+export const StudyHeadUserAndDate = styled.div`
+  margin-top: 32px;
+  padding-bottom: 32px;
+  border-bottom: 3px solid #f2f2f2;
+  display: flex;
+  grid-gap: 15px;
+  gap: 15px;
+  align-items: center;
+`;
+export const StudyHeadUserBox = styled.div`
+  display: flex;
+  align-items: center;
+  position: relative;
+`;
+export const StudyHeadUserName = styled.div`
+  color: #333;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 700;
+  padding-right: 15px;
+  border-right: 2px solid #e1e1e1;
+`;
+export const StudyHeadRegisterDate = styled.div`
+  font-size: 18px;
+  color: #717171;
+`;
+export const StudyInfoGridUl = styled.ul`
+  display: grid;
+  grid-template-columns: repeat(2, 3fr);
+  grid-row-gap: 24px;
+  row-gap: 24px;
+  margin-top: 60px;
+  list-style: none;
+`;
+export const StudyInfoGridLi = styled.li`
+  display: flex;
+  position: relative;
+  align-items: center;
+  font-weight: 700;
+  font-size: 20px;
+`;
+export const StudyInfoGridTitle = styled.span`
+  color: #717171;
+  margin-right: 40px;
+`;
+export const StudyInfoGridContent = styled.span`
+  color: #333;
+`;
+export const StudyProjectBox = styled.div`
+  margin-top: 132px;
+  font-size: 1.125rem;
+  word-break: break-all;
+  line-height: 1.7;
+  letter-spacing: -0.004em;
+`;
+export const StudyProjectInfo = styled.h2`
+  margin: 0;
+  color: #333;
+  font-size: 26px;
+  font-weight: 700;
+  padding-bottom: 24px;
+  border-bottom: 3px solid #f2f2f2;
+`;
+export const StudyProjectDetail = styled.div`
+  width: 100%;
+  margin: 40px auto 0;
+`;
+export const StudyCommentBox = styled.section`
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+`;
+export const StudyCommentInnerBox = styled.div`
+  width: 100%;
+  margin: 0 auto;
+`;
+export const StudyCommentInputBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 100px;
+`;
+export const StudyCommentInputCount = styled.h1`
+  margin: 0 0 30px;
+  font-size: 22px;
+`;
+export const StudyCommentInputText = styled.textarea`
+  font-family: inherit;
+  padding: 1rem 1rem 1.5rem;
+  outline: none;
+  border: 2px solid #e1e1e1;
+  border-radius: 16px;
+  width: 100%;
+  min-height: 100px;
+  margin-bottom: 10px;
+  resize: none;
+`;
+export const StudyButtonBox = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin: 16px 0 24px;
+`;
+export const StudyButton = styled.div`
+  min-width: 120px;
+  height: 40px;
+  background: #333;
+  border-radius: 50px;
+  font-weight: 700;
+  color: #fff;
+  font-size: 16px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  border: none;
 `;
