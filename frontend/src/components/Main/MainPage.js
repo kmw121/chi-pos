@@ -4,7 +4,7 @@ import MainSection from "./MainSection";
 import MainContents from "./MainContents";
 import MainFooter from "./MainFooter";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
-function MainPage() {
+function MainPage({ login, setLogin }) {
   const handleTop = () => {
     window.scrollTo({
       top: 0,
@@ -13,7 +13,7 @@ function MainPage() {
   };
   return (
     <>
-      <MainHead />
+      <MainHead login={login} setLogin={setLogin} />
       <MainBanner />
       <MainSection />
       <MainContents />

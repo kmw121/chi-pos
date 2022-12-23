@@ -4,7 +4,7 @@ import { MainHeadNav, MainHeadNavRight, MainHeadNavBtn } from "../components";
 import ModalPortal from "../../Portal/ModalPortal";
 import SignInForm from "../SignIn/SignInForm";
 
-function MainHead() {
+function MainHead({ login, setLogin }) {
   const navigate = useNavigate();
   const onGoToRegister = () => {
     navigate("/register");
@@ -24,13 +24,23 @@ function MainHead() {
         </a>
         <MainHeadNavRight>
           <MainHeadNavBtn onClick={onGoToRegister}>새 글 쓰기</MainHeadNavBtn>
-          <MainHeadNavBtn onClick={onGoToSignUp}>회원가입</MainHeadNavBtn>
-          <MainHeadNavBtn onClick={toggleModal}>로그인</MainHeadNavBtn>
+          {!login ? (
+            <>
+              <MainHeadNavBtn onClick={onGoToSignUp}>회원가입</MainHeadNavBtn>
+              <MainHeadNavBtn onClick={toggleModal}>로그인</MainHeadNavBtn>
+            </>
+          ) : (
+            <p>zzzzzzzzzzz</p>
+          )}
         </MainHeadNavRight>
       </MainHeadNav>
       {modalOpen && (
         <ModalPortal>
-          <SignInForm onToggle={toggleModal} />
+          <SignInForm
+            login={login}
+            setLogin={setLogin}
+            onToggle={toggleModal}
+          />
         </ModalPortal>
       )}
     </>

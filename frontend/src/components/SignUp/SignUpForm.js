@@ -19,7 +19,7 @@ import {
 import Select from "react-select";
 import { stacks } from "../../stack";
 import axios from "axios";
-
+import { API_URL } from "../../API_URL";
 function SignUpForm() {
   let stackNumber = 1;
   const stackArray = stacks
@@ -132,7 +132,7 @@ function SignUpForm() {
 
         const res = await axios({
           method: "POST",
-          url: `http://3.39.164.180:8080/signup`,
+          url: API_URL + "/signup",
           mode: "cors",
           headers: { "Content-Type": "multipart/form-data" },
           data: formdata,
@@ -159,7 +159,7 @@ function SignUpForm() {
   const onDupCheckEmail = async () => {
     if (formReg.username) {
       try {
-        const res = await axios.post("http://3.39.164.180:8080/dupUsername", {
+        const res = await axios.post(API_URL + "/dupUsername", {
           username: form.username,
         });
         if (res.data.code === -1) {
@@ -187,7 +187,7 @@ function SignUpForm() {
   const onDupCheckNickName = async () => {
     if (formReg.nickName) {
       try {
-        const res = await axios.post("http://3.39.164.180:8080/dupNickName", {
+        const res = await axios.post(API_URL + "/dupNickName", {
           nickName: form.nickName,
         });
         if (res.data.code === -1) {
