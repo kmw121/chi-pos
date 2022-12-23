@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Select from "react-select";
-import DatePicker from "react-datepicker";
 import { stacks } from "../../stack";
 import "react-datepicker/dist/react-datepicker.css";
 import { ko } from "date-fns/locale";
@@ -14,6 +13,8 @@ import {
   RegisterNumber1Label,
 } from "../components";
 import { getYear, getMonth } from "date-fns";
+import DatePicker from "react-datepicker";
+import "./customDatePickerWidth.css";
 
 function RegisterNumber1({ dataForm, setDataForm }) {
   const optionCategory = [
@@ -124,7 +125,6 @@ function RegisterNumber1({ dataForm, setDataForm }) {
     "11월",
     "12월",
   ];
-
   return (
     <section>
       <RegisterNumber1Title>
@@ -181,70 +181,71 @@ function RegisterNumber1({ dataForm, setDataForm }) {
         </RegisterNumber1Li>
         <RegisterNumber1Li>
           <RegisterNumber1Label>시작 예정일</RegisterNumber1Label>
-          <DatePicker
-            selected={dataForm.datePickerValue}
-            onChange={onChangeDatePickerValue}
-            showPopperArrow={false}
-            fixedHeight
-            locale={ko}
-            dateFormat="yyyy년 MM월 dd일 (eee)"
-            minDate={new Date()}
-            style={{ width: "300px" }}
-            renderCustomHeader={({
-              date,
-              changeYear,
-              changeMonth,
-              decreaseMonth,
-              increaseMonth,
-              prevMonthButtonDisabled,
-              nextMonthButtonDisabled,
-            }) => (
-              <div
-                style={{
-                  margin: 10,
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <button
-                  onClick={decreaseMonth}
-                  disabled={prevMonthButtonDisabled}
+          <div className="customDatePickerWidth">
+            <DatePicker
+              selected={dataForm.datePickerValue}
+              onChange={onChangeDatePickerValue}
+              showPopperArrow={false}
+              fixedHeight
+              locale={ko}
+              dateFormat="yyyy년 MM월 dd일 (eee)"
+              minDate={new Date()}
+              renderCustomHeader={({
+                date,
+                changeYear,
+                changeMonth,
+                decreaseMonth,
+                increaseMonth,
+                prevMonthButtonDisabled,
+                nextMonthButtonDisabled,
+              }) => (
+                <div
+                  style={{
+                    margin: 10,
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
                 >
-                  {"<"}
-                </button>
-                <select
-                  value={getYear(date)}
-                  onChange={({ target: { value } }) => changeYear(value)}
-                >
-                  {years.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
+                  <button
+                    onClick={decreaseMonth}
+                    disabled={prevMonthButtonDisabled}
+                  >
+                    {"<"}
+                  </button>
+                  <select
+                    value={getYear(date)}
+                    onChange={({ target: { value } }) => changeYear(value)}
+                  >
+                    {years.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
 
-                <select
-                  value={months[getMonth(date)]}
-                  onChange={({ target: { value } }) =>
-                    changeMonth(months.indexOf(value))
-                  }
-                >
-                  {months.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
+                  <select
+                    value={months[getMonth(date)]}
+                    onChange={({ target: { value } }) =>
+                      changeMonth(months.indexOf(value))
+                    }
+                  >
+                    {months.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
 
-                <button
-                  onClick={increaseMonth}
-                  disabled={nextMonthButtonDisabled}
-                >
-                  {">"}
-                </button>
-              </div>
-            )}
-          />
+                  <button
+                    onClick={increaseMonth}
+                    disabled={nextMonthButtonDisabled}
+                  >
+                    {">"}
+                  </button>
+                </div>
+              )}
+            />
+          </div>
         </RegisterNumber1Li>
       </RegisterNumber1Ul>
       <RegisterNumber1Ul>
