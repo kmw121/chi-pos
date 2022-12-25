@@ -16,53 +16,54 @@ import {
 } from "../components";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-function SignInForm({ onToggle, login, setLogin }) {
+import { setUser } from "../../slice/userSlice";
+import { useDispatch } from "react-redux";
+import { useCookies } from "react-cookie";
+function SignInForm({ onToggle }) {
+  const dispatch = useDispatch();
   useEffect(() => {
     getPreventScrolling();
     return () => {
       document.body.style.overflow = "auto";
     };
   }, []);
-  const [emailValue, setEmailValue] = useState("");
-  const [pwValue, setPwValue] = useState("");
+  const [loginForm, setLoginForm] = useState({
+    username: "",
+    password: "",
+  });
+  const [_, setCookie] = useCookies(["id", "id"]);
   const onEmailValue = (e) => {
-    setEmailValue(e.target.value);
+    const onChangeName = (prev) => {
+      return { ...prev, username: e.target.value };
+    };
+    setLoginForm(onChangeName);
   };
   const onPwValue = (e) => {
-    setPwValue(e.target.value);
+    const onChangePw = (prev) => {
+      return { ...prev, password: e.target.value };
+    };
+    setLoginForm(onChangePw);
   };
   const onLogin = async (e) => {
     try {
       const res = await axios.post(
         "http://3.39.164.180:8080/login",
-        {
-          username: emailValue,
-          password: pwValue,
-        }
+        loginForm
         //  { withCredentials: true }
       );
       const { accessToken } = res.data.data;
       axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+      // res.data.data => JWT TOKEN
       const payload = res.data.data;
       const decoded = jwt_decode(payload);
-      console.log(decoded);
-      var date = new Date(decoded.iat * 1000);
-      console.log(date.toUTCString());
-      var date1 = new Date(decoded.exp * 1000);
-      console.log(date1.toUTCString());
-      console.log(date.toLocaleString());
-      console.log(date1.toLocaleString());
-      localStorage.setItem("access", JSON.stringify(res.data.data));
-      console.log(res.data.data);
-      console.log(res);
-      setLogin(true);
+      dispatch(setUser(decoded));
+      setCookie("id", res.data.data);
       onToggle();
-      alert("로그인 성공?");
+      alert(`${loginForm.username}님 반갑습니다!`);
     } catch (err) {
       throw new Error(err);
     }
   };
-
   return (
     <>
       <ModalBackground onClick={onToggle} />
@@ -83,12 +84,12 @@ function SignInForm({ onToggle, login, setLogin }) {
           <ModalInnerBox>
             <IdInput
               onChange={onEmailValue}
-              value={emailValue}
+              value={loginForm.username}
               placeholder="E-MAIL"
             />
             <PwInput
               onChange={onPwValue}
-              value={pwValue}
+              value={loginForm.password}
               placeholder="PASSWORD"
               type="password"
             />
