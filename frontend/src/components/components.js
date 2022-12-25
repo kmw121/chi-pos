@@ -169,6 +169,7 @@ export const MainHeadNavRight = styled.div`
   display: flex;
   gap: 30px;
   align-items: center;
+  position: relative;
 `;
 export const MainHeadNavBtn = styled.button`
   cursor: pointer;
@@ -856,4 +857,38 @@ export const StudyButton = styled.div`
   cursor: pointer;
   outline: none;
   border: none;
+`;
+
+///////////////////////////////////////
+/////////////MAIN HEAD DROPDOWN////////
+///////////////////////////////////////
+
+export const MainHeadDropdownContainer = styled.div`
+  position: absolute;
+  top: 100%;
+  margin-top: 1rem;
+  right: 0;
+`;
+export const MainHeadDropdownUl = styled.ul`
+  position: relative;
+  z-index: 5;
+  width: 12rem;
+  background: #fff;
+  box-shadow: 0 5px 25px rgb(0 0 0 / 15%);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+`;
+export const MainHeadDropdownLi = styled.li`
+  padding: 0.75rem 1rem;
+  line-height: 1.5;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+`;
+export const MainHeadDropdownA = styled.a`
+  width: 100%;
+  text-decoration: none;
+  line-height: 1.5;
+  font-weight: 500;
 `;

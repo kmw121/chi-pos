@@ -4,6 +4,8 @@ import MainSection from "./MainSection";
 import MainContents from "./MainContents";
 import MainFooter from "./MainFooter";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
+import { useEffect } from "react";
+import { useCookies } from "react-cookie";
 function MainPage({ login, setLogin }) {
   const handleTop = () => {
     window.scrollTo({
@@ -11,6 +13,11 @@ function MainPage({ login, setLogin }) {
       behavior: "smooth",
     });
   };
+  useEffect(() => {
+    console.log("main mount");
+  }, []);
+  // const [cookies, setCookie] = useCookies(["id"]);
+  // console.log("cookies : ", cookies);
   return (
     <>
       <MainHead login={login} setLogin={setLogin} />
