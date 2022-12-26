@@ -31,6 +31,7 @@ function RegisterContainer() {
     title: titleText,
     detail: editorValue,
   };
+  console.log("submit ㅋㅋ  : ", submitForm);
   return (
     <RegisterContainerDiv>
       <RegisterNumber1 dataForm={dataForm} setDataForm={steDataForm} />
