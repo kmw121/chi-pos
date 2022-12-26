@@ -14,9 +14,9 @@ import SignInForm from "../SignIn/SignInForm";
 import { useCookies } from "react-cookie";
 
 function MainHead({ login, setLogin }) {
-  const [cookies, setCookies, removeCookie] = useCookies(["id"]);
+  const [cookies, setCookies, removeCookie] = useCookies(["jwtToken"]);
   const handleLogOut = () => {
-    removeCookie(["id"]);
+    removeCookie(["jwtToken"]);
     alert("로그아웃되었습니다.");
   };
   const navigate = useNavigate();
@@ -48,7 +48,7 @@ function MainHead({ login, setLogin }) {
         </a>
         <MainHeadNavRight>
           <MainHeadNavBtn onClick={onGoToRegister}>새 글 쓰기</MainHeadNavBtn>
-          {cookies.id !== undefined ? (
+          {cookies.jwtToken !== undefined ? (
             <MainHeadNavBtn onClick={toggleDropdown}>
               이미지 들어갈 자리입니다.
               {dropdownOpen && (
@@ -57,7 +57,7 @@ function MainHead({ login, setLogin }) {
                     <MainHeadDropdownLi onClick={onGoToPosts}>
                       내 작성글
                     </MainHeadDropdownLi>
-                    <MainHeadDropdownLi onCanPlay={onGoToSetting}>
+                    <MainHeadDropdownLi onClick={onGoToSetting}>
                       설정
                     </MainHeadDropdownLi>
                     <MainHeadDropdownLi onClick={handleLogOut}>

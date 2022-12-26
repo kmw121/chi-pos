@@ -31,7 +31,7 @@ function SignInForm({ onToggle }) {
     username: "",
     password: "",
   });
-  const [_, setCookie] = useCookies(["id", "id"]);
+  const [_, setCookie] = useCookies(["jwtToken"]);
   const onEmailValue = (e) => {
     const onChangeName = (prev) => {
       return { ...prev, username: e.target.value };
@@ -52,13 +52,16 @@ function SignInForm({ onToggle }) {
         //  { withCredentials: true }
       );
       const { accessToken } = res.data.data;
-      axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+      // axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
       // res.data.data => JWT TOKEN
-      const payload = res.data.data;
-      const decoded = jwt_decode(payload);
+      const jwtToken = res.data.data.accessToken;
+      const decoded = jwt_decode(jwtToken);
       dispatch(setUser(decoded));
-      setCookie("id", res.data.data);
+      setCookie("jwtToken", jwtToken);
       onToggle();
+      setLoginForm((prev) => {
+        return { ...prev, username: "", password: "" };
+      });
       alert(`${loginForm.username}님 반갑습니다!`);
     } catch (err) {
       throw new Error(err);
