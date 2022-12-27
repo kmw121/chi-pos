@@ -16,6 +16,8 @@ import { stacks } from "../../stack";
 import Select from "react-select";
 import { useState } from "react";
 import MainHead from "../Main/MainHead";
+import { useSelector } from "react-redux";
+import { API_URL } from "../../API_URL";
 function SettingDetail() {
   const [stack, setStack] = useState({});
   const stackArray = stacks
@@ -32,14 +34,20 @@ function SettingDetail() {
       return { ...prev, value };
     });
   };
-
+  const { userInfo } = useSelector((state) => {
+    return state.user;
+  });
+  console.log(userInfo.data.id);
   return (
     <>
       <MainHead />
       <SettingContainer>
         <h1>내 정보 수정</h1>
         <SettingImgBox>
-          <SettingImg src="asdf" alt="asdf" />
+          <SettingImg
+            src={API_URL + userInfo.data.imageUrl}
+            alt="asdfasdfasdfasdfasdf"
+          />
           <SettingImgBtnBox>
             <SettingImgBtnBoxLabel>이미지 선택</SettingImgBtnBoxLabel>
             <SettingImgBtnBoxBtn>이미지 제거</SettingImgBtnBoxBtn>

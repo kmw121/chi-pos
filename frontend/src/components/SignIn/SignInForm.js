@@ -13,6 +13,12 @@ import {
   ModalInnerBox,
   IdInput,
   PwInput,
+  ModalBtnContainer,
+  ModalBtnBox,
+  ModalBtnGoogle,
+  ModalBtnText,
+  ModalBtnGithub,
+  ModalBtnKakao,
 } from "../components";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
@@ -32,6 +38,7 @@ function SignInForm({ onToggle }) {
     password: "",
   });
   const [_, setCookie] = useCookies(["jwtToken"]);
+  const [refresh, setRefresh] = useCookies(["refreshToken"]);
   const onEmailValue = (e) => {
     const onChangeName = (prev) => {
       return { ...prev, username: e.target.value };
@@ -46,23 +53,24 @@ function SignInForm({ onToggle }) {
   };
   const onLogin = async (e) => {
     try {
-      const res = await axios.post(
-        "http://3.39.164.180:8080/login",
-        loginForm
-        //  { withCredentials: true }
-      );
-      const { accessToken } = res.data.data;
-      // axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-      // res.data.data => JWT TOKEN
-      const jwtToken = res.data.data.accessToken;
-      const decoded = jwt_decode(jwtToken);
-      dispatch(setUser(decoded));
-      setCookie("jwtToken", jwtToken);
-      onToggle();
-      setLoginForm((prev) => {
-        return { ...prev, username: "", password: "" };
-      });
-      alert(`${loginForm.username}님 반갑습니다!`);
+      const res = await axios.post("http://3.39.164.180:8080/login", loginForm);
+      if (res.data.code === 1) {
+        const jwtToken = res.data.data.accessToken;
+        const refreshToken = res.data.data.refreshToken;
+        const decoded = jwt_decode(jwtToken);
+        const decodedR = jwt_decode(refreshToken);
+        console.log("refresh decoded", decodedR);
+        dispatch(setUser(decoded));
+        setCookie("jwtToken", jwtToken);
+        setRefresh("refreshToken", refreshToken);
+        onToggle();
+        setLoginForm((prev) => {
+          return { ...prev, username: "", password: "" };
+        });
+        console.log(res);
+        console.log(decoded);
+        alert(`${loginForm.username}님 반갑습니다!`);
+      }
     } catch (err) {
       throw new Error(err);
     }
@@ -103,6 +111,39 @@ function SignInForm({ onToggle }) {
             </RegisterBottomCancelBtn>
             <RegisterBottomOkBtn onClick={onLogin}>로그인</RegisterBottomOkBtn>
           </RegisterBottomSection>
+
+          <ModalBtnContainer>
+            <ModalBtnBox>
+              <ModalBtnGoogle>
+                <img
+                  style={{ width: "50px", height: "50px", zInde: "50" }}
+                  src={"/logo/google.png"}
+                  alt="github"
+                />
+              </ModalBtnGoogle>
+              <ModalBtnText>Google 로그인</ModalBtnText>
+            </ModalBtnBox>
+            <ModalBtnBox>
+              <ModalBtnGithub>
+                <img
+                  style={{ width: "50px", height: "50px", zInde: "50" }}
+                  src={"/logo/github.png"}
+                  alt="github"
+                />
+              </ModalBtnGithub>
+              <ModalBtnText> Github 로그인</ModalBtnText>
+            </ModalBtnBox>
+            <ModalBtnBox>
+              <ModalBtnKakao>
+                <img
+                  style={{ width: "50px", height: "50px", zInde: "50" }}
+                  src={"/logo/kakao.png"}
+                  alt="github"
+                />
+              </ModalBtnKakao>
+              <ModalBtnText>Kakao 로그인</ModalBtnText>
+            </ModalBtnBox>
+          </ModalBtnContainer>
         </ModalMain>
       </ModalContainer>
     </>

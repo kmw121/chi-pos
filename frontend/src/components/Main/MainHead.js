@@ -12,13 +12,10 @@ import {
 import ModalPortal from "../../Portal/ModalPortal";
 import SignInForm from "../SignIn/SignInForm";
 import { useCookies } from "react-cookie";
-
+import { logout } from "../../util/logout";
 function MainHead({ login, setLogin }) {
   const [cookies, setCookies, removeCookie] = useCookies(["jwtToken"]);
-  const handleLogOut = () => {
-    removeCookie(["jwtToken"]);
-    alert("로그아웃되었습니다.");
-  };
+  const [refresh, setRefresh, removeRefresh] = useCookies(["refreshToken"]);
   const navigate = useNavigate();
   const onGoToRegister = () => {
     navigate("/register");
@@ -60,7 +57,7 @@ function MainHead({ login, setLogin }) {
                     <MainHeadDropdownLi onClick={onGoToSetting}>
                       설정
                     </MainHeadDropdownLi>
-                    <MainHeadDropdownLi onClick={handleLogOut}>
+                    <MainHeadDropdownLi onClick={logout}>
                       로그아웃
                     </MainHeadDropdownLi>
                   </MainHeadDropdownUl>

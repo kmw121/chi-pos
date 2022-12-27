@@ -498,7 +498,7 @@ export const SettingContainer = styled.div`
 export const SettingImgBox = styled.div`
   display: flex;
 `;
-export const SettingImg = styled.div`
+export const SettingImg = styled.img`
   display: block;
   height: 10rem;
   width: 10rem;
@@ -648,7 +648,7 @@ export const ModalBackground = styled.div`
 `;
 export const ModalContainer = styled.div`
   width: 800px;
-  height: 550px;
+  // height: 550px;
   box-shadow: 0 2px 12px 0 rgb(0 0 0 / 9%);
   position: absolute;
   display: flex;
@@ -891,4 +891,67 @@ export const MainHeadDropdownA = styled.a`
   text-decoration: none;
   line-height: 1.5;
   font-weight: 500;
+`;
+
+////////////////////////////////////////////
+///////////////SOCIAL///////////////////////
+////////////////////////////////////////////
+
+export const ModalBtnContainer = styled.section`
+  margin-top: 4rem;
+  width: 60%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+export const ModalBtnBox = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+export const ModalBtnGoogle = styled.button`
+  width: 8rem;
+  height: 8rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  transition: all 0.125s ease-in 0s;
+  color: #fff;
+  box-shadow: 0 5px 25px rgb(0 0 0 / 15%);
+  border: none;
+`;
+export const ModalBtnGithub = styled.button`
+  width: 8rem;
+  height: 8rem;
+  border-radius: 10px;
+  outline: none;
+  transition: all 0.125s ease-in 0s;
+  color: #fff;
+  background-color: #272e33;
+  box-shadow: 0 5px 25px rgb(0 0 0 / 15%);
+  border: none;
+`;
+export const ModalBtnKakao = styled.button`
+  width: 8rem;
+  height: 8rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  transition: all 0.125s ease-in 0s;
+  color: #fff;
+  box-shadow: 0 5px 25px rgb(0 0 0 / 15%);
+  background-color: #fae100;
+  border: none;
+`;
+export const ModalBtnText = styled.p`
+  margin-top: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 126.5%;
+  text-align: center;
+  letter-spacing: -0.005em;
+  color: #565656;
 `;
