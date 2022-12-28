@@ -70,6 +70,8 @@ function SignInForm({ onToggle }) {
         console.log(res);
         console.log(decoded);
         alert(`${loginForm.username}님 반갑습니다!`);
+      } else if (res.data.code === -1) {
+        alert("id/pw를 확인해주세요.");
       }
     } catch (err) {
       throw new Error(err);

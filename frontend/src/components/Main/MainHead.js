@@ -13,10 +13,11 @@ import ModalPortal from "../../Portal/ModalPortal";
 import SignInForm from "../SignIn/SignInForm";
 import { useCookies } from "react-cookie";
 import { logout } from "../../util/logout";
+import { useDispatch } from "react-redux";
 function MainHead({ login, setLogin }) {
   const [cookies, setCookies, removeCookie] = useCookies(["jwtToken"]);
-  const [refresh, setRefresh, removeRefresh] = useCookies(["refreshToken"]);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const onGoToRegister = () => {
     navigate("/register");
   };
@@ -57,7 +58,7 @@ function MainHead({ login, setLogin }) {
                     <MainHeadDropdownLi onClick={onGoToSetting}>
                       설정
                     </MainHeadDropdownLi>
-                    <MainHeadDropdownLi onClick={logout}>
+                    <MainHeadDropdownLi onClick={() => logout(dispatch)}>
                       로그아웃
                     </MainHeadDropdownLi>
                   </MainHeadDropdownUl>
@@ -74,11 +75,7 @@ function MainHead({ login, setLogin }) {
       </MainHeadNav>
       {modalOpen && (
         <ModalPortal>
-          <SignInForm
-            login={login}
-            setLogin={setLogin}
-            onToggle={toggleModal}
-          />
+          <SignInForm onToggle={toggleModal} />
         </ModalPortal>
       )}
     </>
