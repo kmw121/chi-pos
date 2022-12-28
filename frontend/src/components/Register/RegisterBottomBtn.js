@@ -4,13 +4,10 @@ import {
   RegisterBottomCancelBtn,
   RegisterBottomOkBtn,
 } from "../components";
-function RegisterBottomBtn() {
+function RegisterBottomBtn({ onSubmit }) {
   const navigate = useNavigate();
   const onGoToBack = () => {
     navigate(-1);
-  };
-  const onSubmit = () => {
-    alert("아직 못만듬");
   };
   return (
     <RegisterBottomSection>

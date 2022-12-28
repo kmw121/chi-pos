@@ -22,24 +22,25 @@ import {
   MainContentsAppStudyInfo,
 } from "../components";
 function MainContents() {
-  const total = <CiCloudOn />;
-  const study = <CiEdit />;
-  const pproject = <CiInstagram />;
-  const contentsCategoryItem = [
-    { text: "전체", logo: total },
-    { text: "스터디", logo: study },
-    { text: "프로젝트", logo: pproject },
-  ];
+  // const total = <CiCloudOn />;
+  // const study = <CiEdit />;
+  // const pproject = <CiInstagram />;
+  // const contentsCategoryItem = [
+  //   { text: "전체", logo: total },
+  //   { text: "스터디", logo: study },
+  //   { text: "프로젝트", logo: pproject },
+  // ];
   return (
     <MainContentsMain>
       <MainContentsCategoryContainer>
         <MainContentsCategoryInnerContainer>
-          {contentsCategoryItem.map((content) => (
+          {/* 오류때문에 일단 주석처리 해놓음. */}
+          {/* {contentsCategoryItem.map((content) => (
             <MainContentsCategoryItem key={content.text}>
               {content.logo}
               {content.text}
             </MainContentsCategoryItem>
-          ))}
+          ))} */}
         </MainContentsCategoryInnerContainer>
         <MainContentsToggle>
           <MainContentsToggleText>모집 중만 보기</MainContentsToggleText>
