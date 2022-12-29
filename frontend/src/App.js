@@ -4,11 +4,13 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import AllRoute from "./Route/AllRoute";
 import { API_URL } from "./API_URL";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getPosts } from "./slice/userSlice";
 function App() {
-  const { user } = useSelector((state) => {
+  const { user, posts, isLoading, error } = useSelector((state) => {
     return state.user;
   });
+  const dispatch = useDispatch();
   console.log("user id in redux: ", user.id);
   useEffect(() => {
     async function helloWorld() {
@@ -20,6 +22,12 @@ function App() {
       }
     }
     helloWorld();
+  }, []);
+  useEffect(() => {
+    dispatch(getPosts());
+    console.log("posts : ", posts);
+    console.log("posts loading :  ", isLoading);
+    console.log("posts error : ", error);
   }, []);
   return (
     <>
