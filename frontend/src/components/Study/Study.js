@@ -1,6 +1,8 @@
 import React from "react";
 import { AiOutlineArrowLeft } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import useGetPostsById from "../../hooks/useGetPostsById";
 import {
   StudyContainer,
   StudyHeadSection,
@@ -38,18 +40,25 @@ function Study() {
   const onGoBack = () => {
     navigate(-1);
   };
+  const { posts, user } = useSelector((state) => {
+    return state.user;
+  });
+  const { id } = useParams();
+  const post = useGetPostsById(id);
+  console.log(`id : ${id}`);
+  console.log(post);
   return (
     <StudyContainer>
       <StudyHeadSection>
         <AiOutlineArrowLeft onClick={onGoBack} />
-        <StudyHeadTitle>
-          [서울대입구역, 낙성대역] 모각코 구합니다
-        </StudyHeadTitle>
+        <StudyHeadTitle>{post.title}</StudyHeadTitle>
         <StudyHeadUserAndDate>
           <StudyHeadUserBox>
             <AiOutlineArrowLeft />
-            <StudyHeadUserName>말하는콩순이</StudyHeadUserName>
-            <StudyHeadRegisterDate>2022.12.21</StudyHeadRegisterDate>
+            <StudyHeadUserName>{post.user.nickName}</StudyHeadUserName>
+            <StudyHeadRegisterDate>
+              {post.createDate.slice(0, 10).replace(/-/gi, " . ")}
+            </StudyHeadRegisterDate>
           </StudyHeadUserBox>
         </StudyHeadUserAndDate>
 
@@ -64,12 +73,7 @@ function Study() {
       </StudyHeadSection>
       <StudyProjectBox>
         <StudyProjectInfo>프로젝트 소개</StudyProjectInfo>
-        <StudyProjectDetail>
-          {`혼자 공부하기 어려우셨던 취준생 분들 계신가요?
-            같이 감시하면서 공부하는건 어떨까요? 주중 아침에 모여서 오늘 할 일 브리핑하고, 오늘 할
-          일 다 끝내야 집에 갈 수 있습니다. 모여서 각자 공부하면 될 것 같습니다.
-          관심있으신 분들은 연락주세요.`}
-        </StudyProjectDetail>
+        <StudyProjectDetail>{post.detail}</StudyProjectDetail>
       </StudyProjectBox>
 
       <StudyCommentBox>

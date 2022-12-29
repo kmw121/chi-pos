@@ -47,6 +47,7 @@ function RegisterContainer() {
   useEffect(() => {
     authCheck(dispatch, navigate, user);
   }, []);
+  console.log(toStringByFormatting(new Date(dataForm.datePickerValue)));
   const onSubmit = async () => {
     try {
       const res = await axios.get(API_URL + `/user/${user.id}`, {

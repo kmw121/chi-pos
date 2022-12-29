@@ -96,6 +96,8 @@ export const MainContentsAppStudyA = styled.a`
   position: relative;
   cursor: pointer;
   transition: 0.2s ease-in;
+  text-decoration: none !important;
+  color: inherit;
 `;
 export const MainContentsAppStudyLi = styled.li`
   padding: 0;
@@ -120,6 +122,7 @@ export const MainContentsAppStudyTitle = styled.h1`
   -webkit-line-clamp: 2;
   word-break: break-all;
   overflow: hidden;
+  text-decoration: none;
 `;
 export const MainContentsAppStudyTag = styled.ul`
   display: flex;
@@ -155,7 +158,27 @@ export const MainContentsAppStudyInfo = styled.section`
   border-top: 2px solid #f2f2f2;
   padding-top: 16px;
 `;
-
+export const MainContentsAppStudyInfoUserBox = styled.div`
+  display: flex;
+  align-items: center;
+  position: relative;
+`;
+export const MainContentsAppStudyInfoUserName = styled.div`
+  font-size: 18px;
+  font-weight: 400;
+`;
+export const MainContentsAppStudyInfoRightBox = styled.div`
+  display: flex;
+  grid-gap: 12px;
+  gap: 12px;
+`;
+export const MainContentsAppStudyInfoRightDetail = styled.div`
+  display: flex;
+  align-items: center;
+  color: #999;
+  grid-gap: 6px;
+  gap: 6px;
+`;
 export const MainHeadNav = styled.nav`
   margin: auto;
   max-width: 1180px;
