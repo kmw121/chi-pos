@@ -4,5 +4,6 @@ export default function useGetPostsById(id) {
   const { posts } = useSelector((state) => {
     return state.user;
   });
-  return posts[id - 1];
+  const post = posts.filter((data) => String(data.id) === id);
+  return post[0];
 }

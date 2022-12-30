@@ -880,8 +880,90 @@ export const StudyButton = styled.div`
   cursor: pointer;
   outline: none;
   border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
+export const StudyAuthBtnSection = styled.section`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  gap: 5px;
+`;
+export const StudyAuthBtn = styled.button`
+  font-size: 16px;
+  color: #444;
+  outline: none;
+  border: none;
+  background-color: #fff;
+  cursor: pointer;
+`;
+export const StudyCommentUl = styled.ul`
+  width: 100%;
+  box-sizing: border-box;
+`;
+export const StudyCommentLi = styled.li`
+  display: flex;
+  flex-direction: column;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid #e1e1e1;
+  box-sizing: border-box;
+`;
+export const StudyCommentHead = styled.section`
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+`;
+export const StudyCommentHeadBox = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 18px;
+  box-sizing: border-box;
+`;
+export const StudyCommentHeadImg = styled.img`
+  display: block;
+  width: 52px;
+  height: 52px;
+  margin-right: 16px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-sizing: border-box;
+`;
+export const StudyCommentHeadNameDateBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+`;
+export const StudyCommentHeadName = styled.div`
+  color: #333;
+  font-weight: 700;
+  box-sizing: border-box;
+`;
+export const StudyCommentHeadDate = styled.div`
+  font-size: 14px;
+  line-height: 126.5%;
+  letter-spacing: -0.005em;
+  box-sizing: border-box;
+  color: #9f9f9f;
+`;
+export const StudyCommentMain = styled.section`
+  font-size: 1.125rem;
+  line-height: 1.7;
+  letter-spacing: -0.004em;
+  word-break: break-all;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+`;
+export const StudyCommentMainText = styled.p`
+  font-size: 1.125rem;
+  line-height: 1.7;
+  letter-spacing: -0.004em;
+  word-break: break-all;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+`;
 ///////////////////////////////////////
 /////////////MAIN HEAD DROPDOWN////////
 ///////////////////////////////////////
