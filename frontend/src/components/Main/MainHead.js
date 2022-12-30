@@ -42,7 +42,18 @@ function MainHead({ login, setLogin }) {
     <>
       <MainHeadNav>
         <a href="/">
-          <img alt="LOGO" src={"favicon.ico"} />
+          <img
+            alt="LOGO"
+            src={"/logo/NextJs.png"}
+            style={{
+              width: "3rem",
+              height: "3rem",
+              display: "block",
+              marginRight: "16px",
+              borderRadius: "50%",
+              objectFit: "cover",
+            }}
+          />
         </a>
         <MainHeadNavRight>
           <MainHeadNavBtn onClick={onGoToRegister}>새 글 쓰기</MainHeadNavBtn>

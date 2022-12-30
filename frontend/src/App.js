@@ -11,7 +11,6 @@ function App() {
     return state.user;
   });
   const dispatch = useDispatch();
-  console.log("user id in redux: ", user.id);
   useEffect(() => {
     async function helloWorld() {
       try {
@@ -25,9 +24,6 @@ function App() {
   }, []);
   useEffect(() => {
     dispatch(getPosts());
-    console.log("posts : ", posts);
-    console.log("posts loading :  ", isLoading);
-    console.log("posts error : ", error);
   }, []);
   return (
     <>
