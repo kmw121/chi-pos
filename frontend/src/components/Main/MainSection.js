@@ -40,8 +40,6 @@ function MainSection() {
       name: "ETC",
     },
   ]);
-  // 이 isShown : true || false로 render 결정하는거 어떰?
-  // useRef 이용해서 게시판 input rerendering 막을것
   const [sectionStack, setSectionStack] = useState([
     { name: "JavaScript", category: "FE", isPopular: true },
     { name: "TypeScript", category: "FE", isPopular: true },
@@ -64,6 +62,7 @@ function MainSection() {
     );
     setSectionTextList(changeList);
   };
+  // console.log("selected Stack : ", selectedStack);
   const onClickCategoryStackChanged = (category) => {
     const changeStack = [...stacks].filter((a) =>
       category.category === "모두보기"

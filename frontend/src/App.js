@@ -12,17 +12,7 @@ function App() {
     return state.user;
   });
   const dispatch = useDispatch();
-  // useEffect(() => {
-  //   async function helloWorld() {
-  //     try {
-  //       const res = await axios.get(API_URL + "/posts");
-  //       console.log("글 정보", res);
-  //     } catch (err) {
-  //       throw new Error(err);
-  //     }
-  //   }
-  //   helloWorld();
-  // }, []);
+  const { list, loadingStatus } = usePostsSearch();
   useEffect(() => {
     dispatch(getPosts());
   }, []);
