@@ -55,6 +55,7 @@ function Study() {
   console.log("댓글 : ", comment);
   const { id } = useParams();
   const post = useGetPostsById(id);
+  console.log("post in study : ", post);
   const onDeadline = async () => {
     if (window.confirm("마감하시겠습니까?")) {
       try {

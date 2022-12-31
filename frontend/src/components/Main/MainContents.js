@@ -26,11 +26,15 @@ import {
   MainContentsAppStudyInfoRightDetail,
 } from "../components";
 import { useSelector } from "react-redux";
+import usePostsSearch from "../../hooks/usePostsSearch";
 function MainContents() {
   const { posts } = useSelector((state) => {
     return state.user;
   });
-  console.log("psts in contents component : ", posts);
+  const { list, loadingStatus } = usePostsSearch();
+  console.log("list : ", list);
+  // console.log("psts in contents component : ", posts);
+  // console.log(list.map((a) => a.postStack.map((b) => b.stack.name)));
   return (
     <MainContentsMain>
       <MainContentsCategoryContainer>
@@ -57,99 +61,102 @@ function MainContents() {
       <MainContentsAppContainer>
         <MainContentsAppStudyUl>
           {/* ///////////////////////////////// */}
-          {posts.map((content) => (
-            <MainContentsAppStudyA
-              key={content.id + content.createDate}
-              href={`/study/${content.id}`}
-            >
-              <MainContentsAppStudyLi>
-                <MainContentsAppSchedule>
-                  <p>시작 예정일 |</p>
-                  <p>{content.startDate.slice(0, 10).replace(/-/gi, " . ")}</p>
-                </MainContentsAppSchedule>
-                <MainContentsAppStudyTitle>
-                  {content.title}
-                </MainContentsAppStudyTitle>
+          {list &&
+            list.map((content) => (
+              <MainContentsAppStudyA
+                key={content.id + content.createDate}
+                href={`/study/${content.id}`}
+              >
+                <MainContentsAppStudyLi>
+                  <MainContentsAppSchedule>
+                    <p>시작 예정일 |</p>
+                    <p>
+                      {content.startDate.slice(0, 10).replace(/-/gi, " . ")}
+                    </p>
+                  </MainContentsAppSchedule>
+                  <MainContentsAppStudyTitle>
+                    {content.title}
+                  </MainContentsAppStudyTitle>
 
-                <MainContentsAppStudyTag>
-                  <MainContentsAppStudyTagLi>
-                    #{content.category}
-                  </MainContentsAppStudyTagLi>
-                  <MainContentsAppStudyTagLi>
-                    {content.howto !== null && `#${content.howto}`}
-                  </MainContentsAppStudyTagLi>
-                  <MainContentsAppStudyTagLi>
-                    #{content.people}
-                  </MainContentsAppStudyTagLi>
-                  <MainContentsAppStudyTagLi>
-                    #{content.duration}
-                  </MainContentsAppStudyTagLi>
-                </MainContentsAppStudyTag>
+                  <MainContentsAppStudyTag>
+                    <MainContentsAppStudyTagLi>
+                      #{content.category}
+                    </MainContentsAppStudyTagLi>
+                    <MainContentsAppStudyTagLi>
+                      {content.howto !== null && `#${content.howto}`}
+                    </MainContentsAppStudyTagLi>
+                    <MainContentsAppStudyTagLi>
+                      #{content.people}
+                    </MainContentsAppStudyTagLi>
+                    <MainContentsAppStudyTagLi>
+                      #{content.duration}
+                    </MainContentsAppStudyTagLi>
+                  </MainContentsAppStudyTag>
 
-                <MainContentsAppStudyImgUl>
-                  <MainContentsAppStudyImgLi>
+                  <MainContentsAppStudyImgUl>
+                    <MainContentsAppStudyImgLi>
+                      <img
+                        style={{
+                          width: "48px",
+                          height: "48px",
+                          borderRadius: "30px",
+                        }}
+                        src={"favicon.ico"}
+                        alt="hello world"
+                      />
+                    </MainContentsAppStudyImgLi>
+                    <MainContentsAppStudyImgLi>
+                      <img
+                        style={{
+                          width: "48px",
+                          height: "48px",
+                          borderRadius: "30px",
+                        }}
+                        src={"favicon.ico"}
+                        alt="hello world"
+                      />
+                    </MainContentsAppStudyImgLi>
+                    <MainContentsAppStudyImgLi>
+                      <img
+                        style={{
+                          width: "48px",
+                          height: "48px",
+                          borderRadius: "30px",
+                        }}
+                        src={"favicon.ico"}
+                        alt="hello world"
+                      />
+                    </MainContentsAppStudyImgLi>
+                  </MainContentsAppStudyImgUl>
+                </MainContentsAppStudyLi>
+                <MainContentsAppStudyInfo>
+                  <MainContentsAppStudyInfoUserBox>
                     <img
-                      style={{
-                        width: "48px",
-                        height: "48px",
-                        borderRadius: "30px",
-                      }}
                       src={"favicon.ico"}
                       alt="hello world"
-                    />
-                  </MainContentsAppStudyImgLi>
-                  <MainContentsAppStudyImgLi>
-                    <img
-                      style={{
-                        width: "48px",
-                        height: "48px",
-                        borderRadius: "30px",
-                      }}
-                      src={"favicon.ico"}
-                      alt="hello world"
-                    />
-                  </MainContentsAppStudyImgLi>
-                  <MainContentsAppStudyImgLi>
-                    <img
-                      style={{
-                        width: "48px",
-                        height: "48px",
-                        borderRadius: "30px",
-                      }}
-                      src={"favicon.ico"}
-                      alt="hello world"
-                    />
-                  </MainContentsAppStudyImgLi>
-                </MainContentsAppStudyImgUl>
-              </MainContentsAppStudyLi>
-              <MainContentsAppStudyInfo>
-                <MainContentsAppStudyInfoUserBox>
-                  <img
-                    src={"favicon.ico"}
-                    alt="hello world"
-                    style={{ width: "28px", height: "28px" }}
-                  />
-                  <MainContentsAppStudyInfoUserName>
-                    {content.user.nickName}
-                  </MainContentsAppStudyInfoUserName>
-                </MainContentsAppStudyInfoUserBox>
-                <MainContentsAppStudyInfoRightBox>
-                  <MainContentsAppStudyInfoRightDetail>
-                    <AiOutlineEye style={{ width: "28px", height: "28px" }} />
-                    {/* 조회수 들어갈 자리 */}
-                    <p>0</p>
-                  </MainContentsAppStudyInfoRightDetail>
-                  <MainContentsAppStudyInfoRightDetail>
-                    <AiOutlineMessage
                       style={{ width: "28px", height: "28px" }}
                     />
-                    {/* 댓글 갯수 들어갈 자리 */}
-                    <p>0</p>
-                  </MainContentsAppStudyInfoRightDetail>
-                </MainContentsAppStudyInfoRightBox>
-              </MainContentsAppStudyInfo>
-            </MainContentsAppStudyA>
-          ))}
+                    <MainContentsAppStudyInfoUserName>
+                      {content.user.nickName}
+                    </MainContentsAppStudyInfoUserName>
+                  </MainContentsAppStudyInfoUserBox>
+                  <MainContentsAppStudyInfoRightBox>
+                    <MainContentsAppStudyInfoRightDetail>
+                      <AiOutlineEye style={{ width: "28px", height: "28px" }} />
+                      {/* 조회수 들어갈 자리 */}
+                      <p>0</p>
+                    </MainContentsAppStudyInfoRightDetail>
+                    <MainContentsAppStudyInfoRightDetail>
+                      <AiOutlineMessage
+                        style={{ width: "28px", height: "28px" }}
+                      />
+                      {/* 댓글 갯수 들어갈 자리 */}
+                      <p>0</p>
+                    </MainContentsAppStudyInfoRightDetail>
+                  </MainContentsAppStudyInfoRightBox>
+                </MainContentsAppStudyInfo>
+              </MainContentsAppStudyA>
+            ))}
         </MainContentsAppStudyUl>
       </MainContentsAppContainer>
     </MainContentsMain>

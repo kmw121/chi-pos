@@ -3,7 +3,16 @@ import axios from "axios";
 import { API_URL } from "../API_URL";
 
 export const getPosts = createAsyncThunk("getPosts", async () => {
-  const res = await axios.get(API_URL + "/posts");
+  const res = await axios.post(
+    API_URL + "/posts",
+    {
+      size: 6,
+      page: 1,
+    },
+    {
+      headers: { "Content-Type": "application/json" },
+    }
+  );
   return res.data.data;
 });
 
