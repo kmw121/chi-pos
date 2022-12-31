@@ -14,8 +14,12 @@ import {
 } from "../components";
 import { stacks } from "../../stack";
 import Select from "react-select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MainHead from "../Main/MainHead";
+import { useDispatch, useSelector } from "react-redux";
+import { API_URL } from "../../API_URL";
+import authCheck from "../../util/authCheck";
+import { useNavigate } from "react-router-dom";
 function SettingDetail() {
   const [stack, setStack] = useState({});
   const stackArray = stacks
@@ -32,14 +36,24 @@ function SettingDetail() {
       return { ...prev, value };
     });
   };
-
+  const { user } = useSelector((state) => {
+    return state.user;
+  });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  useEffect(() => {
+    authCheck(dispatch, navigate, user);
+  }, []);
   return (
     <>
       <MainHead />
       <SettingContainer>
         <h1>내 정보 수정</h1>
         <SettingImgBox>
-          <SettingImg src="asdf" alt="asdf" />
+          <SettingImg
+          // src={API_URL + userInfo.data.imageUrl}
+          // alt="asdfasdfasdfasdfasdf"
+          />
           <SettingImgBtnBox>
             <SettingImgBtnBoxLabel>이미지 선택</SettingImgBtnBoxLabel>
             <SettingImgBtnBoxBtn>이미지 제거</SettingImgBtnBoxBtn>

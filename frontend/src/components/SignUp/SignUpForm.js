@@ -170,12 +170,12 @@ function SignUpForm() {
             setDupCheck((prev) => {
               return { ...prev, username: true };
             });
-            alert("닉네임을 설정하셨습니다.");
+            alert("이메일을 설정하셨습니다.");
           } else {
             alert("취소되었습니다.");
           }
         } else if (res.data.code === 1) {
-          alert("이미 존재하는 닉네임입니다.");
+          alert("이미 존재하는 이메일입니다.");
         }
       } catch (err) {
         throw new Error(err);

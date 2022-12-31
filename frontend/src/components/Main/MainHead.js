@@ -12,14 +12,12 @@ import {
 import ModalPortal from "../../Portal/ModalPortal";
 import SignInForm from "../SignIn/SignInForm";
 import { useCookies } from "react-cookie";
-
+import { logout } from "../../util/logout";
+import { useDispatch } from "react-redux";
 function MainHead({ login, setLogin }) {
   const [cookies, setCookies, removeCookie] = useCookies(["jwtToken"]);
-  const handleLogOut = () => {
-    removeCookie(["jwtToken"]);
-    alert("로그아웃되었습니다.");
-  };
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const onGoToRegister = () => {
     navigate("/register");
   };
@@ -44,7 +42,18 @@ function MainHead({ login, setLogin }) {
     <>
       <MainHeadNav>
         <a href="/">
-          <img alt="LOGO" src={"favicon.ico"} />
+          <img
+            alt="LOGO"
+            src={"/logo/NextJs.png"}
+            style={{
+              width: "3rem",
+              height: "3rem",
+              display: "block",
+              marginRight: "16px",
+              borderRadius: "50%",
+              objectFit: "cover",
+            }}
+          />
         </a>
         <MainHeadNavRight>
           <MainHeadNavBtn onClick={onGoToRegister}>새 글 쓰기</MainHeadNavBtn>
@@ -60,7 +69,7 @@ function MainHead({ login, setLogin }) {
                     <MainHeadDropdownLi onClick={onGoToSetting}>
                       설정
                     </MainHeadDropdownLi>
-                    <MainHeadDropdownLi onClick={handleLogOut}>
+                    <MainHeadDropdownLi onClick={() => logout(dispatch)}>
                       로그아웃
                     </MainHeadDropdownLi>
                   </MainHeadDropdownUl>
@@ -77,11 +86,7 @@ function MainHead({ login, setLogin }) {
       </MainHeadNav>
       {modalOpen && (
         <ModalPortal>
-          <SignInForm
-            login={login}
-            setLogin={setLogin}
-            onToggle={toggleModal}
-          />
+          <SignInForm onToggle={toggleModal} />
         </ModalPortal>
       )}
     </>

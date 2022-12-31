@@ -18,7 +18,7 @@ function AllRoute({ login, setLogin }) {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/myPosts" element={<MyPostsPage />} />
         <Route path="/setting" element={<Setting />} />
-        <Route path="/study" element={<StudyPage />} />
+        <Route path="/study/:id" element={<StudyPage />} />
       </Routes>
     </BrowserRouter>
   );

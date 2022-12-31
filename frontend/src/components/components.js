@@ -96,6 +96,8 @@ export const MainContentsAppStudyA = styled.a`
   position: relative;
   cursor: pointer;
   transition: 0.2s ease-in;
+  text-decoration: none !important;
+  color: inherit;
 `;
 export const MainContentsAppStudyLi = styled.li`
   padding: 0;
@@ -120,6 +122,7 @@ export const MainContentsAppStudyTitle = styled.h1`
   -webkit-line-clamp: 2;
   word-break: break-all;
   overflow: hidden;
+  text-decoration: none;
 `;
 export const MainContentsAppStudyTag = styled.ul`
   display: flex;
@@ -155,7 +158,27 @@ export const MainContentsAppStudyInfo = styled.section`
   border-top: 2px solid #f2f2f2;
   padding-top: 16px;
 `;
-
+export const MainContentsAppStudyInfoUserBox = styled.div`
+  display: flex;
+  align-items: center;
+  position: relative;
+`;
+export const MainContentsAppStudyInfoUserName = styled.div`
+  font-size: 18px;
+  font-weight: 400;
+`;
+export const MainContentsAppStudyInfoRightBox = styled.div`
+  display: flex;
+  grid-gap: 12px;
+  gap: 12px;
+`;
+export const MainContentsAppStudyInfoRightDetail = styled.div`
+  display: flex;
+  align-items: center;
+  color: #999;
+  grid-gap: 6px;
+  gap: 6px;
+`;
 export const MainHeadNav = styled.nav`
   margin: auto;
   max-width: 1180px;
@@ -498,7 +521,7 @@ export const SettingContainer = styled.div`
 export const SettingImgBox = styled.div`
   display: flex;
 `;
-export const SettingImg = styled.div`
+export const SettingImg = styled.img`
   display: block;
   height: 10rem;
   width: 10rem;
@@ -648,7 +671,7 @@ export const ModalBackground = styled.div`
 `;
 export const ModalContainer = styled.div`
   width: 800px;
-  height: 550px;
+  // height: 550px;
   box-shadow: 0 2px 12px 0 rgb(0 0 0 / 9%);
   position: absolute;
   display: flex;
@@ -857,8 +880,90 @@ export const StudyButton = styled.div`
   cursor: pointer;
   outline: none;
   border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
+export const StudyAuthBtnSection = styled.section`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  gap: 5px;
+`;
+export const StudyAuthBtn = styled.button`
+  font-size: 16px;
+  color: #444;
+  outline: none;
+  border: none;
+  background-color: #fff;
+  cursor: pointer;
+`;
+export const StudyCommentUl = styled.ul`
+  width: 100%;
+  box-sizing: border-box;
+`;
+export const StudyCommentLi = styled.li`
+  display: flex;
+  flex-direction: column;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid #e1e1e1;
+  box-sizing: border-box;
+`;
+export const StudyCommentHead = styled.section`
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+`;
+export const StudyCommentHeadBox = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 18px;
+  box-sizing: border-box;
+`;
+export const StudyCommentHeadImg = styled.img`
+  display: block;
+  width: 52px;
+  height: 52px;
+  margin-right: 16px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-sizing: border-box;
+`;
+export const StudyCommentHeadNameDateBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+`;
+export const StudyCommentHeadName = styled.div`
+  color: #333;
+  font-weight: 700;
+  box-sizing: border-box;
+`;
+export const StudyCommentHeadDate = styled.div`
+  font-size: 14px;
+  line-height: 126.5%;
+  letter-spacing: -0.005em;
+  box-sizing: border-box;
+  color: #9f9f9f;
+`;
+export const StudyCommentMain = styled.section`
+  font-size: 1.125rem;
+  line-height: 1.7;
+  letter-spacing: -0.004em;
+  word-break: break-all;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+`;
+export const StudyCommentMainText = styled.p`
+  font-size: 1.125rem;
+  line-height: 1.7;
+  letter-spacing: -0.004em;
+  word-break: break-all;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+`;
 ///////////////////////////////////////
 /////////////MAIN HEAD DROPDOWN////////
 ///////////////////////////////////////
@@ -891,4 +996,67 @@ export const MainHeadDropdownA = styled.a`
   text-decoration: none;
   line-height: 1.5;
   font-weight: 500;
+`;
+
+////////////////////////////////////////////
+///////////////SOCIAL///////////////////////
+////////////////////////////////////////////
+
+export const ModalBtnContainer = styled.section`
+  margin-top: 4rem;
+  width: 60%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+export const ModalBtnBox = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+export const ModalBtnGoogle = styled.button`
+  width: 8rem;
+  height: 8rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  transition: all 0.125s ease-in 0s;
+  color: #fff;
+  box-shadow: 0 5px 25px rgb(0 0 0 / 15%);
+  border: none;
+`;
+export const ModalBtnGithub = styled.button`
+  width: 8rem;
+  height: 8rem;
+  border-radius: 10px;
+  outline: none;
+  transition: all 0.125s ease-in 0s;
+  color: #fff;
+  background-color: #272e33;
+  box-shadow: 0 5px 25px rgb(0 0 0 / 15%);
+  border: none;
+`;
+export const ModalBtnKakao = styled.button`
+  width: 8rem;
+  height: 8rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  transition: all 0.125s ease-in 0s;
+  color: #fff;
+  box-shadow: 0 5px 25px rgb(0 0 0 / 15%);
+  background-color: #fae100;
+  border: none;
+`;
+export const ModalBtnText = styled.p`
+  margin-top: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 126.5%;
+  text-align: center;
+  letter-spacing: -0.005em;
+  color: #565656;
 `;

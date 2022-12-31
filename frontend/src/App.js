@@ -1,37 +1,35 @@
 // src/main/frontend/src/App.js
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import AllRoute from "./Route/AllRoute";
 import { API_URL } from "./API_URL";
-import { useCookies } from "react-cookie";
+import { useDispatch, useSelector } from "react-redux";
+import { getPosts } from "./slice/userSlice";
+import usePostsSearch from "./hooks/usePostsSearch";
 function App() {
-  const [login, setLogin] = useState(false);
-  const [cookies, setCookie] = useCookies(["jwtToken"]);
+  const { user, posts, isLoading, error } = useSelector((state) => {
+    return state.user;
+  });
+  const dispatch = useDispatch();
+  // useEffect(() => {
+  //   async function helloWorld() {
+  //     try {
+  //       const res = await axios.get(API_URL + "/posts");
+  //       console.log("글 정보", res);
+  //     } catch (err) {
+  //       throw new Error(err);
+  //     }
+  //   }
+  //   helloWorld();
+  // }, []);
   useEffect(() => {
-    async function testApiCall() {
-      // axios.defaults.headers.common[
-      //   "Authorization"
-      // ] = `Bearer ${cookies.jwtToken.jwtToken.accessToken}`;
-      try {
-        const res = await axios.get(API_URL + "/user/3", {
-          headers: cookies,
-          //여기 오류 수정예정...
-          //     withCredentials: true,
-        });
-        console.log(res);
-        console.log("cookies : ", cookies);
-      } catch (err) {
-        throw new Error(err);
-      }
-    }
-    testApiCall();
+    dispatch(getPosts());
   }, []);
-  // console.log(cookies.jwtToken.jwtToken.accessToken);
-  //  console.log("app.js cookies : ", cookies.jwtToken.jwtToken.accessToken);
+  usePostsSearch();
   return (
     <>
-      <AllRoute login={login} setLogin={setLogin} />
+      <AllRoute />
     </>
   );
 }
