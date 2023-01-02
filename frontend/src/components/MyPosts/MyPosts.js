@@ -10,6 +10,7 @@ import { BsFillJournalBookmarkFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import authCheck from "../../util/authCheck";
+import getMyPost from "../../util/getMyPost";
 function MyPosts() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ function MyPosts() {
   });
   useEffect(() => {
     authCheck(dispatch, navigate, user);
+    getMyPost(dispatch, navigate);
   }, []);
   return (
     <MyPostsContainer>

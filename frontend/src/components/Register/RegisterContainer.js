@@ -9,8 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import toStringByFormatting from "../../util/toStringByFormatting";
 import axios from "axios";
-import { API_URL } from "../../API_URL";
-import { getCookie, deleteCookie, setCookie } from "../../cookie";
+import { API_URL } from "../../util/API_URL";
+import { getCookie, deleteCookie, setCookie } from "../../util/cookie";
 import { setUserInfo, setUser } from "../../slice/userSlice";
 function RegisterContainer() {
   const [dataForm, steDataForm] = useState({
@@ -28,7 +28,7 @@ function RegisterContainer() {
   const [editorValue, setEditorValue] = useState("");
   const submitForm = {
     id: null,
-    category: dataForm.category,
+    categoryType: dataForm.category,
     people: dataForm.people,
     howto: dataForm.howto,
     duration: dataForm.duration,
@@ -55,6 +55,7 @@ function RegisterContainer() {
           Authorization: `${getCookie("jwtToken")}`,
         },
       });
+      console.log("res : ", res);
       if (res.data.code === -1) {
         deleteCookie(["jwtToken"]);
         deleteCookie(["refreshToken"]);
@@ -84,6 +85,8 @@ function RegisterContainer() {
               alert("등록이 완료되었습니다.");
               navigate("/");
             } else if (response.data.code === -1) {
+              console.log(res);
+              console.log(response);
               alert("알 수 없는 오류로 등록에 실패하였습니다.");
               navigate("/");
             }
@@ -96,6 +99,7 @@ function RegisterContainer() {
           const response = await axios.post(API_URL + "/post", submitForm, {
             headers: { Authorization: `${getCookie("jwtToken")}` },
           });
+          console.log("response : ", response);
           if (response.data.code === 1) {
             alert("등록이 완료되었습니다.");
             navigate("/");

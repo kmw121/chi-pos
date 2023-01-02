@@ -1,6 +1,12 @@
 import React from "react";
-import { CiInstagram, CiCloudOn, CiEdit } from "react-icons/ci";
-import { AiOutlineEye, AiOutlineMessage } from "react-icons/ai";
+import FadeLoader from "react-spinners/FadeLoader";
+import {
+  AiOutlineEye,
+  AiOutlineMessage,
+  AiOutlineCloud,
+  AiOutlineEdit,
+  AiOutlineInstagram,
+} from "react-icons/ai";
 import {
   MainContentsAppContainer,
   MainContentsMain,
@@ -25,26 +31,34 @@ import {
   MainContentsAppStudyInfoRightBox,
   MainContentsAppStudyInfoRightDetail,
 } from "../components";
-import { useSelector } from "react-redux";
+import usePostsSearch from "../../hooks/usePostsSearch";
+import { API_URL } from "../../util/API_URL";
+import axios from "axios";
 function MainContents() {
-  const { posts } = useSelector((state) => {
-    return state.user;
-  });
-  console.log("psts in contents component : ", posts);
+  const { list, loadingStatus } = usePostsSearch();
+  usePostsSearch();
+  const onClickView = async (id) => {
+    try {
+      await axios.get(API_URL + `/post/view/${id}`);
+    } catch (err) {
+      throw new Error(err);
+    }
+  };
+  console.log(list);
   return (
     <MainContentsMain>
       <MainContentsCategoryContainer>
         <MainContentsCategoryInnerContainer>
           <MainContentsCategoryItem>
-            {/* <CiCloudOn /> */}
+            <AiOutlineCloud />
             전체
           </MainContentsCategoryItem>
           <MainContentsCategoryItem>
-            {/* <CiEdit /> */}
+            <AiOutlineEdit />
             스터디
           </MainContentsCategoryItem>
           <MainContentsCategoryItem>
-            {/* <CiInstagram /> */}
+            <AiOutlineInstagram />
             프로젝트
           </MainContentsCategoryItem>
         </MainContentsCategoryInnerContainer>
@@ -57,100 +71,106 @@ function MainContents() {
       <MainContentsAppContainer>
         <MainContentsAppStudyUl>
           {/* ///////////////////////////////// */}
-          {posts.map((content) => (
-            <MainContentsAppStudyA
-              key={content.id + content.createDate}
-              href={`/study/${content.id}`}
-            >
-              <MainContentsAppStudyLi>
-                <MainContentsAppSchedule>
-                  <p>시작 예정일 |</p>
-                  <p>{content.startDate.slice(0, 10).replace(/-/gi, " . ")}</p>
-                </MainContentsAppSchedule>
-                <MainContentsAppStudyTitle>
-                  {content.title}
-                </MainContentsAppStudyTitle>
+          {list &&
+            list.map((content) => (
+              <MainContentsAppStudyA
+                key={content.id}
+                href={`/study/${content.id}`}
+                onClick={() => onClickView(content.id)}
+              >
+                <MainContentsAppStudyLi>
+                  <MainContentsAppSchedule>
+                    <p>시작 예정일 |</p>
+                    <p>
+                      {content.startDate.slice(0, 10).replace(/-/gi, " . ")}
+                    </p>
+                  </MainContentsAppSchedule>
+                  <MainContentsAppStudyTitle>
+                    {content.title}
+                  </MainContentsAppStudyTitle>
 
-                <MainContentsAppStudyTag>
-                  <MainContentsAppStudyTagLi>
-                    #{content.category}
-                  </MainContentsAppStudyTagLi>
-                  <MainContentsAppStudyTagLi>
-                    {content.howto !== null && `#${content.howto}`}
-                  </MainContentsAppStudyTagLi>
-                  <MainContentsAppStudyTagLi>
-                    #{content.people}
-                  </MainContentsAppStudyTagLi>
-                  <MainContentsAppStudyTagLi>
-                    #{content.duration}
-                  </MainContentsAppStudyTagLi>
-                </MainContentsAppStudyTag>
+                  <MainContentsAppStudyTag>
+                    <MainContentsAppStudyTagLi>
+                      #{content.category}
+                    </MainContentsAppStudyTagLi>
+                    <MainContentsAppStudyTagLi>
+                      {content.howto !== null && `#${content.howto}`}
+                    </MainContentsAppStudyTagLi>
+                    <MainContentsAppStudyTagLi>
+                      #{content.people}
+                    </MainContentsAppStudyTagLi>
+                    <MainContentsAppStudyTagLi>
+                      #{content.duration}
+                    </MainContentsAppStudyTagLi>
+                  </MainContentsAppStudyTag>
 
-                <MainContentsAppStudyImgUl>
-                  <MainContentsAppStudyImgLi>
+                  <MainContentsAppStudyImgUl>
+                    {content.postStack.map((stack) => (
+                      <MainContentsAppStudyImgLi key={stack.stack.id}>
+                        <img
+                          style={{
+                            width: "48px",
+                            height: "48px",
+                            // borderRadius: "30px",
+                          }}
+                          src={`./logo/${stack.stack.name}.png`}
+                          alt={stack.stack.name}
+                        />
+                      </MainContentsAppStudyImgLi>
+                    ))}
+                  </MainContentsAppStudyImgUl>
+                </MainContentsAppStudyLi>
+                <MainContentsAppStudyInfo>
+                  <MainContentsAppStudyInfoUserBox>
                     <img
-                      style={{
-                        width: "48px",
-                        height: "48px",
-                        borderRadius: "30px",
-                      }}
                       src={"favicon.ico"}
                       alt="hello world"
-                    />
-                  </MainContentsAppStudyImgLi>
-                  <MainContentsAppStudyImgLi>
-                    <img
                       style={{
-                        width: "48px",
-                        height: "48px",
+                        width: "28px",
+                        height: "28px",
                         borderRadius: "30px",
+                        marginRight: "10px",
                       }}
-                      src={"favicon.ico"}
-                      alt="hello world"
                     />
-                  </MainContentsAppStudyImgLi>
-                  <MainContentsAppStudyImgLi>
-                    <img
-                      style={{
-                        width: "48px",
-                        height: "48px",
-                        borderRadius: "30px",
-                      }}
-                      src={"favicon.ico"}
-                      alt="hello world"
-                    />
-                  </MainContentsAppStudyImgLi>
-                </MainContentsAppStudyImgUl>
-              </MainContentsAppStudyLi>
-              <MainContentsAppStudyInfo>
-                <MainContentsAppStudyInfoUserBox>
-                  <img
-                    src={"favicon.ico"}
-                    alt="hello world"
-                    style={{ width: "28px", height: "28px" }}
-                  />
-                  <MainContentsAppStudyInfoUserName>
-                    {content.user.nickName}
-                  </MainContentsAppStudyInfoUserName>
-                </MainContentsAppStudyInfoUserBox>
-                <MainContentsAppStudyInfoRightBox>
-                  <MainContentsAppStudyInfoRightDetail>
-                    <AiOutlineEye style={{ width: "28px", height: "28px" }} />
-                    {/* 조회수 들어갈 자리 */}
-                    <p>0</p>
-                  </MainContentsAppStudyInfoRightDetail>
-                  <MainContentsAppStudyInfoRightDetail>
-                    <AiOutlineMessage
-                      style={{ width: "28px", height: "28px" }}
-                    />
-                    {/* 댓글 갯수 들어갈 자리 */}
-                    <p>0</p>
-                  </MainContentsAppStudyInfoRightDetail>
-                </MainContentsAppStudyInfoRightBox>
-              </MainContentsAppStudyInfo>
-            </MainContentsAppStudyA>
-          ))}
+                    <MainContentsAppStudyInfoUserName>
+                      {content.user.nickName}
+                    </MainContentsAppStudyInfoUserName>
+                  </MainContentsAppStudyInfoUserBox>
+                  <MainContentsAppStudyInfoRightBox>
+                    <MainContentsAppStudyInfoRightDetail>
+                      <AiOutlineEye style={{ width: "28px", height: "28px" }} />
+                      <p>{content.view}</p>
+                    </MainContentsAppStudyInfoRightDetail>
+                    <MainContentsAppStudyInfoRightDetail>
+                      <AiOutlineMessage
+                        style={{ width: "28px", height: "28px" }}
+                      />
+                      <p>{content.comments.length}</p>
+                    </MainContentsAppStudyInfoRightDetail>
+                  </MainContentsAppStudyInfoRightBox>
+                </MainContentsAppStudyInfo>
+              </MainContentsAppStudyA>
+            ))}
         </MainContentsAppStudyUl>
+        {loadingStatus && (
+          <div
+            style={{
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            <FadeLoader
+              color="#aaa"
+              height={15}
+              width={5}
+              radius={2}
+              margin={2}
+            />
+            쫌만 기둘...
+          </div>
+        )}
       </MainContentsAppContainer>
     </MainContentsMain>
   );

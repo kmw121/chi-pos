@@ -919,7 +919,6 @@ export const StudyCommentHead = styled.section`
 export const StudyCommentHeadBox = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 18px;
   box-sizing: border-box;
 `;
 export const StudyCommentHeadImg = styled.img`

@@ -1,11 +1,11 @@
 import axios from "axios";
-import React, { useState } from "react";
-import { AiOutlineArrowLeft } from "react-icons/ai";
-import { useSelector } from "react-redux";
+import React, { useEffect, useRef, useState } from "react";
+import { AiOutlineArrowLeft, AiOutlineCloseCircle } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { API_URL } from "../../API_URL";
+import { API_URL } from "../../util/API_URL";
 import useGetPostsById from "../../hooks/useGetPostsById";
-import { getCookie } from "../../cookie";
+import { getCookie, deleteCookie, setCookie } from "../../util/cookie";
 import {
   StudyContainer,
   StudyHeadSection,
@@ -43,18 +43,23 @@ import {
 } from "../components";
 import { logout } from "../../util/logout";
 function Study() {
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  useGetPostsById(id, dispatch);
   const navigate = useNavigate();
   const onGoBack = () => {
     navigate("/");
   };
-  const { userInfo, user } = useSelector((state) => {
+  const { user, currentPost } = useSelector((state) => {
     return state.user;
   });
+  console.log("user : ", user);
+  console.log("currentPost : ", currentPost);
+  const post = currentPost[0];
   const [comment, setComment] = useState("");
-  const handleComment = (e) => setComment(e.target.value);
-  console.log("댓글 : ", comment);
-  const { id } = useParams();
-  const post = useGetPostsById(id);
+  const handleCommentValue = (e) => {
+    setComment(e.target.value);
+  };
   const onDeadline = async () => {
     if (window.confirm("마감하시겠습니까?")) {
       try {
@@ -70,9 +75,8 @@ function Study() {
           alert("알 수 없는 오류가 발생하였습니다.");
           logout();
         }
-        console.log("마감 데이터 : ", res);
       } catch (err) {
-        console.log(err);
+        throw new Error(err);
       }
     }
   };
@@ -87,33 +91,102 @@ function Study() {
         if (res.data.code === 1) {
           alert("삭제되었습니다.");
           navigate("/");
+        } else if (res.data.code === 2) {
+          const nextRes = await axios.delete(API_URL + `/post/${id}`, {
+            headers: {
+              Authorization: `${getCookie("refreshToken")}`,
+            },
+          });
+          if (nextRes.data.code === 1) {
+            alert("삭제되었습니다.");
+            navigate("/");
+          } else if (nextRes.data.code === -1 || nextRes.data.code === 2) {
+            deleteCookie(["jwtToken"]);
+            deleteCookie(["refreshToken"]);
+            alert("잘못된 접근입니다. 다시 로그인해주세요.");
+            navigate("/");
+          }
         } else if (res.data.code === -1) {
           alert("알 수 없는 오류가 발생하였습니다.");
           logout();
         }
-        console.log("마감 데이터 : ", res);
       } catch (err) {
-        console.log(err);
+        throw new Error(err);
       }
     }
   };
   const onPostComment = async () => {
-    try {
-      const res = await axios.post(API_URL + "/post/comment", comment, {
-        headers: {
-          Authorization: `${getCookie("jwtToken")}`,
-        },
-      });
-      console.log(res);
-    } catch (err) {
-      console.log(err);
+    if (window.confirm("댓글을 등록하시겠습니까?")) {
+      try {
+        const res = await axios.post(
+          API_URL + "/comment",
+          { postId: post.id, detail: comment },
+          {
+            headers: {
+              Authorization: `${getCookie("jwtToken")}`,
+            },
+          }
+        );
+        if (res.data.code === 1) {
+          alert("댓글이 등록되었습니다!");
+          setComment("");
+          window.location.reload();
+        } else if (res.data.code === 2) {
+          const nextRes = await axios.post(
+            API_URL + "/comment",
+            { postId: post.id, detail: comment },
+            { headers: { Authorization: `${getCookie("refreshToken")}` } }
+          );
+          if (nextRes.data.code === 1) {
+            alert("댓글이 등록되었습니다!");
+            setComment("");
+            window.location.reload();
+          } else if (nextRes.data.code === 2 || nextRes.data.code === -1) {
+            deleteCookie(["jwtToken"]);
+            deleteCookie(["refreshToken"]);
+            alert("잘못된 접근입니다. 다시 로그인해주세요.");
+            navigate("/");
+          }
+        } else if (res.data.code === -1) {
+          alert("로그인 후 시도해주세요.");
+        }
+      } catch (err) {
+        throw new Error(err);
+      }
     }
   };
-  console.log(`id : ${id}`);
-  // console.log("post.user.id : ", post.user.id);
-  // console.log("user.id : ", user.id);
-  // console.log("post : ", post);
-  // console.log(userInfo.data === null);
+  const onDeleteComment = async (id) => {
+    if (window.confirm("댓글을 삭제하시겠습니까?")) {
+      try {
+        const res = await axios.delete(API_URL + `/comment/${id}`, {
+          headers: {
+            Authorization: `${getCookie("jwtToken")}`,
+          },
+        });
+        if (res.data.code === 1) {
+          alert("댓글이 삭제되었습니다.");
+          window.location.reload();
+        } else if (res.data.code === 2) {
+          const nextRes = await axios.delete(API_URL + `/comment/${id}`, {
+            headers: { Authorization: `${getCookie("refreshToken")}` },
+          });
+          if (nextRes.data.code === 2 || nextRes.data.code === -1) {
+            deleteCookie(["jwtToken"]);
+            deleteCookie(["refreshToken"]);
+            alert("잘못된 접근입니다. 다시 로그인해주세요.");
+            navigate("/");
+          } else if (nextRes.data.code === 1) {
+            deleteCookie("jwtToken");
+            setCookie("jwtToken", nextRes.data.data);
+            alert("댓글이 삭제되었습니다.");
+            window.location.reload();
+          }
+        }
+      } catch (err) {
+        throw new Error(err);
+      }
+    }
+  };
   return (
     <StudyContainer>
       <StudyHeadSection>
@@ -139,7 +212,7 @@ function Study() {
             <StudyHeadUserName>{post.user.nickName}</StudyHeadUserName>
           </StudyHeadUserBox>
           <StudyHeadRegisterDate>
-            {post.createDate.slice(0, 10).replace(/-/gi, " . ")}
+            {post.createdDate.slice(0, 10).replace(/-/gi, " . ")}
           </StudyHeadRegisterDate>
         </StudyHeadUserAndDate>
         {post.user.id === user.id && (
@@ -152,7 +225,7 @@ function Study() {
         <StudyInfoGridUl>
           <StudyInfoGridLi>
             <StudyInfoGridTitle>모집 구분</StudyInfoGridTitle>
-            <StudyInfoGridContent>{post.category}</StudyInfoGridContent>
+            <StudyInfoGridContent>{post.categoryType}</StudyInfoGridContent>
           </StudyInfoGridLi>
           <StudyInfoGridLi>
             <StudyInfoGridTitle>진행 방식</StudyInfoGridTitle>
@@ -190,7 +263,6 @@ function Study() {
         <StudyProjectInfo>프로젝트 소개</StudyProjectInfo>
         <StudyProjectDetail dangerouslySetInnerHTML={{ __html: post.detail }} />
       </StudyProjectBox>
-
       <StudyCommentBox>
         <StudyCommentInnerBox>
           <StudyCommentInputBox>
@@ -199,7 +271,7 @@ function Study() {
             </StudyCommentInputCount>
             <StudyCommentInputText
               value={comment}
-              onChange={handleComment}
+              onChange={handleCommentValue}
               disabled={user.id === undefined ? true : false}
               placeholder="댓글을 입력하세요."
             ></StudyCommentInputText>
@@ -209,21 +281,39 @@ function Study() {
           <StudyButton onClick={onPostComment}>댓글 등록</StudyButton>
         </StudyButtonBox>
         <StudyCommentUl>
-          {/* 요밑에 Li부터 MAP으로 뿌리시오!  */}
-          <StudyCommentLi>
-            <StudyCommentHead>
-              <StudyCommentHeadBox>
-                <StudyCommentHeadImg src={"/logo/Git.png"} alt="zz" />
-                <StudyCommentHeadNameDateBox>
-                  <StudyCommentHeadName>NICKNAME</StudyCommentHeadName>
-                  <StudyCommentHeadDate>작성시간...</StudyCommentHeadDate>
-                </StudyCommentHeadNameDateBox>
-              </StudyCommentHeadBox>
-            </StudyCommentHead>
-            <StudyCommentMain>
-              <StudyCommentMainText>댓글 들어갈 자리</StudyCommentMainText>
-            </StudyCommentMain>
-          </StudyCommentLi>
+          {post.comments.map((content) => (
+            <StudyCommentLi key={content.createdDate + content.id}>
+              <StudyCommentHead>
+                <StudyCommentHeadBox>
+                  <StudyCommentHeadImg src={"/logo/Git.png"} alt="zz" />
+                  <StudyCommentHeadNameDateBox>
+                    <StudyCommentHeadName>
+                      {content.user.nickName}
+                    </StudyCommentHeadName>
+                    <StudyCommentHeadDate>
+                      {content.createdDate.slice(0, 10).replace(/-/gi, ".")}
+                    </StudyCommentHeadDate>
+                  </StudyCommentHeadNameDateBox>
+                </StudyCommentHeadBox>
+                {user.id === content.user.id && (
+                  <AiOutlineCloseCircle
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      cursor: "pointer",
+                      width: "28px",
+                      height: "28px",
+                      justifyContent: "center",
+                    }}
+                    onClick={() => onDeleteComment(content.id)}
+                  />
+                )}
+              </StudyCommentHead>
+              <StudyCommentMain>
+                <StudyCommentMainText>{content.detail}</StudyCommentMainText>
+              </StudyCommentMain>
+            </StudyCommentLi>
+          ))}
         </StudyCommentUl>
       </StudyCommentBox>
     </StudyContainer>
