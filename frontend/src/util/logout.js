@@ -1,4 +1,4 @@
-import { deleteCookie } from "../cookie";
+import { deleteCookie } from "./cookie";
 import { setUser, setUserInfo } from "../slice/userSlice";
 export const logout = (dispatch) => {
   deleteCookie(["jwtToken"]);

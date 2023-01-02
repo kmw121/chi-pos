@@ -12,16 +12,22 @@ import {
   SettingCompleteBtn,
   SettingWithdrawalBtn,
 } from "../components";
-import { stacks } from "../../stack";
+import { stacks } from "../../util/stack";
 import Select from "react-select";
 import { useEffect, useState } from "react";
 import MainHead from "../Main/MainHead";
 import { useDispatch, useSelector } from "react-redux";
-import { API_URL } from "../../API_URL";
+import { API_URL } from "../../util/API_URL";
 import authCheck from "../../util/authCheck";
 import { useNavigate } from "react-router-dom";
+import withdrawal from "../../util/withdrawal";
 function SettingDetail() {
+  const { user, userInfo } = useSelector((state) => {
+    return state.user;
+  });
+  console.log(userInfo.data.nickName);
   const [stack, setStack] = useState({});
+  const [nick, setNick] = useState(userInfo.data.nickName);
   const stackArray = stacks
     .map((stack) => stack.name)
     .map((a) => {
@@ -30,15 +36,15 @@ function SettingDetail() {
         label: a,
       };
     });
+  const onChangeNickName = (e) => {
+    setNick(nick);
+  };
   const optionStack = stackArray;
   const onSelectedStack = (value) => {
     setStack((prev) => {
       return { ...prev, value };
     });
   };
-  const { user } = useSelector((state) => {
-    return state.user;
-  });
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
@@ -61,7 +67,11 @@ function SettingDetail() {
         </SettingImgBox>
         <SettingTitleBox>
           <h3 style={{ width: "20rem" }}>닉네임</h3>
-          <SettingTitleBoxInput placeholder="" />
+          <SettingTitleBoxInput
+            placeholder=""
+            value={nick}
+            onChange={onChangeNickName}
+          />
         </SettingTitleBox>
         <SettingDescription>
           '프로젝트 이름'에서 사용되는 닉네임입니다.
@@ -82,7 +92,9 @@ function SettingDetail() {
         </SettingDescription>
         <hr />
         <SettingCompleteBtn>완료</SettingCompleteBtn>
-        <SettingWithdrawalBtn>회원탈퇴</SettingWithdrawalBtn>
+        <SettingWithdrawalBtn onClick={() => withdrawal(dispatch, navigate)}>
+          회원탈퇴
+        </SettingWithdrawalBtn>
       </SettingContainer>
     </>
   );

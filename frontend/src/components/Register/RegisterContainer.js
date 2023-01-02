@@ -9,8 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import toStringByFormatting from "../../util/toStringByFormatting";
 import axios from "axios";
-import { API_URL } from "../../API_URL";
-import { getCookie, deleteCookie, setCookie } from "../../cookie";
+import { API_URL } from "../../util/API_URL";
+import { getCookie, deleteCookie, setCookie } from "../../util/cookie";
 import { setUserInfo, setUser } from "../../slice/userSlice";
 function RegisterContainer() {
   const [dataForm, steDataForm] = useState({

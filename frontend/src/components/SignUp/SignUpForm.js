@@ -17,9 +17,9 @@ import {
   SignUpInputImg,
 } from "../components";
 import Select from "react-select";
-import { stacks } from "../../stack";
+import { stacks } from "../../util/stack";
 import axios from "axios";
-import { API_URL } from "../../API_URL";
+import { API_URL } from "../../util/API_URL";
 function SignUpForm() {
   let stackNumber = 1;
   const stackArray = stacks
