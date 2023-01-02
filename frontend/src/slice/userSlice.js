@@ -1,24 +1,9 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import { API_URL } from "../API_URL";
-
-export const getPosts = createAsyncThunk("getPosts", async () => {
-  const res = await axios.post(
-    API_URL + "/posts",
-    {
-      size: 6,
-      page: 1,
-    },
-    {
-      headers: { "Content-Type": "application/json" },
-    }
-  );
-  return res.data.data;
-});
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   user: [],
   userInfo: [],
+  currentPost: [],
 };
 
 export const userSlice = createSlice({
@@ -31,22 +16,11 @@ export const userSlice = createSlice({
     setUserInfo: (state, action) => {
       state.userInfo = action.payload;
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(getPosts.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(getPosts.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.posts = action.payload;
-      })
-      .addCase(getPosts.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.error.message;
-      });
+    setCurrentPost: (state, action) => {
+      state.currentPost = action.payload;
+    },
   },
 });
 
-export const { setUser, setUserInfo } = userSlice.actions;
+export const { setUser, setUserInfo, setCurrentPost } = userSlice.actions;
 export default userSlice.reducer;

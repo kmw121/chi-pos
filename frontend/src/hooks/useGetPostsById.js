@@ -1,16 +1,20 @@
 import axios from "axios";
-import { useState } from "react";
-import { API_URL } from "../API_URL";
-import usePostsSearch from "./usePostsSearch";
-//여기 오류 수정...ㅠㅠ
-export default async function useGetPostsById(id) {
-  try {
-    const res = await axios.get(API_URL + "/posts/all");
-    const [list, setList] = useState(res.data.data);
-    const post = setList(list.filter((data) => String(data.id) === id));
-    console.log("post : ", post);
-    return post[0];
-  } catch (err) {
-    throw new Error(err);
-  }
+import { useEffect } from "react";
+import { API_URL } from "../util/API_URL";
+import { setCurrentPost } from "../slice/userSlice";
+export default function useGetPostsById(id, dispatch) {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(API_URL + `/posts/all`);
+        const post = res.data.data.filter((data) => String(data.id) === id);
+        console.log("res : ", res);
+        console.log("post : ", post);
+        dispatch(setCurrentPost(post));
+      } catch (err) {
+        throw new Error(err);
+      }
+    };
+    fetchData();
+  }, []);
 }

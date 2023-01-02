@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FiDelete } from "react-icons/fi";
-import { stacks } from "../../stack";
+import { stacks } from "../../util/stack";
 import {
   StackBtnLi,
   SectionContainer,
