@@ -35,9 +35,12 @@ public class SignupDto {
     @NotBlank(message ="닉네임은 필수입니다.")
     private String nickName;
 
+    private String prePassword;
     private MultipartFile file;
 
     private List<Long> stack;
+
+
 
     public User toEntity(){
         User user = new User();
@@ -45,11 +48,9 @@ public class SignupDto {
         user.setNickName(this.nickName);
         user.setPassword(this.password);
 
-        System.out.println(uploadFolder);
         if(file!=null){
             UUID uuid = UUID.randomUUID();
             String imageFileName = uuid +"_"+file.getOriginalFilename();
-            System.out.println(imageFileName);
             Path imageFilePath = Paths.get(uploadFolder+imageFileName);
 
             try{

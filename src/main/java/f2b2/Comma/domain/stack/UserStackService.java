@@ -11,7 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserStackService {
     private final UserStackRepository userStackRepository;
 
+
     public void save(Long userId,Long stackId){
         userStackRepository.saveStack(userId,stackId);
     }
+    public void delete(Long userId){
+        userStackRepository.deleteUserStack(userId);
+    }
+
 }

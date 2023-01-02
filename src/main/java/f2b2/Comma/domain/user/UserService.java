@@ -1,5 +1,9 @@
 package f2b2.Comma.domain.user;
 
+import f2b2.Comma.domain.post.CommentService;
+import f2b2.Comma.domain.post.Post;
+import f2b2.Comma.domain.post.PostService;
+import f2b2.Comma.domain.stack.UserStackService;
 import f2b2.Comma.handler.exception.CustomException;
 import f2b2.Comma.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +21,10 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PostService postService;
+    private final UserStackService userStackService;
+    private final CommentService commentService;
+
 
     @Transactional
     public User save(User user){
@@ -36,7 +44,6 @@ public class UserService {
         return user;
     }
     @Transactional(readOnly = true)
-
     public User findByUsername(String username){
        User user = userRepository.findByUsername(username).orElseThrow(()->{
             return new CustomException("존재하지 않는 회원입니다.");
@@ -66,5 +73,18 @@ public class UserService {
             throw  new CustomException("아이디 비밀번호가 맞지 않습니다.");
         }
     }
+    public void delete(Long userId){
+        List<Post> posts = postService.findAllByUser(userId);
+        commentService.deleteByUser(userId);
+        userStackService.delete(userId);
+        for(Post p : posts){
+            Long postId = p.getId();
+            postService.delete(postId,p);
+        }
+
+
+        userRepository.deleteById(userId);
+    }
+
 
 }
