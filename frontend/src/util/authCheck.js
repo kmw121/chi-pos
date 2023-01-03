@@ -4,6 +4,7 @@ import { deleteCookie, getCookie, setCookie } from "./cookie";
 import { setUser, setUserInfo } from "../slice/userSlice";
 export default async function authCheck(dispatch, navigate, user) {
   if (!user.id) {
+    console.log("userid X");
     alert("로그인이 필요한 페이지 입니다.");
     navigate("/");
   } else {
