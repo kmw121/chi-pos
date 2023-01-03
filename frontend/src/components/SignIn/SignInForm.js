@@ -24,7 +24,8 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { setUser } from "../../slice/userSlice";
 import { useDispatch } from "react-redux";
-import { useCookies } from "react-cookie";
+import { API_URL } from "../../util/API_URL";
+import { getCookie, setCookie, deleteCookie } from "../../util/cookie";
 function SignInForm({ onToggle }) {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -37,8 +38,6 @@ function SignInForm({ onToggle }) {
     username: "",
     password: "",
   });
-  const [_, setCookie] = useCookies(["jwtToken"]);
-  const [refresh, setRefresh] = useCookies(["refreshToken"]);
   const onEmailValue = (e) => {
     const onChangeName = (prev) => {
       return { ...prev, username: e.target.value };
@@ -51,24 +50,22 @@ function SignInForm({ onToggle }) {
     };
     setLoginForm(onChangePw);
   };
-  const onLogin = async (e) => {
+  const onLogin = async () => {
     try {
-      const res = await axios.post("http://3.39.164.180:8080/login", loginForm);
+      const res = await axios.post(API_URL + "/login", loginForm);
       if (res.data.code === 1) {
         const jwtToken = res.data.data.accessToken;
         const refreshToken = res.data.data.refreshToken;
         const decoded = jwt_decode(jwtToken);
-        const decodedR = jwt_decode(refreshToken);
-        console.log("refresh decoded", decodedR);
         dispatch(setUser(decoded));
+        deleteCookie("jwtToken");
+        deleteCookie("refreshToken");
         setCookie("jwtToken", jwtToken);
-        setRefresh("refreshToken", refreshToken);
-        onToggle();
+        setCookie("refreshToken", refreshToken);
         setLoginForm((prev) => {
           return { ...prev, username: "", password: "" };
         });
-        console.log(res);
-        console.log(decoded);
+        onToggle();
         alert(`${loginForm.username}님 반갑습니다!`);
       } else if (res.data.code === -1) {
         alert("id/pw를 확인해주세요.");

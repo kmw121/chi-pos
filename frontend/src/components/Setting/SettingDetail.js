@@ -25,9 +25,8 @@ function SettingDetail() {
   const { user, userInfo } = useSelector((state) => {
     return state.user;
   });
-  console.log(userInfo.data.nickName);
   const [stack, setStack] = useState({});
-  const [nick, setNick] = useState(userInfo.data.nickName);
+  const [nick, setNick] = useState("");
   const stackArray = stacks
     .map((stack) => stack.name)
     .map((a) => {
@@ -47,9 +46,6 @@ function SettingDetail() {
   };
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  useEffect(() => {
-    authCheck(dispatch, navigate, user);
-  }, []);
   return (
     <>
       <MainHead />
