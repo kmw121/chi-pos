@@ -10,7 +10,7 @@ export default function usePostsSearch(searchConfig) {
       try {
         setLoadingStatus(true);
         const res = await axios.post(API_URL + "/posts", searchConfig);
-        setList((prev) => res.data.data);
+        setList((prev) => prev.concat(res.data.data));
         setLoadingStatus(false);
       } catch (err) {
         throw new Error(err);

@@ -78,7 +78,11 @@ function MainSection({ searchConfig, setSearchConfig }) {
       const clickStack = selectedStack.concat(stack);
       const stackNumber = stacks.filter((a) => a.name === stack)[0].number;
       const addStackNumber = (prev) => {
-        return { ...prev, stack: [...prev.stack, stackNumber] };
+        return {
+          ...prev,
+          stack: [...prev.stack, stackNumber],
+          page: 1,
+        };
       };
       setSearchConfig(addStackNumber);
       setSelectedStack(clickStack);
@@ -104,7 +108,7 @@ function MainSection({ searchConfig, setSearchConfig }) {
   const onFilterClear = () => {
     setSelectedStack([]);
     const searchConfigClear = (prev) => {
-      return { ...prev, stack: [] };
+      return { ...prev, stack: [], categoryType: "" };
     };
     setSearchConfig(searchConfigClear);
   };

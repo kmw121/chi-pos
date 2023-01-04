@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState, useCallback, useEffect } from "react";
 import FadeLoader from "react-spinners/FadeLoader";
 import {
   AiOutlineEye,
@@ -35,7 +35,8 @@ import {
 import usePostsSearch from "../../hooks/usePostsSearch";
 import { API_URL } from "../../util/API_URL";
 import axios from "axios";
-function MainContents({ searchConfig, setSearchConfig }) {
+import getGenerateRandomKey from "../../util/getGenerateRandomKey";
+function MainContents({ searchConfig, setSearchConfig, pageNum, setPageNum }) {
   const { list, loadingStatus } = usePostsSearch(searchConfig);
   const [isChecked, setIsChecked] = useState(false);
   const [categorySelected, setCategorySelected] = useState([
@@ -59,7 +60,7 @@ function MainContents({ searchConfig, setSearchConfig }) {
   };
   const onClickCategorySelected = (category) => {
     const changeList = categorySelected.map((content) =>
-      content.category === category
+      content.text === category
         ? { ...content, isSelected: true }
         : { ...content, isSelected: false }
     );
@@ -68,7 +69,7 @@ function MainContents({ searchConfig, setSearchConfig }) {
   const handleInputCheck = () => {
     setIsChecked(!isChecked);
   };
-  const onClickView = async (id) => {
+  const onIncreaseView = async (id) => {
     try {
       await axios.get(API_URL + `/post/view/${id}`);
     } catch (err) {
@@ -76,20 +77,44 @@ function MainContents({ searchConfig, setSearchConfig }) {
     }
   };
   const handleIsEnd = () => {
-    // isEnd 필터
     if (isChecked) {
       const isEndFilter = (prev) => {
         return { ...prev, isEnd: true };
       };
       setSearchConfig(isEndFilter);
     } else if (!isChecked) {
-      // filter X
       const isEndFilter = (prev) => {
         return { ...prev, isEnd: false };
       };
       setSearchConfig(isEndFilter);
     }
   };
+  const [target, setTarget] = useState(null);
+  const targetStyle = { width: "100%", height: "5px" };
+  const fetchData = async () => {
+    try {
+      await setSearchConfig((prev) => {
+        return { ...prev, page: prev.page + 1 };
+      });
+    } catch (e) {
+      throw new Error(e);
+    }
+  };
+  useEffect(() => {
+    let observer;
+    if (target) {
+      const onIntersect = async ([entry], observer) => {
+        if (entry.isIntersecting) {
+          observer.unobserve(entry.target);
+          await fetchData();
+          observer.observe(entry.target);
+        }
+      };
+      observer = new IntersectionObserver(onIntersect, { threshold: 1 });
+      observer.observe(target);
+    }
+    return () => observer && observer.disconnect();
+  }, [target]);
   return (
     <MainContentsMain>
       <MainContentsCategoryContainer>
@@ -131,11 +156,11 @@ function MainContents({ searchConfig, setSearchConfig }) {
         <MainContentsAppStudyUl>
           {/* ///////////////////////////////// */}
           {list &&
-            list.map((content) => (
+            list.map((content, index) => (
               <MainContentsAppStudyA
-                key={content.id}
+                key={content.id + index + getGenerateRandomKey()}
                 href={`/study/${content.id}`}
-                onClick={() => onClickView(content.id)}
+                onClick={() => onIncreaseView(content.id)}
               >
                 <MainContentsAppStudyLi>
                   <MainContentsAppSchedule>
@@ -150,7 +175,7 @@ function MainContents({ searchConfig, setSearchConfig }) {
 
                   <MainContentsAppStudyTag>
                     <MainContentsAppStudyTagLi>
-                      #{content.category}
+                      #{content.categoryType}
                     </MainContentsAppStudyTagLi>
                     <MainContentsAppStudyTagLi>
                       {content.howto !== null && `#${content.howto}`}
@@ -230,6 +255,7 @@ function MainContents({ searchConfig, setSearchConfig }) {
           </div>
         )}
       </MainContentsAppContainer>
+      <div ref={setTarget} style={targetStyle} />
     </MainContentsMain>
   );
 }
