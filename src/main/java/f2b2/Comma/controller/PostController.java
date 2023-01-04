@@ -23,6 +23,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
@@ -145,10 +146,23 @@ public class PostController {
         }
 
         if(flag){
-            return new ResponseEntity<>(new CMRespDto<>(1, "글조회 성공", postService.findAll("SELECT DISTINCT p FROM Post p order by p.modifiedDate desc ",start,size)), HttpStatus.OK);
+            List<Post> posts = postService.findAll("SELECT DISTINCT p FROM Post p order by p.modifiedDate desc ", start, size);
+            if(posts.size()==0){
+                return new ResponseEntity<>(new CMRespDto<>(-1, "글이 존재하지 않습니다.", null), HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(new CMRespDto<>(1, "글조회 성공", posts), HttpStatus.OK);
+            }
         }
         else{
-            return new ResponseEntity<>(new CMRespDto<>(1, "글조회 성공", postService.findAll("SELECT DISTINCT p FROM Post p "+query + " order by p.modifiedDate desc ",start,size)), HttpStatus.OK);
+
+            List<Post> posts = postService.findAll("SELECT DISTINCT p FROM Post p "+query + " order by p.modifiedDate desc ",start,size);
+            if(posts.size()==0){
+                return new ResponseEntity<>(new CMRespDto<>(-1, "글이 존재하지 않습니다.", null), HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(new CMRespDto<>(1, "글조회 성공", posts), HttpStatus.OK);
+            }
         }
     }
 
