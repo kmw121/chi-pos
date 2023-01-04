@@ -68,7 +68,7 @@ public class OAuthService{
         return access_Token;
     }
 
-    public String[] createKakaoUser(String token) {
+    public Long createKakaoUser(String token) {
 
         String reqURL = "https://kapi.kakao.com/v2/user/me";
 
@@ -102,22 +102,12 @@ public class OAuthService{
 
             Long id = element.getAsJsonObject().get("id").getAsLong();
             System.out.println(id + "여까지됨");
-            boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
-            String email = "";
-            if(hasEmail){
-                email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
-            }
 
             System.out.println("id : " + id);
-            System.out.println("email : " + email);
 
             br.close();
 
-            String[] idEmail = new String[2];
-
-            idEmail[0] = Long.toString(id);
-            idEmail[0] = email;
-            return idEmail;
+            return id;
 
         } catch (IOException e) {
             throw new CustomException(e.getMessage());

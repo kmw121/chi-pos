@@ -23,7 +23,7 @@ public class OAuthController {
     public ResponseEntity<?> kakaoCallback(@RequestParam String code) {
         System.out.println(code);
         String kakaoAccessToken = oAuthService.getKakaoAccessToken(code);
-        String[] kakaoUserInfo = oAuthService.createKakaoUser(kakaoAccessToken);
+        Long kakaoUserInfo = oAuthService.createKakaoUser(kakaoAccessToken);
 
         return new ResponseEntity<>(new CMRespDto<>(1, "코드 받기 성공", kakaoUserInfo), HttpStatus.OK);
     }
