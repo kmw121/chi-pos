@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 @RestController
 @AllArgsConstructor
-@RequestMapping("/oauth")
 public class OAuthController {
 
     /**
@@ -17,7 +16,7 @@ public class OAuthController {
      * [GET] /oauth/kakao/callback
      */
     @ResponseBody
-    @GetMapping("/kakao")
+    @GetMapping("/ouath/kakao")
     public ResponseEntity<?> kakaoCallback(@RequestParam String code) {
         System.out.println(code);
         return new ResponseEntity<>(new CMRespDto<>(1, "코드 받기 성공", code), HttpStatus.OK);
