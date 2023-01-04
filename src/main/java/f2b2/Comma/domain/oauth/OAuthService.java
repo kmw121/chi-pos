@@ -94,7 +94,6 @@ public class OAuthService{
                 result += line;
             }
             System.out.println("response body : " + result);
-            System.out.println("여까지됨");
 
             //Gson 라이브러리로 JSON파싱
             JsonParser parser = new JsonParser();
