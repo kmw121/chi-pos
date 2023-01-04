@@ -30,7 +30,7 @@ public class OAuthController {
         System.out.println(code);
         String kakaoAccessToken = oAuthService.getKakaoAccessToken(code);
         String userId = oAuthService.createKakaoUser(kakaoAccessToken);
-        User loginUser = userRepository.findByKakaoId(userId).orElseThrow(()->{
+        User loginUser = userRepository.findByKakaoId("kakao_"+userId).orElseThrow(()->{
             throw new CustomAuthException("카카오 회원가입이 안된 회원",userId);
         });
 
