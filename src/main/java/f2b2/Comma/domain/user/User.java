@@ -9,6 +9,7 @@ import f2b2.Comma.domain.stack.UserStack;
 import f2b2.Comma.domain.stack.UserStackService;
 import lombok.Builder;
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -46,6 +47,42 @@ public class User extends BaseTimeEntity implements UserDetails  {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    @ColumnDefault("null")
+    @JsonIgnore
+    private String kakaoId;
+
+    @ColumnDefault("null")
+    @JsonIgnore
+    private String facebookId;
+
+    @ColumnDefault("null")
+    @JsonIgnore
+    private String googleId;
+
+    public String getKakaoId() {
+        return kakaoId;
+    }
+
+    public void setKakaoId(String kakaoId) {
+        this.kakaoId = kakaoId;
+    }
+
+    public String getFacebookId() {
+        return facebookId;
+    }
+
+    public void setFacebookId(String facebookId) {
+        this.facebookId = facebookId;
+    }
+
+    public String getGoogleId() {
+        return googleId;
+    }
+
+    public void setGoogleId(String googleId) {
+        this.googleId = googleId;
     }
 
     public void setUserStack(List<UserStack> userStack) {

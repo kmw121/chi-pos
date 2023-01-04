@@ -1,6 +1,7 @@
 package f2b2.Comma.handler;
 
 import f2b2.Comma.dto.CMRespDto;
+import f2b2.Comma.handler.exception.CustomAuthException;
 import f2b2.Comma.handler.exception.CustomException;
 import f2b2.Comma.handler.exception.CustomValidationException;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,11 @@ public class controllerExceptionHandler {
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<?> apiException(CustomException e) {
         return new ResponseEntity<>(new CMRespDto<>(-1, e.getMessage(), null), HttpStatus.OK);
+    }
+
+    @ExceptionHandler(CustomAuthException.class)
+    public ResponseEntity<?> authException(CustomAuthException e) {
+        return new ResponseEntity<>(new CMRespDto<>(2, e.getMessage(), e.getId()), HttpStatus.OK);
     }
 
     @ExceptionHandler(CustomValidationException.class)

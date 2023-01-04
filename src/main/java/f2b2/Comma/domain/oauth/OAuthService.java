@@ -68,7 +68,7 @@ public class OAuthService{
         return access_Token;
     }
 
-    public Long createKakaoUser(String token) {
+    public String createKakaoUser(String token) {
 
         String reqURL = "https://kapi.kakao.com/v2/user/me";
 
@@ -100,10 +100,8 @@ public class OAuthService{
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
 
-            Long id = element.getAsJsonObject().get("id").getAsLong();
-            System.out.println(id + "여까지됨");
+            String id = element.getAsJsonObject().get("id").getAsString();
 
-            System.out.println("id : " + id);
 
             br.close();
 

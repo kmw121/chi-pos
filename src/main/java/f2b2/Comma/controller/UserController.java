@@ -5,6 +5,7 @@ import f2b2.Comma.domain.stack.UserStackService;
 import f2b2.Comma.domain.user.User;
 import f2b2.Comma.domain.user.UserService;
 import f2b2.Comma.dto.CMRespDto;
+import f2b2.Comma.dto.auth.KakaoSignupDto;
 import f2b2.Comma.dto.auth.SignupDto;
 import f2b2.Comma.dto.jwt.JwtDto;
 import f2b2.Comma.handler.exception.CustomValidationException;
@@ -66,6 +67,35 @@ public class UserController {
         }
 
         }
+
+    @Transactional
+    @PostMapping(value = "/kakaoSignup", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> kakaoSignUp(@ModelAttribute @Valid KakaoSignupDto kakaosignupDto, BindingResult bindingResult){
+
+        kakaosignupDto.setUsername("kakao_"+kakaosignupDto.getUsername());
+
+        if(!userRepository.findByUsername(kakaosignupDto.getUsername()).isEmpty()) {
+            return new ResponseEntity<>(new CMRespDto<>(-1, "카카오 아이디 중복", null), HttpStatus.OK);
+        }
+        else if(!userRepository.findByNickName(kakaosignupDto.getNickName()).isEmpty()) {
+            return new ResponseEntity<>(new CMRespDto<>(-1, "닉네임 중복", null), HttpStatus.OK);
+        }
+        else {
+            User user = kakaosignupDto.toEntity();
+            User loginUser = userService.save(user);
+            if (kakaosignupDto.getStack() != null) {
+                for (Long n : kakaosignupDto.getStack()) {
+                    userStackService.save(loginUser.getId(), n);
+                }
+            }
+
+
+            return new ResponseEntity<>(new CMRespDto<>(1,"로그인 성공", new JwtDto(jwtTokenProvider.createAccessToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()), jwtTokenProvider.createRefreshToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()))),HttpStatus.OK);
+
+
+        }
+
+    }
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> userJWT(@PathVariable Long userId,@RequestHeader HttpHeaders headers){
