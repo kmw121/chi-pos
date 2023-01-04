@@ -101,6 +101,7 @@ public class OAuthService{
             JsonElement element = parser.parse(result);
 
             int id = element.getAsJsonObject().get("id").getAsInt();
+            System.out.println(id + "여까지됨");
             boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
             String email = "";
             if(hasEmail){
