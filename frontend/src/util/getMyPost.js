@@ -14,7 +14,7 @@ export default async function getMyPost(dispatch, navigate) {
     if (res.data.code === 1) {
       console.log("res.data.code === 1");
     } else if (res.data.code === 2) {
-      const nextRes = await axios.get(API_URL + "/withdrawal", {
+      const nextRes = await axios.get(API_URL + "/myPost", {
         headers: { Authorization: `${getCookie("refreshToken")}` },
       });
       if (nextRes.data.code === 2 || nextRes.data.code === -1) {

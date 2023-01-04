@@ -48,6 +48,13 @@ export const MainContentsCategoryItem = styled.div`
   cursor: pointer;
   font-weight: 700;
   font-size: 1.5rem;
+  color: #848484;
+  ${(props) =>
+    props.isSelected &&
+    `
+      background-color: white;
+      color: black;
+    `}
 `;
 export const MainContentsToggle = styled.div`
   display: flex;
@@ -63,13 +70,44 @@ export const MainContentsToggleText = styled.span`
   margin-right: 20px;
 `;
 export const MainContentsToggleLabel = styled.label`
-  position: relative;
-  display: inline-block;
-  height: 26px;
+  position: absolute;
+  top: 0;
+  right: 0;
   width: 50px;
-  border-radius: 50px;
-  background-color: #ffcd00;
+  height: 26px;
+  border-radius: 15px;
+  background: #bebebe;
   cursor: pointer;
+  &::after {
+    content: "";
+    display: block;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    margin: 3px;
+    background: #ffffff;
+    box-shadow: 1px 3px 3px 1px rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+  }
+`;
+export const MainContentsToggleInput = styled.input`
+  opacity: 0;
+  z-index: 1;
+  border-radius: 15px;
+  width: 50px;
+  height: 26px;
+  &:checked + ${MainContentsToggleLabel} {
+    background: #ffcd00;
+    &::after {
+      content: "";
+      display: block;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      margin-left: 27px;
+      transition: 0.3s;
+    }
+  }
 `;
 export const MainContentsAppContainer = styled.div`
   margin: 0 auto;

@@ -19,6 +19,8 @@ function MyPosts() {
   });
   useEffect(() => {
     authCheck(dispatch, navigate, user);
+  }, []);
+  useEffect(() => {
     getMyPost(dispatch, navigate);
   }, []);
   return (

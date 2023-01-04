@@ -53,8 +53,6 @@ function Study() {
   const { user, currentPost } = useSelector((state) => {
     return state.user;
   });
-  console.log("user : ", user);
-  console.log("currentPost : ", currentPost);
   const post = currentPost[0];
   const [comment, setComment] = useState("");
   const handleCommentValue = (e) => {

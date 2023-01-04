@@ -13,7 +13,7 @@ import {
   SelectedStackLi,
   SelectedStackUl,
 } from "../components";
-function MainSection() {
+function MainSection({ searchConfig, setSearchConfig }) {
   const [sectionTextList, setSectionTextList] = useState([
     {
       category: "인기",
@@ -62,7 +62,6 @@ function MainSection() {
     );
     setSectionTextList(changeList);
   };
-  // console.log("selected Stack : ", selectedStack);
   const onClickCategoryStackChanged = (category) => {
     const changeStack = [...stacks].filter((a) =>
       category.category === "모두보기"
@@ -77,20 +76,40 @@ function MainSection() {
     const isIncluded = selectedStack.includes(stack);
     if (!isIncluded) {
       const clickStack = selectedStack.concat(stack);
+      const stackNumber = stacks.filter((a) => a.name === stack)[0].number;
+      const addStackNumber = (prev) => {
+        return { ...prev, stack: [...prev.stack, stackNumber] };
+      };
+      setSearchConfig(addStackNumber);
       setSelectedStack(clickStack);
     } else {
       const deleteStack = selectedStack.filter((a) => a !== stack);
+      const stackNumber = stacks.filter((a) => a.name === stack)[0].number;
+      const deleteStackNumber = (prev) => {
+        return { ...prev, stack: prev.stack.filter((n) => n !== stackNumber) };
+      };
+      setSearchConfig(deleteStackNumber);
       setSelectedStack(deleteStack);
     }
   };
   const onClickXBtn = (stack) => {
     const deleteStack = selectedStack.filter((a) => a !== stack);
+    const stackNumber = stacks.filter((a) => a.name === stack)[0].number;
+    const deleteStackNumber = (prev) => {
+      return { ...prev, stack: prev.stack.filter((n) => n !== stackNumber) };
+    };
+    setSearchConfig(deleteStackNumber);
     setSelectedStack(deleteStack);
   };
   const onFilterClear = () => {
     setSelectedStack([]);
+    const searchConfigClear = (prev) => {
+      return { ...prev, stack: [] };
+    };
+    setSearchConfig(searchConfigClear);
   };
   const isFilterSelected = selectedStack.length !== 0;
+  console.log("searchConfig : ", searchConfig);
   return (
     <SectionContainer>
       <CategoryUl>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import FadeLoader from "react-spinners/FadeLoader";
 import {
   AiOutlineEye,
@@ -30,13 +30,44 @@ import {
   MainContentsAppStudyInfoUserName,
   MainContentsAppStudyInfoRightBox,
   MainContentsAppStudyInfoRightDetail,
+  MainContentsToggleInput,
 } from "../components";
 import usePostsSearch from "../../hooks/usePostsSearch";
 import { API_URL } from "../../util/API_URL";
 import axios from "axios";
-function MainContents() {
-  const { list, loadingStatus } = usePostsSearch();
-  usePostsSearch();
+function MainContents({ searchConfig, setSearchConfig }) {
+  const { list, loadingStatus } = usePostsSearch(searchConfig);
+  const [isChecked, setIsChecked] = useState(false);
+  const [categorySelected, setCategorySelected] = useState([
+    {
+      text: "전체",
+      isSelected: true,
+      category: "",
+    },
+    {
+      text: "스터디",
+      isSelected: false,
+      category: "스터디",
+    },
+    { text: "프로젝트", isSelected: false, category: "프로젝트" },
+  ]);
+  const onClickFilterCategory = (text) => {
+    const changeFilterCategory = (prev) => {
+      return { ...prev, categoryType: text };
+    };
+    setSearchConfig(changeFilterCategory);
+  };
+  const onClickCategorySelected = (category) => {
+    const changeList = categorySelected.map((content) =>
+      content.category === category
+        ? { ...content, isSelected: true }
+        : { ...content, isSelected: false }
+    );
+    setCategorySelected(changeList);
+  };
+  const handleInputCheck = () => {
+    setIsChecked(!isChecked);
+  };
   const onClickView = async (id) => {
     try {
       await axios.get(API_URL + `/post/view/${id}`);
@@ -44,27 +75,55 @@ function MainContents() {
       throw new Error(err);
     }
   };
-  console.log(list);
+  const handleIsEnd = () => {
+    // isEnd 필터
+    if (isChecked) {
+      const isEndFilter = (prev) => {
+        return { ...prev, isEnd: true };
+      };
+      setSearchConfig(isEndFilter);
+    } else if (!isChecked) {
+      // filter X
+      const isEndFilter = (prev) => {
+        return { ...prev, isEnd: false };
+      };
+      setSearchConfig(isEndFilter);
+    }
+  };
   return (
     <MainContentsMain>
       <MainContentsCategoryContainer>
         <MainContentsCategoryInnerContainer>
-          <MainContentsCategoryItem>
-            <AiOutlineCloud />
-            전체
-          </MainContentsCategoryItem>
-          <MainContentsCategoryItem>
-            <AiOutlineEdit />
-            스터디
-          </MainContentsCategoryItem>
-          <MainContentsCategoryItem>
-            <AiOutlineInstagram />
-            프로젝트
-          </MainContentsCategoryItem>
+          {categorySelected.map((content) => (
+            <MainContentsCategoryItem
+              onClick={() => {
+                onClickCategorySelected(content.text);
+                onClickFilterCategory(content.category);
+              }}
+              key={content.text}
+              isSelected={content.isSelected}
+            >
+              {content.text === "전체" ? (
+                <AiOutlineCloud />
+              ) : content.text === "스터디" ? (
+                <AiOutlineEdit />
+              ) : content.text === "프로젝트" ? (
+                <AiOutlineInstagram />
+              ) : null}
+              {content.text}
+            </MainContentsCategoryItem>
+          ))}
         </MainContentsCategoryInnerContainer>
         <MainContentsToggle>
           <MainContentsToggleText>모집 중만 보기</MainContentsToggleText>
-          <MainContentsToggleLabel />
+          <MainContentsToggleInput
+            onChange={handleInputCheck}
+            onClick={handleIsEnd}
+            checked={isChecked}
+            id="checkbox"
+            type="checkbox"
+          />
+          <MainContentsToggleLabel htmlFor="checkbox" />
         </MainContentsToggle>
       </MainContentsCategoryContainer>
 
@@ -168,7 +227,6 @@ function MainContents() {
               radius={2}
               margin={2}
             />
-            쫌만 기둘...
           </div>
         )}
       </MainContentsAppContainer>
