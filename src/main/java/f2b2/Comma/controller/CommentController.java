@@ -46,7 +46,7 @@ public class CommentController {
         Comment commentEntity = commentService.save(comment);
         post.getComments().add(commentEntity);
 
-        return new ResponseEntity<>(new CMRespDto<>(1, " 코멘트 작성 성공1", commentEntity), HttpStatus.OK);
+        return new ResponseEntity<>(new CMRespDto<>(1, " 코멘트 작성 성공", commentEntity), HttpStatus.OK);
     }
 
     @Transactional
