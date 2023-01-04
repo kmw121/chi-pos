@@ -26,6 +26,7 @@ import { setUser } from "../../slice/userSlice";
 import { useDispatch } from "react-redux";
 import { API_URL } from "../../util/API_URL";
 import { getCookie, setCookie, deleteCookie } from "../../util/cookie";
+import { KAKAO_AUTH_URL } from "../../util/kakaoAuth";
 function SignInForm({ onToggle }) {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -133,7 +134,7 @@ function SignInForm({ onToggle }) {
               <ModalBtnText> Github 로그인</ModalBtnText>
             </ModalBtnBox>
             <ModalBtnBox>
-              <ModalBtnKakao>
+              <ModalBtnKakao href={KAKAO_AUTH_URL}>
                 <img
                   style={{ width: "50px", height: "50px", zInde: "50" }}
                   src={"/logo/kakao.png"}

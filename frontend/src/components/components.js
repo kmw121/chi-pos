@@ -1074,7 +1074,7 @@ export const ModalBtnGithub = styled.button`
   box-shadow: 0 5px 25px rgb(0 0 0 / 15%);
   border: none;
 `;
-export const ModalBtnKakao = styled.button`
+export const ModalBtnKakao = styled.a`
   width: 8rem;
   height: 8rem;
   border-radius: 10px;
