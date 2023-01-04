@@ -12,15 +12,13 @@ function MainPage({ login, setLogin }) {
       behavior: "smooth",
     });
   };
+  const [pageNum, setPageNum] = useState(1);
   const [searchConfig, setSearchConfig] = useState({
     stack: [],
     size: 6,
-    page: 1,
+    page: pageNum,
     isEnd: true,
     categoryType: "",
-    // isEnd: true -> all return, false -> 모집중 return
-    // categoryType : null || "" -> all return , '스터디' || '프로젝트' -> 그것에 맞는거 return
-    // isEnd , categorType 은 백엔드 개발중
   });
   console.log("searchConfig : ", searchConfig);
   return (
@@ -34,6 +32,8 @@ function MainPage({ login, setLogin }) {
       <MainContents
         searchConfig={searchConfig}
         setSearchConfig={setSearchConfig}
+        pageNum={pageNum}
+        setPageNum={setPageNum}
       />
       <MainFooter />
       <BsFillArrowUpCircleFill
