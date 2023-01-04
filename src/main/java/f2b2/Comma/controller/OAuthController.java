@@ -1,6 +1,8 @@
 package f2b2.Comma.controller;
 
 import f2b2.Comma.domain.oauth.OAuthService;
+import f2b2.Comma.domain.user.User;
+import f2b2.Comma.domain.user.UserService;
 import f2b2.Comma.dto.CMRespDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,17 +15,16 @@ import org.springframework.web.bind.annotation.*;
 public class OAuthController {
 
     private final OAuthService oAuthService;
+    private final UserService userService;
 
-    /**
-     * 카카오 callback
-     * [GET] /oauth/kakao/callback
-     */
+
     @ResponseBody
     @GetMapping("/ouath/kakao")
     public ResponseEntity<?> kakaoCallback(@RequestParam String code) {
         System.out.println(code);
         String kakaoAccessToken = oAuthService.getKakaoAccessToken(code);
         Long kakaoUserInfo = oAuthService.createKakaoUser(kakaoAccessToken);
+
 
         return new ResponseEntity<>(new CMRespDto<>(1, "코드 받기 성공", kakaoUserInfo), HttpStatus.OK);
     }

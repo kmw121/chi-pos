@@ -62,7 +62,7 @@ public class OAuthService{
             br.close();
             bw.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new CustomException("올바른 access Token이 아닙니다.");
         }
 
         return access_Token;
