@@ -100,7 +100,7 @@ public class OAuthService{
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
 
-            int id = element.getAsJsonObject().get("id").getAsInt();
+            Long id = element.getAsJsonObject().get("id").getAsLong();
             System.out.println(id + "여까지됨");
             boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
             String email = "";
@@ -115,7 +115,7 @@ public class OAuthService{
 
             String[] idEmail = new String[2];
 
-            idEmail[0] = Integer.toString(id);
+            idEmail[0] = Long.toString(id);
             idEmail[0] = email;
             return idEmail;
 
