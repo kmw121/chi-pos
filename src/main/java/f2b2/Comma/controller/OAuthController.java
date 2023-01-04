@@ -2,7 +2,6 @@ package f2b2.Comma.controller;
 
 import f2b2.Comma.domain.oauth.OAuthService;
 import f2b2.Comma.dto.CMRespDto;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
