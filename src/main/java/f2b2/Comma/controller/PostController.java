@@ -91,6 +91,12 @@ public class PostController {
     @PostMapping("/posts")
     public ResponseEntity<?> findPosts(@RequestBody PostsDto postsDto){
 
+        System.out.println("page : " + postsDto.getPage());
+        System.out.println("size : " + postsDto.getSize());
+        System.out.println("stack : " + postsDto.getStack());
+        System.out.println("isEnd : " + postsDto.getIsEnd());
+        System.out.println("category : " + postsDto.getCategoryType());
+
         String query = " where ";
         boolean flag = true;
 
