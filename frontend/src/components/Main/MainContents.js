@@ -36,8 +36,19 @@ import usePostsSearch from "../../hooks/usePostsSearch";
 import { API_URL } from "../../util/API_URL";
 import axios from "axios";
 import getGenerateRandomKey from "../../util/getGenerateRandomKey";
-function MainContents({ searchConfig, setSearchConfig, pageNum, setPageNum }) {
-  const { list, loadingStatus } = usePostsSearch(searchConfig);
+function MainContents({
+  searchConfig,
+  setSearchConfig,
+  pageNumber,
+  setPageNumber,
+}) {
+  const { list, loadingStatus, setList, setLoadingStatus } = usePostsSearch(
+    searchConfig,
+    searchConfig.stack,
+    searchConfig.isEnd,
+    searchConfig.categoryType,
+    searchConfig.page
+  );
   const [isChecked, setIsChecked] = useState(false);
   const [categorySelected, setCategorySelected] = useState([
     {
@@ -93,9 +104,13 @@ function MainContents({ searchConfig, setSearchConfig, pageNum, setPageNum }) {
   const targetStyle = { width: "100%", height: "5px" };
   const fetchData = async () => {
     try {
-      await setSearchConfig((prev) => {
-        return { ...prev, page: prev.page + 1 };
-      });
+      console.log("call infinity");
+      setLoadingStatus(true);
+      setPageNumber((prev) => prev + 1);
+      const res = await axios.post(API_URL + "/posts", searchConfig);
+      setList((prev) => prev.concat(res.data.data));
+      setLoadingStatus(false);
+      console.log("infinity searchConfig : ", searchConfig);
     } catch (e) {
       throw new Error(e);
     }
@@ -110,7 +125,7 @@ function MainContents({ searchConfig, setSearchConfig, pageNum, setPageNum }) {
           observer.observe(entry.target);
         }
       };
-      observer = new IntersectionObserver(onIntersect, { threshold: 1 });
+      observer = new IntersectionObserver(onIntersect, { threshold: 0.5 });
       observer.observe(target);
     }
     return () => observer && observer.disconnect();
@@ -255,7 +270,9 @@ function MainContents({ searchConfig, setSearchConfig, pageNum, setPageNum }) {
           </div>
         )}
       </MainContentsAppContainer>
-      <div ref={setTarget} style={targetStyle} />
+      <div ref={setTarget} style={targetStyle}>
+        asdfasdfasdf
+      </div>
     </MainContentsMain>
   );
 }

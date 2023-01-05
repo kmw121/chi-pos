@@ -12,15 +12,17 @@ function MainPage({ login, setLogin }) {
       behavior: "smooth",
     });
   };
-  const [pageNum, setPageNum] = useState(1);
+  const [pageNumber, setPageNumber] = useState(1);
   const [searchConfig, setSearchConfig] = useState({
     stack: [],
     size: 6,
-    page: pageNum,
+    page: pageNumber,
     isEnd: true,
     categoryType: "",
   });
+
   console.log("searchConfig : ", searchConfig);
+  console.log("pagenumber : ", pageNumber);
   return (
     <>
       <MainHead login={login} setLogin={setLogin} />
@@ -32,8 +34,8 @@ function MainPage({ login, setLogin }) {
       <MainContents
         searchConfig={searchConfig}
         setSearchConfig={setSearchConfig}
-        pageNum={pageNum}
-        setPageNum={setPageNum}
+        pageNumber={pageNumber}
+        setPageNumber={setPageNumber}
       />
       <MainFooter />
       <BsFillArrowUpCircleFill
