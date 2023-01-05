@@ -2,7 +2,8 @@ import { Cookies } from "react-cookie";
 const cookies = new Cookies();
 
 export const setCookie = (name, value) => {
-  document.cookie = name +"=" + value+ "; http://3.39.164.180:8080"
+  document.cookie = name +"=" + value+ "; path=/; http://3.39.164.180:8080"
+  console.log("쿠키완성")
   return cookies.set(name, value,{domain:"http://3.39.164.180:8080"});
 };
 
