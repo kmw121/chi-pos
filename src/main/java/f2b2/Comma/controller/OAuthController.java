@@ -27,7 +27,6 @@ public class OAuthController {
     @ResponseBody
     @GetMapping("/ouath/kakao")
     public ResponseEntity<?> kakaoCallback(@RequestParam String code) {
-        System.out.println(code);
         String kakaoAccessToken = oAuthService.getKakaoAccessToken(code);
         String userId = oAuthService.createKakaoUser(kakaoAccessToken);
         User loginUser = userRepository.findByKakaoId("kakao_"+userId).orElseThrow(()->{
