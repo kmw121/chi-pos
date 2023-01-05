@@ -153,6 +153,11 @@ public class PostController {
 
         if(flag){
             List<Post> posts = postService.findAll("SELECT DISTINCT p FROM Post p order by p.modifiedDate desc ", start, size);
+
+            for(Post p : posts) {
+                System.out.println(p.getId() + "번째 글");
+            }
+
             if(posts.size()==0){
                 return new ResponseEntity<>(new CMRespDto<>(-1, "글이 존재하지 않습니다.", null), HttpStatus.OK);
             }
@@ -163,6 +168,11 @@ public class PostController {
         else{
 
             List<Post> posts = postService.findAll("SELECT DISTINCT p FROM Post p "+query + " order by p.modifiedDate desc ",start,size);
+
+            for(Post p : posts) {
+                System.out.println(p.getId() + "번째 글");
+            }
+
             if(posts.size()==0){
                 return new ResponseEntity<>(new CMRespDto<>(-1, "글이 존재하지 않습니다.", null), HttpStatus.OK);
             }
