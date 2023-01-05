@@ -5,6 +5,10 @@ export const logout = (dispatch) => {
   deleteCookie(["refreshToken"]);
   deleteCookie(["jwtToken"]);
   deleteCookie(["refreshToken"]);
+  deleteCookie(["jwtToken"]);
+  deleteCookie(["refreshToken"]);
+  deleteCookie(["jwtToken"]);
+  deleteCookie(["refreshToken"]);
 
   dispatch(setUserInfo([]));
   dispatch(setUser([]));
