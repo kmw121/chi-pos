@@ -28,6 +28,7 @@ const KakaoSocial = () => {
           deleteCookie("refreshToken");
           setCookie("jwtToken", jwtToken);
           setCookie("refreshToken", refreshToken);
+          navigate("/");
         }
       } catch (err) {
         console.log(err);
