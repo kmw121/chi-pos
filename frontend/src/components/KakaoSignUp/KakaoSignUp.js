@@ -104,6 +104,8 @@ function KakaoSignUp() {
           data: formdata,
         });
         if (res.data.code === 1) {
+          alert("카카오 회원가입 완료~");
+          navigate("/");
           console.log(res);
           const jwtToken = res.data.data.accessToken;
           const refreshToken = res.data.data.refreshToken;
@@ -114,8 +116,6 @@ function KakaoSignUp() {
           deleteCookie("Kakao");
           setCookie("jwtToken", jwtToken);
           setCookie("refreshToken", refreshToken);
-          alert("카카오 회원가입 완료~");
-          navigate("/");
         } else {
           if (res.data.code === -1) {
             alert("kakao 회원가입 실패 ");
