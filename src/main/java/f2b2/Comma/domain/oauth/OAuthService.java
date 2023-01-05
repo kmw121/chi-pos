@@ -20,12 +20,10 @@ public class OAuthService{
         try {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            System.out.println("여까지됨1");
 
             //POST 요청을 위해 기본값이 false인 setDoOutput을 true로
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
-            System.out.println("여까지됨2");
 
             //POST 요청에 필요로 요구하는 파라미터 스트림을 통해 전송
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
@@ -36,29 +34,24 @@ public class OAuthService{
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();
-            System.out.println("여까지됨3");
 
             //결과 코드가 200이라면 성공
             int responseCode = conn.getResponseCode();
             System.out.println("responseCode : " + responseCode);
-            System.out.println("여까지됨4");
 
             //요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String line = "";
             String result = "";
-            System.out.println("여까지됨5");
 
             while ((line = br.readLine()) != null) {
                 result += line;
             }
             System.out.println("response body : " + result);
-            System.out.println("여까지됨6");
 
             //Gson 라이브러리에 포함된 클래스로 JSON파싱 객체 생성
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
-            System.out.println("여까지됨7");
 
             access_Token = element.getAsJsonObject().get("access_token").getAsString();
             refresh_Token = element.getAsJsonObject().get("refresh_token").getAsString();
