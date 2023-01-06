@@ -7,6 +7,10 @@ export default async function authCheck(dispatch, navigate, user) {
     console.log("userid X");
     alert("로그인이 필요한 페이지 입니다.");
     navigate("/");
+    deleteCookie(["jwtToken"]);
+    deleteCookie(["refreshToken"]);
+    dispatch(setUserInfo([]));
+    dispatch(setUser([]));
   } else {
     try {
       const res = await axios.get(API_URL + `/user/${user.id}`, {

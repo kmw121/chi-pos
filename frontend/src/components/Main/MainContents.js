@@ -36,15 +36,16 @@ import usePostsSearch from "../../hooks/usePostsSearch";
 import { API_URL } from "../../util/API_URL";
 import axios from "axios";
 import getGenerateRandomKey from "../../util/getGenerateRandomKey";
-function MainContents() {
-  const [searchConfig, setSearchConfig] = useState({
-    page: 1,
-    stack: [],
-    size: 6,
-    isEnd: true,
-    categoryType: "",
-  });
-  const { list, loadingStatus } = usePostsSearch(searchConfig);
+function MainContents({
+  setSearchConfig,
+  list,
+  searchConfig,
+  setLoadingStatus,
+  loadingStatus,
+  setList,
+  hello,
+  setHello,
+}) {
   const [isChecked, setIsChecked] = useState(false);
   const [categorySelected, setCategorySelected] = useState([
     {
@@ -60,8 +61,9 @@ function MainContents() {
     { text: "프로젝트", isSelected: false, category: "프로젝트" },
   ]);
   const onClickFilterCategory = (text) => {
+    setList([]);
     const changeFilterCategory = (prev) => {
-      return { ...prev, categoryType: text };
+      return { ...prev, categoryType: text, page: 1 };
     };
     setSearchConfig(changeFilterCategory);
   };
@@ -98,37 +100,51 @@ function MainContents() {
   };
   const [target, setTarget] = useState(null);
   const targetStyle = { width: "100%", height: "5px" };
-  const fetchData = async () => {
-    // usePostsSearch(searchConfig);
-    // try {
-    //   setLoadingStatus(true);
-    //   const res = await axios.post(API_URL + "/posts", searchConfig);
-    //   setList((prev) => prev.concat(res.data.data));
-    //   setLoadingStatus(false);
-    // } catch (e) {
-    //   throw new Error(e);
-    // }
-  };
-  const aa = usePostsSearch(searchConfig);
+  useEffect(() => {
+    setHello(() => true);
+  }, []);
+
   useEffect(() => {
     let observer;
     if (target) {
       const onIntersect = async ([entry], observer) => {
+        console.log("onintersect calling~");
+        setHello(false);
         if (entry.isIntersecting) {
           observer.unobserve(entry.target);
-          setSearchConfig((prev) => {
-            return { ...prev, page: prev.page + 1 };
-          });
-          await aa();
-          observer.observe(entry.target);
+          try {
+            setLoadingStatus(true);
+            const res = await axios.post(API_URL + "/posts", searchConfig);
+            if (res.data.code !== -1) {
+              setSearchConfig((prev) => {
+                return { ...prev, page: prev.page + 1 };
+              });
+              setLoadingStatus(false);
+            }
+          } catch (err) {
+            setLoadingStatus(false);
+            throw new Error(err);
+          }
         }
+        observer.observe(entry.target);
       };
-      observer = new IntersectionObserver(onIntersect, { threshold: 0.5 });
+      observer = new IntersectionObserver(onIntersect, { threshold: 1 });
       observer.observe(target);
     }
     return () => observer && observer.disconnect();
   }, [target]);
-  console.log(searchConfig);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setList([]);
+  //     setSearchConfig({
+  //       page: 1,
+  //       stack: [],
+  //       size: 6,
+  //       isEnd: true,
+  //       categoryType: "",
+  //     });
+  //   }, 100);
+  // }, []);
   return (
     <MainContentsMain>
       <MainContentsCategoryContainer>
@@ -253,10 +269,9 @@ function MainContents() {
         {loadingStatus && (
           <div
             style={{
-              position: "fixed",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
             <FadeLoader
@@ -269,9 +284,11 @@ function MainContents() {
           </div>
         )}
       </MainContentsAppContainer>
-      <div ref={setTarget} style={targetStyle}>
-        asdfasdfasdf
-      </div>
+      {
+        <div ref={setTarget} style={targetStyle}>
+          asdfasdfasdf
+        </div>
+      }
     </MainContentsMain>
   );
 }

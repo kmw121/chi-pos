@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { AiOutlineArrowLeft, AiOutlineCloseCircle } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -45,12 +45,12 @@ import { logout } from "../../util/logout";
 function Study() {
   const dispatch = useDispatch();
   const { id } = useParams();
-  useGetPostsById(id, dispatch);
+  const { currentPost } = useGetPostsById(id, dispatch);
   const navigate = useNavigate();
   const onGoBack = () => {
     navigate("/");
   };
-  const { user, currentPost } = useSelector((state) => {
+  const { user } = useSelector((state) => {
     return state.user;
   });
   const post = currentPost[0];
@@ -192,7 +192,7 @@ function Study() {
           style={{ width: "25px", height: "25px", cursor: "pointer" }}
           onClick={onGoBack}
         />
-        <StudyHeadTitle>{post.title}</StudyHeadTitle>
+        <StudyHeadTitle>{post && post.title}</StudyHeadTitle>
         <StudyHeadUserAndDate>
           <StudyHeadUserBox>
             <img
@@ -207,13 +207,13 @@ function Study() {
                 objectFit: "cover",
               }}
             />
-            <StudyHeadUserName>{post.user.nickName}</StudyHeadUserName>
+            <StudyHeadUserName>{post && post.user.nickName}</StudyHeadUserName>
           </StudyHeadUserBox>
           <StudyHeadRegisterDate>
-            {post.createdDate.slice(0, 10).replace(/-/gi, " . ")}
+            {post && post.createdDate.slice(0, 10).replace(/-/gi, " . ")}
           </StudyHeadRegisterDate>
         </StudyHeadUserAndDate>
-        {post.user.id === user.id && (
+        {post && post.user.id === user.id && (
           <StudyAuthBtnSection>
             <StudyAuthBtn onClick={onDeadline}>마감</StudyAuthBtn>
             <StudyAuthBtn>수정</StudyAuthBtn>
@@ -223,34 +223,36 @@ function Study() {
         <StudyInfoGridUl>
           <StudyInfoGridLi>
             <StudyInfoGridTitle>모집 구분</StudyInfoGridTitle>
-            <StudyInfoGridContent>{post.categoryType}</StudyInfoGridContent>
+            <StudyInfoGridContent>
+              {post && post.categoryType}
+            </StudyInfoGridContent>
           </StudyInfoGridLi>
           <StudyInfoGridLi>
             <StudyInfoGridTitle>진행 방식</StudyInfoGridTitle>
-            <StudyInfoGridContent>{post.howto}</StudyInfoGridContent>
+            <StudyInfoGridContent>{post && post.howto}</StudyInfoGridContent>
           </StudyInfoGridLi>
           <StudyInfoGridLi>
             <StudyInfoGridTitle>모집 인원</StudyInfoGridTitle>
-            <StudyInfoGridContent>{post.people}</StudyInfoGridContent>
+            <StudyInfoGridContent>{post && post.people}</StudyInfoGridContent>
           </StudyInfoGridLi>
           <StudyInfoGridLi>
             <StudyInfoGridTitle>시작 예정</StudyInfoGridTitle>
             <StudyInfoGridContent>
-              {post.startDate.slice(0, 10).replace(/-/gi, ".")}
+              {post && post.startDate.slice(0, 10).replace(/-/gi, ".")}
             </StudyInfoGridContent>
           </StudyInfoGridLi>
           <StudyInfoGridLi>
             <StudyInfoGridTitle>연락 방법</StudyInfoGridTitle>
-            <StudyInfoGridContent>{post.contact}</StudyInfoGridContent>
+            <StudyInfoGridContent>{post && post.contact}</StudyInfoGridContent>
           </StudyInfoGridLi>
           <StudyInfoGridLi>
             <StudyInfoGridTitle>예상 기간</StudyInfoGridTitle>
-            <StudyInfoGridContent>{post.duration}</StudyInfoGridContent>
+            <StudyInfoGridContent>{post && post.duration}</StudyInfoGridContent>
           </StudyInfoGridLi>
           <StudyInfoGridLi>
             <StudyInfoGridTitle>사용 언어</StudyInfoGridTitle>
             <StudyInfoGridContent>
-              {post.postStack.length !== 0
+              {post && post.postStack.length !== 0
                 ? post.postStack[0].stack.name
                 : null}
             </StudyInfoGridContent>
@@ -259,7 +261,9 @@ function Study() {
       </StudyHeadSection>
       <StudyProjectBox>
         <StudyProjectInfo>프로젝트 소개</StudyProjectInfo>
-        <StudyProjectDetail dangerouslySetInnerHTML={{ __html: post.detail }} />
+        <StudyProjectDetail
+          dangerouslySetInnerHTML={{ __html: post && post.detail }}
+        />
       </StudyProjectBox>
       <StudyCommentBox>
         <StudyCommentInnerBox>
@@ -270,7 +274,7 @@ function Study() {
             <StudyCommentInputText
               value={comment}
               onChange={handleCommentValue}
-              disabled={user.id === undefined ? true : false}
+              disabled={post && user.id === undefined ? true : false}
               placeholder="댓글을 입력하세요."
             ></StudyCommentInputText>
           </StudyCommentInputBox>
@@ -279,39 +283,40 @@ function Study() {
           <StudyButton onClick={onPostComment}>댓글 등록</StudyButton>
         </StudyButtonBox>
         <StudyCommentUl>
-          {post.comments.map((content) => (
-            <StudyCommentLi key={content.createdDate + content.id}>
-              <StudyCommentHead>
-                <StudyCommentHeadBox>
-                  <StudyCommentHeadImg src={"/logo/Git.png"} alt="zz" />
-                  <StudyCommentHeadNameDateBox>
-                    <StudyCommentHeadName>
-                      {content.user.nickName}
-                    </StudyCommentHeadName>
-                    <StudyCommentHeadDate>
-                      {content.createdDate.slice(0, 10).replace(/-/gi, ".")}
-                    </StudyCommentHeadDate>
-                  </StudyCommentHeadNameDateBox>
-                </StudyCommentHeadBox>
-                {user.id === content.user.id && (
-                  <AiOutlineCloseCircle
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      cursor: "pointer",
-                      width: "28px",
-                      height: "28px",
-                      justifyContent: "center",
-                    }}
-                    onClick={() => onDeleteComment(content.id)}
-                  />
-                )}
-              </StudyCommentHead>
-              <StudyCommentMain>
-                <StudyCommentMainText>{content.detail}</StudyCommentMainText>
-              </StudyCommentMain>
-            </StudyCommentLi>
-          ))}
+          {post &&
+            post.comments.map((content) => (
+              <StudyCommentLi key={content.createdDate + content.id}>
+                <StudyCommentHead>
+                  <StudyCommentHeadBox>
+                    <StudyCommentHeadImg src={"/logo/Git.png"} alt="zz" />
+                    <StudyCommentHeadNameDateBox>
+                      <StudyCommentHeadName>
+                        {content.user.nickName}
+                      </StudyCommentHeadName>
+                      <StudyCommentHeadDate>
+                        {content.createdDate.slice(0, 10).replace(/-/gi, ".")}
+                      </StudyCommentHeadDate>
+                    </StudyCommentHeadNameDateBox>
+                  </StudyCommentHeadBox>
+                  {post && user.id === content.user.id && (
+                    <AiOutlineCloseCircle
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        cursor: "pointer",
+                        width: "28px",
+                        height: "28px",
+                        justifyContent: "center",
+                      }}
+                      onClick={() => onDeleteComment(content.id)}
+                    />
+                  )}
+                </StudyCommentHead>
+                <StudyCommentMain>
+                  <StudyCommentMainText>{content.detail}</StudyCommentMainText>
+                </StudyCommentMain>
+              </StudyCommentLi>
+            ))}
         </StudyCommentUl>
       </StudyCommentBox>
     </StudyContainer>

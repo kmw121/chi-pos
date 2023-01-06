@@ -13,7 +13,7 @@ import {
   SelectedStackLi,
   SelectedStackUl,
 } from "../components";
-function MainSection({ searchConfig, setSearchConfig }) {
+function MainSection({ setSearchConfig, setList }) {
   const [sectionTextList, setSectionTextList] = useState([
     {
       category: "인기",
@@ -84,6 +84,8 @@ function MainSection({ searchConfig, setSearchConfig }) {
           page: 1,
         };
       };
+      setList([]);
+      console.log("stack change!!");
       setSearchConfig(addStackNumber);
       setSelectedStack(clickStack);
     } else {

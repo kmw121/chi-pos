@@ -534,6 +534,7 @@ export const MyPostsTitle = styled.main`
 export const MyPostsTitleCategory = styled.section`
   display: flex;
   margin-bottom: 2rem;
+  justify-content: center;
 `;
 export const MyPostsTitleCategoryItem = styled.div`
   display: flex;
@@ -542,6 +543,8 @@ export const MyPostsTitleCategoryItem = styled.div`
   cursor: pointer;
   font-weight: 700;
   font-size: 1.5rem;
+  flex-direction: column;
+  width: 90%;
 `;
 
 /////////////////////////////////////////////////////////////

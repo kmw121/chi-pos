@@ -14,6 +14,7 @@ import SignInForm from "../SignIn/SignInForm";
 import { useCookies } from "react-cookie";
 import { logout } from "../../util/logout";
 import { useDispatch } from "react-redux";
+import useGetPostsById from "../../hooks/useGetPostsById";
 function MainHead({ login, setLogin }) {
   const [cookies, setCookies, removeCookie] = useCookies(["jwtToken"]);
   const navigate = useNavigate();
@@ -69,7 +70,12 @@ function MainHead({ login, setLogin }) {
                     <MainHeadDropdownLi onClick={onGoToSetting}>
                       설정
                     </MainHeadDropdownLi>
-                    <MainHeadDropdownLi onClick={() => logout(dispatch)}>
+                    <MainHeadDropdownLi
+                      onClick={() => {
+                        logout(dispatch);
+                        logout(dispatch);
+                      }}
+                    >
                       로그아웃
                     </MainHeadDropdownLi>
                   </MainHeadDropdownUl>
