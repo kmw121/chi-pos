@@ -1,17 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { API_URL } from "../util/API_URL";
-export default function usePostsSearch(
-  searchConfig,
-  stack,
-  isEnd,
-  categoryType,
-  page
-) {
+export default function usePostsSearch(searchConfig) {
   const [list, setList] = useState([]);
   const [loadingStatus, setLoadingStatus] = useState(false);
   useEffect(() => {
-    console.log("call usePostsSearch useEffect");
     async function fetchData() {
       try {
         setLoadingStatus(true);
@@ -20,13 +13,11 @@ export default function usePostsSearch(
           setList((prev) => prev.concat(res.data.data));
           setLoadingStatus(false);
         }
-        console.log("useEffect searchConfig : ", searchConfig);
-        console.log("res : ", res);
       } catch (err) {
         throw new Error(err);
       }
     }
     fetchData();
-  }, [stack, isEnd, categoryType]);
+  }, [searchConfig]);
   return { list, loadingStatus, setList, setLoadingStatus };
 }

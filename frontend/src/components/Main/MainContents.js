@@ -36,19 +36,15 @@ import usePostsSearch from "../../hooks/usePostsSearch";
 import { API_URL } from "../../util/API_URL";
 import axios from "axios";
 import getGenerateRandomKey from "../../util/getGenerateRandomKey";
-function MainContents({
-  searchConfig,
-  setSearchConfig,
-  pageNumber,
-  setPageNumber,
-}) {
-  const { list, loadingStatus, setList, setLoadingStatus } = usePostsSearch(
-    searchConfig,
-    searchConfig.stack,
-    searchConfig.isEnd,
-    searchConfig.categoryType,
-    searchConfig.page
-  );
+function MainContents() {
+  const [searchConfig, setSearchConfig] = useState({
+    page: 1,
+    stack: [],
+    size: 6,
+    isEnd: true,
+    categoryType: "",
+  });
+  const { list, loadingStatus } = usePostsSearch(searchConfig);
   const [isChecked, setIsChecked] = useState(false);
   const [categorySelected, setCategorySelected] = useState([
     {
@@ -103,25 +99,27 @@ function MainContents({
   const [target, setTarget] = useState(null);
   const targetStyle = { width: "100%", height: "5px" };
   const fetchData = async () => {
-    try {
-      console.log("call infinity");
-      setLoadingStatus(true);
-      setPageNumber((prev) => prev + 1);
-      const res = await axios.post(API_URL + "/posts", searchConfig);
-      setList((prev) => prev.concat(res.data.data));
-      setLoadingStatus(false);
-      console.log("infinity searchConfig : ", searchConfig);
-    } catch (e) {
-      throw new Error(e);
-    }
+    // usePostsSearch(searchConfig);
+    // try {
+    //   setLoadingStatus(true);
+    //   const res = await axios.post(API_URL + "/posts", searchConfig);
+    //   setList((prev) => prev.concat(res.data.data));
+    //   setLoadingStatus(false);
+    // } catch (e) {
+    //   throw new Error(e);
+    // }
   };
+  const aa = usePostsSearch(searchConfig);
   useEffect(() => {
     let observer;
     if (target) {
       const onIntersect = async ([entry], observer) => {
         if (entry.isIntersecting) {
           observer.unobserve(entry.target);
-          await fetchData();
+          setSearchConfig((prev) => {
+            return { ...prev, page: prev.page + 1 };
+          });
+          await aa();
           observer.observe(entry.target);
         }
       };
@@ -130,6 +128,7 @@ function MainContents({
     }
     return () => observer && observer.disconnect();
   }, [target]);
+  console.log(searchConfig);
   return (
     <MainContentsMain>
       <MainContentsCategoryContainer>
