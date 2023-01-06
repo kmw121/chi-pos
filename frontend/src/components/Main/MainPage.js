@@ -13,12 +13,32 @@ function MainPage({ login, setLogin }) {
       behavior: "smooth",
     });
   };
+  const [hello, setHello] = useState(true);
+
+  const {
+    list,
+    loadingStatus,
+    setLoadingStatus,
+    setList,
+    searchConfig,
+    setSearchConfig,
+  } = usePostsSearch(hello);
+  console.log("hello : ", hello);
   return (
     <>
       <MainHead login={login} setLogin={setLogin} />
       <MainBanner />
-      <MainSection />
-      <MainContents />
+      <MainSection setSearchConfig={setSearchConfig} setList={setList} />
+      <MainContents
+        list={list}
+        loadingStatus={loadingStatus}
+        setLoadingStatus={setLoadingStatus}
+        setList={setList}
+        searchConfig={searchConfig}
+        setSearchConfig={setSearchConfig}
+        hello={hello}
+        setHello={setHello}
+      />
       <MainFooter />
       <BsFillArrowUpCircleFill
         style={{
