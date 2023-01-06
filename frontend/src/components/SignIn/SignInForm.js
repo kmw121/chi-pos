@@ -68,6 +68,7 @@ function SignInForm({ onToggle }) {
         });
         onToggle();
         alert(`${loginForm.username}님 반갑습니다!`);
+        window.location.reload();
       } else if (res.data.code === -1) {
         alert("id/pw를 확인해주세요.");
       }

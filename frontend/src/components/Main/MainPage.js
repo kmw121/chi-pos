@@ -5,6 +5,7 @@ import MainContents from "./MainContents";
 import MainFooter from "./MainFooter";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import { useState } from "react";
+import usePostsSearch from "../../hooks/usePostsSearch";
 function MainPage({ login, setLogin }) {
   const handleTop = () => {
     window.scrollTo({
@@ -12,31 +13,12 @@ function MainPage({ login, setLogin }) {
       behavior: "smooth",
     });
   };
-  const [pageNumber, setPageNumber] = useState(1);
-  const [searchConfig, setSearchConfig] = useState({
-    stack: [],
-    size: 6,
-    page: pageNumber,
-    isEnd: true,
-    categoryType: "",
-  });
-
-  console.log("searchConfig : ", searchConfig);
-  console.log("pagenumber : ", pageNumber);
   return (
     <>
       <MainHead login={login} setLogin={setLogin} />
       <MainBanner />
-      <MainSection
-        searchConfig={searchConfig}
-        setSearchConfig={setSearchConfig}
-      />
-      <MainContents
-        searchConfig={searchConfig}
-        setSearchConfig={setSearchConfig}
-        pageNumber={pageNumber}
-        setPageNumber={setPageNumber}
-      />
+      <MainSection />
+      <MainContents />
       <MainFooter />
       <BsFillArrowUpCircleFill
         style={{

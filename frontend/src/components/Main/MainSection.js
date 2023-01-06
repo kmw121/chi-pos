@@ -113,7 +113,6 @@ function MainSection({ searchConfig, setSearchConfig }) {
     setSearchConfig(searchConfigClear);
   };
   const isFilterSelected = selectedStack.length !== 0;
-  console.log("searchConfig : ", searchConfig);
   return (
     <SectionContainer>
       <CategoryUl>
