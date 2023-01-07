@@ -22,8 +22,8 @@ import {
 } from "../components";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-import { setUser } from "../../slice/userSlice";
-import { useDispatch } from "react-redux";
+import { setUser, setUserInfo } from "../../slice/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { API_URL } from "../../util/API_URL";
 import { getCookie, setCookie, deleteCookie } from "../../util/cookie";
 import { KAKAO_AUTH_URL } from "../../util/kakaoAuth";
@@ -38,6 +38,9 @@ function SignInForm({ onToggle }) {
   const [loginForm, setLoginForm] = useState({
     username: "",
     password: "",
+  });
+  const { user } = useSelector((state) => {
+    return state.user;
   });
   const onEmailValue = (e) => {
     const onChangeName = (prev) => {
@@ -55,6 +58,7 @@ function SignInForm({ onToggle }) {
     try {
       const res = await axios.post(API_URL + "/login", loginForm);
       if (res.data.code === 1) {
+        console.log(res);
         const jwtToken = res.data.data.accessToken;
         const refreshToken = res.data.data.refreshToken;
         const decoded = jwt_decode(jwtToken);
@@ -63,12 +67,22 @@ function SignInForm({ onToggle }) {
         deleteCookie("refreshToken");
         setCookie("jwtToken", jwtToken);
         setCookie("refreshToken", refreshToken);
-        setLoginForm((prev) => {
-          return { ...prev, username: "", password: "" };
-        });
-        onToggle();
-        alert(`${loginForm.username}님 반갑습니다!`);
-        window.location.reload();
+        try {
+          const nextRes = await axios.get(API_URL + `/user/${user.id}`, {
+            headers: {
+              Authorization: `${getCookie("jwtToken")}`,
+            },
+          });
+          dispatch(setUserInfo(nextRes.data));
+          setLoginForm((prev) => {
+            return { ...prev, username: "", password: "" };
+          });
+          onToggle();
+          alert(`${loginForm.username}님 반갑습니다!`);
+          window.location.reload();
+        } catch (err) {
+          throw new Error(err);
+        }
       } else if (res.data.code === -1) {
         alert("id/pw를 확인해주세요.");
       }

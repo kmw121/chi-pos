@@ -48,7 +48,7 @@ function Study() {
   const { currentPost } = useGetPostsById(id, dispatch);
   const navigate = useNavigate();
   const onGoBack = () => {
-    navigate("/");
+    navigate(-1);
   };
   const { user } = useSelector((state) => {
     return state.user;

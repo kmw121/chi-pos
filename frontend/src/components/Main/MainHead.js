@@ -72,8 +72,8 @@ function MainHead({ login, setLogin }) {
                     </MainHeadDropdownLi>
                     <MainHeadDropdownLi
                       onClick={() => {
-                        logout(dispatch);
-                        logout(dispatch);
+                        logout(dispatch, navigate);
+                        logout(dispatch, navigate);
                       }}
                     >
                       로그아웃

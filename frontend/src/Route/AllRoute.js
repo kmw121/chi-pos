@@ -23,6 +23,7 @@ function AllRoute({ login, setLogin }) {
         <Route path="/study/:id" element={<StudyPage />} />
         <Route path="/oauth/callback/kakao" element={<KakaoSocial />} />
         <Route path="/kakaoSignup" element={<KakaoSignUp />} />
+        <Route path="/myPosts/study/:id" element={<StudyPage />} />
       </Routes>
     </BrowserRouter>
   );
