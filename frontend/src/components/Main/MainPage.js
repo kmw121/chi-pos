@@ -2,7 +2,6 @@ import MainHead from "./MainHead";
 import MainBanner from "./MainBanner";
 import MainSection from "./MainSection";
 import MainContents from "./MainContents";
-import MainFooter from "./MainFooter";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import { useState } from "react";
 import usePostsSearch from "../../hooks/usePostsSearch";
@@ -13,8 +12,7 @@ function MainPage({ login, setLogin }) {
       behavior: "smooth",
     });
   };
-  const [hello, setHello] = useState(true);
-
+  const [initialControl, setInitialControl] = useState(true);
   const {
     list,
     loadingStatus,
@@ -22,8 +20,8 @@ function MainPage({ login, setLogin }) {
     setList,
     searchConfig,
     setSearchConfig,
-  } = usePostsSearch(hello);
-  console.log("hello : ", hello);
+    resCode,
+  } = usePostsSearch(initialControl);
   return (
     <>
       <MainHead login={login} setLogin={setLogin} />
@@ -36,10 +34,10 @@ function MainPage({ login, setLogin }) {
         setList={setList}
         searchConfig={searchConfig}
         setSearchConfig={setSearchConfig}
-        hello={hello}
-        setHello={setHello}
+        initialControl={initialControl}
+        setInitialControl={setInitialControl}
+        resCode={resCode}
       />
-      <MainFooter />
       <BsFillArrowUpCircleFill
         style={{
           width: "50px",

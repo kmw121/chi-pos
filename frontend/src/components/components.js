@@ -1,10 +1,27 @@
 import styled, { keyframes } from "styled-components";
+export const Banner_Animation = keyframes`
+from {
+  -webkit-filter: hue-rotate(0);
+  -moz-filter: hue-rotate(0);
+  -ms-filter: hue-rotate(0);
+  filter: hue-rotate(0);
+}
+to {
+  -webkit-filter: hue-rotate(360deg);
+  -moz-filter: hue-rotate(360deg);
+  -ms-filter: hue-rotate(360deg);
+  filter: hue-rotate(360deg);
+}
 
+`;
 export const Banner = styled.div`
   width: 100vw;
   height: 330px;
   background: thistle;
   cursor: pointer;
+  background-size: cover;
+  background-blend-mode: hard-light;
+  animation: ${Banner_Animation} 1s linear infinite;
 `;
 export const BannerDotsUl = styled.ul`
   display: block;
@@ -579,7 +596,7 @@ export const SettingImgBtnBox = styled.div`
   align-content: center;
   margin-left: 10px;
 `;
-export const SettingImgBtnBoxLabel = styled.label`
+export const SettingImgBtnBoxLabel = styled.input`
   background-color: #262626;
   color: #fff;
   border-radius: 4px;
@@ -630,6 +647,7 @@ export const SettingStackBox = styled.div`
   display: flex;
   align-items: center;
   margin-top: 3rem;
+  width: 100%;
 `;
 export const SettingCompleteBtn = styled.button`
   font-weight: 700;

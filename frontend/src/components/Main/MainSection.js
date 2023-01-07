@@ -85,7 +85,6 @@ function MainSection({ setSearchConfig, setList }) {
         };
       };
       setList([]);
-      console.log("stack change!!");
       setSearchConfig(addStackNumber);
       setSelectedStack(clickStack);
     } else {

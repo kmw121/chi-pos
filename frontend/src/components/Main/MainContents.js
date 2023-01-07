@@ -32,7 +32,6 @@ import {
   MainContentsAppStudyInfoRightDetail,
   MainContentsToggleInput,
 } from "../components";
-import usePostsSearch from "../../hooks/usePostsSearch";
 import { API_URL } from "../../util/API_URL";
 import axios from "axios";
 import getGenerateRandomKey from "../../util/getGenerateRandomKey";
@@ -43,8 +42,8 @@ function MainContents({
   setLoadingStatus,
   loadingStatus,
   setList,
-  hello,
-  setHello,
+  setInitialControl,
+  resCode,
 }) {
   const [isChecked, setIsChecked] = useState(false);
   const [categorySelected, setCategorySelected] = useState([
@@ -99,52 +98,41 @@ function MainContents({
     }
   };
   const [target, setTarget] = useState(null);
-  const targetStyle = { width: "100%", height: "5px" };
+  const targetStyle = { width: "100%", height: "100px" };
   useEffect(() => {
-    setHello(() => true);
+    setInitialControl(() => true);
   }, []);
 
   useEffect(() => {
     let observer;
-    if (target) {
-      const onIntersect = async ([entry], observer) => {
-        console.log("onintersect calling~");
-        setHello(false);
-        if (entry.isIntersecting) {
-          observer.unobserve(entry.target);
-          try {
-            setLoadingStatus(true);
-            const res = await axios.post(API_URL + "/posts", searchConfig);
-            if (res.data.code !== -1) {
-              setSearchConfig((prev) => {
-                return { ...prev, page: prev.page + 1 };
-              });
+    if (resCode === 1) {
+      if (target) {
+        const onIntersect = async ([entry], observer) => {
+          setInitialControl(false);
+          if (entry.isIntersecting) {
+            observer.unobserve(entry.target);
+            try {
+              setLoadingStatus(true);
+              const res = await axios.post(API_URL + "/posts", searchConfig);
+              if (res.data.code === 1) {
+                setSearchConfig((prev) => {
+                  return { ...prev, page: prev.page + 1 };
+                });
+                setLoadingStatus(false);
+              }
+            } catch (err) {
               setLoadingStatus(false);
+              throw new Error(err);
             }
-          } catch (err) {
-            setLoadingStatus(false);
-            throw new Error(err);
           }
-        }
-        observer.observe(entry.target);
-      };
-      observer = new IntersectionObserver(onIntersect, { threshold: 1 });
-      observer.observe(target);
+          observer.observe(entry.target);
+        };
+        observer = new IntersectionObserver(onIntersect, { threshold: 0.8 });
+        observer.observe(target);
+      }
+      return () => observer && observer.disconnect();
     }
-    return () => observer && observer.disconnect();
   }, [target]);
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setList([]);
-  //     setSearchConfig({
-  //       page: 1,
-  //       stack: [],
-  //       size: 6,
-  //       isEnd: true,
-  //       categoryType: "",
-  //     });
-  //   }, 100);
-  // }, []);
   return (
     <MainContentsMain>
       <MainContentsCategoryContainer>
@@ -284,11 +272,11 @@ function MainContents({
           </div>
         )}
       </MainContentsAppContainer>
-      {
+      {resCode === 1 && (
         <div ref={setTarget} style={targetStyle}>
           asdfasdfasdf
         </div>
-      }
+      )}
     </MainContentsMain>
   );
 }

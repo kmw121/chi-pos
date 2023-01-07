@@ -11,13 +11,13 @@ export default function usePostsSearch(hello) {
     isEnd: true,
     categoryType: "",
   });
+  const [resCode, setResCode] = useState(1);
   useEffect(() => {
     async function fetchData() {
-      console.log("useEffect 호출");
       try {
         setLoadingStatus(true);
         const res = await axios.post(API_URL + "/posts", searchConfig);
-        if (res.data.code !== -1) {
+        if (res.data.code === 1) {
           if (hello) {
             setSearchConfig({
               page: 1,
@@ -32,6 +32,9 @@ export default function usePostsSearch(hello) {
             setList((prev) => prev.concat(res.data.data));
             setLoadingStatus(false);
           }
+        } else if (res.data.code === -1) {
+          setLoadingStatus(false);
+          setResCode(() => -1);
         }
       } catch (err) {
         throw new Error(err);
@@ -46,5 +49,7 @@ export default function usePostsSearch(hello) {
     setLoadingStatus,
     searchConfig,
     setSearchConfig,
+    resCode,
+    setResCode,
   };
 }

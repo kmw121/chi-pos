@@ -235,7 +235,7 @@ function SignUpForm() {
       };
     });
   };
-  console.log("유효성 : ", formReg);
+  console.log("files : ", files);
   return (
     <RegisterContainerDiv>
       <SignUpFormTitle>
