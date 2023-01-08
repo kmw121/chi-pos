@@ -20,14 +20,12 @@ const KakaoSocial = () => {
           setCookie("Kakao", res.data.data);
           navigate("/kakaoSignup");
         } else if (res.data.code === 1) {
-          console.log(res.data.data);
           navigate("/");
 
           const jwtToken = res.data.data.accessToken;
           const refreshToken = res.data.data.refreshToken;
           const decoded = jwt_decode(jwtToken);
           dispatch(setUser(decoded));
-          console.log(jwtToken + refreshToken);
           deleteCookie("jwtToken");
           deleteCookie("refreshToken");
           document.cookie = "jwtToken" +" = " + jwtToken+ "; path=/; http://3.39.164.180:8080"

@@ -114,8 +114,8 @@ function KakaoSignUp() {
           deleteCookie("jwtToken");
           deleteCookie("refreshToken");
           deleteCookie("Kakao");
-          setCookie("jwtToken", jwtToken);
-          setCookie("refreshToken", refreshToken);
+          document.cookie = "jwtToken" +" = " + jwtToken+ "; path=/; http://3.39.164.180:8080"
+          document.cookie = "refreshToken" +" = " + refreshToken+ "; path=/; http://3.39.164.180:8080"
         } else {
           if (res.data.code === -1) {
             alert("kakao 회원가입 실패 ");
