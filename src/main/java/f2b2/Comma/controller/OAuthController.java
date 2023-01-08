@@ -29,10 +29,31 @@ public class OAuthController {
     public ResponseEntity<?> kakaoCallback(@RequestParam String code) {
         String kakaoAccessToken = oAuthService.getKakaoAccessToken(code);
         String userId = oAuthService.createKakaoUser(kakaoAccessToken);
-        User loginUser = userRepository.findByKakaoId("kakao_"+userId).orElseThrow(()->{
+        User loginUser = userRepository.findByKakaoId(userId).orElseThrow(()->{
             throw new CustomAuthException("카카오 회원가입이 안된 회원",userId);
         });
 
+        return new ResponseEntity<>(new CMRespDto<>(1,"로그인 성공", new JwtDto(jwtTokenProvider.createAccessToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()), jwtTokenProvider.createRefreshToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()))),HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @GetMapping("/ouath/google")
+    public ResponseEntity<?> googleCallback(@RequestParam String id) {
+        String userId = id;
+        User loginUser = userRepository.findByGoogleId(userId).orElseThrow(()->{
+            throw new CustomAuthException("구글 회원가입이 안된 회원",userId);
+        });
+
+        return new ResponseEntity<>(new CMRespDto<>(1,"로그인 성공", new JwtDto(jwtTokenProvider.createAccessToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()), jwtTokenProvider.createRefreshToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()))),HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @GetMapping("/ouath/facebook")
+    public ResponseEntity<?> facebookCallback(@RequestParam String id) {
+        String userId = id;
+        User loginUser = userRepository.findByGoogleId(userId).orElseThrow(()->{
+            throw new CustomAuthException("구글 회원가입이 안된 회원",userId);
+        });
         return new ResponseEntity<>(new CMRespDto<>(1,"로그인 성공", new JwtDto(jwtTokenProvider.createAccessToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()), jwtTokenProvider.createRefreshToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()))),HttpStatus.OK);
     }
 }

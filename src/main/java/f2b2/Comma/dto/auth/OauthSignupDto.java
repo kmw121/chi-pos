@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,7 +15,7 @@ import java.util.UUID;
 
 @Data
 @Component
-public class KakaoSignupDto {
+public class OauthSignupDto {
     private static String uploadFolder;
 
     @Value("${file.path}")
@@ -42,7 +41,6 @@ public class KakaoSignupDto {
         user.setPassword(UUID.randomUUID().toString());
         user.setUsername(this.username);
         user.setNickName(this.nickName);
-        user.setKakaoId(username);
 
         if(file!=null){
             UUID uuid = UUID.randomUUID();
