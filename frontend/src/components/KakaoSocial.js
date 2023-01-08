@@ -20,11 +20,14 @@ const KakaoSocial = () => {
           setCookie("Kakao", res.data.data);
           navigate("/kakaoSignup");
         } else if (res.data.code === 1) {
+          console.log(res.data.data);
           navigate("/");
+
           const jwtToken = res.data.data.accessToken;
           const refreshToken = res.data.data.refreshToken;
           const decoded = jwt_decode(jwtToken);
           dispatch(setUser(decoded));
+          console.log(jwtToken + refreshToken);
           deleteCookie("jwtToken");
           deleteCookie("refreshToken");
           setCookie("jwtToken", jwtToken);
