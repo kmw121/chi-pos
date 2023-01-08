@@ -169,7 +169,6 @@ function MainContents({
           <MainContentsToggleLabel htmlFor="checkbox" />
         </MainContentsToggle>
       </MainContentsCategoryContainer>
-
       <MainContentsAppContainer>
         <MainContentsAppStudyUl>
           {/* ///////////////////////////////// */}

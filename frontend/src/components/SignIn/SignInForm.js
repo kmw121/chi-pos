@@ -27,6 +27,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { API_URL } from "../../util/API_URL";
 import { getCookie, setCookie, deleteCookie } from "../../util/cookie";
 import { KAKAO_AUTH_URL } from "../../util/kakaoAuth";
+import { gapi } from "gapi-script";
+import GoogleLogin from "react-google-login";
+import GoogleButton from "../Google";
+import Facebook from "../Facebook";
 function SignInForm({ onToggle }) {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -90,6 +94,23 @@ function SignInForm({ onToggle }) {
       throw new Error(err);
     }
   };
+  const clientId =
+    "410536498654-65qpckepv8mo646k8dap7ufhscovs0h3.apps.googleusercontent.com";
+  useEffect(() => {
+    function start() {
+      gapi.client.init({
+        clientId,
+        scope: "email",
+      });
+    }
+    gapi.load("client:auth2", start);
+  });
+  const onSuccess = (res) => {
+    console.log(res);
+  };
+  const onFail = (res) => {
+    console.log(res);
+  };
   return (
     <>
       <ModalBackground onClick={onToggle} />
@@ -126,7 +147,8 @@ function SignInForm({ onToggle }) {
             </RegisterBottomCancelBtn>
             <RegisterBottomOkBtn onClick={onLogin}>로그인</RegisterBottomOkBtn>
           </RegisterBottomSection>
-
+          <GoogleButton />
+          <Facebook />
           <ModalBtnContainer>
             <ModalBtnBox>
               <ModalBtnGoogle>
@@ -138,6 +160,7 @@ function SignInForm({ onToggle }) {
               </ModalBtnGoogle>
               <ModalBtnText>Google 로그인</ModalBtnText>
             </ModalBtnBox>
+
             <ModalBtnBox>
               <ModalBtnGithub>
                 <img
