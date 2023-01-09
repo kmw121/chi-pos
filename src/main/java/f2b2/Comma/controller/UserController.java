@@ -71,8 +71,8 @@ public class UserController {
     @Transactional
     @PostMapping(value = "/kakaoSignup", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> kakaoSignUp(@ModelAttribute @Valid OauthSignupDto oauthSignupDto, BindingResult bindingResult){
-
-        oauthSignupDto.setUsername("kakao_"+oauthSignupDto.getUsername());
+        String preName = oauthSignupDto.getUsername();
+        oauthSignupDto.setUsername("kakao_"+preName);
 
         if(!userRepository.findByUsername(oauthSignupDto.getUsername()).isEmpty()) {
             return new ResponseEntity<>(new CMRespDto<>(-1, "카카오 아이디 중복", null), HttpStatus.OK);
@@ -82,7 +82,7 @@ public class UserController {
         }
         else {
             User user = oauthSignupDto.toEntity();
-            user.setKakaoId(oauthSignupDto.getUsername());
+            user.setKakaoId(preName);
             User loginUser = userService.save(user);
             if (oauthSignupDto.getStack() != null) {
                 for (Long n : oauthSignupDto.getStack()) {
@@ -99,7 +99,8 @@ public class UserController {
     @PostMapping(value = "/googleSignup", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> googleSignUp(@ModelAttribute @Valid OauthSignupDto oauthSignupDto, BindingResult bindingResult){
 
-        oauthSignupDto.setUsername("google_"+oauthSignupDto.getUsername());
+        String preName = oauthSignupDto.getUsername();
+        oauthSignupDto.setUsername("google_"+preName);
 
         if(!userRepository.findByUsername(oauthSignupDto.getUsername()).isEmpty()) {
             return new ResponseEntity<>(new CMRespDto<>(-1, "구글 아이디 중복", null), HttpStatus.OK);
@@ -109,7 +110,7 @@ public class UserController {
         }
         else {
             User user = oauthSignupDto.toEntity();
-            user.setGoogleId(oauthSignupDto.getUsername());
+            user.setGoogleId(preName);
             User loginUser = userService.save(user);
             if (oauthSignupDto.getStack() != null) {
                 for (Long n : oauthSignupDto.getStack()) {
@@ -124,7 +125,8 @@ public class UserController {
     @PostMapping(value = "/facebookSignup", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> facebookSignUp(@ModelAttribute @Valid OauthSignupDto oauthSignupDto, BindingResult bindingResult){
 
-        oauthSignupDto.setUsername("facebook_"+oauthSignupDto.getUsername());
+        String preName = oauthSignupDto.getUsername();
+        oauthSignupDto.setUsername("facebook_"+preName);
 
         if(!userRepository.findByUsername(oauthSignupDto.getUsername()).isEmpty()) {
             return new ResponseEntity<>(new CMRespDto<>(-1, "페이스북 아이디 중복", null), HttpStatus.OK);
@@ -134,7 +136,7 @@ public class UserController {
         }
         else {
             User user = oauthSignupDto.toEntity();
-            user.setFacebookId(oauthSignupDto.getUsername());
+            user.setFacebookId(preName);
             User loginUser = userService.save(user);
             if (oauthSignupDto.getStack() != null) {
                 for (Long n : oauthSignupDto.getStack()) {
