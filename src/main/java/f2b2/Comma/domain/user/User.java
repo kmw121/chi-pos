@@ -61,6 +61,18 @@ public class User extends BaseTimeEntity implements UserDetails  {
     @JsonIgnore
     private String googleId;
 
+    @ColumnDefault("null")
+    @JsonIgnore
+    private String gitId;
+
+    public String getGitId() {
+        return gitId;
+    }
+
+    public void setGitId(String gitId) {
+        this.gitId = gitId;
+    }
+
     public String getKakaoId() {
         return kakaoId;
     }
