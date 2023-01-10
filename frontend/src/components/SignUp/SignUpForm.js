@@ -124,7 +124,7 @@ function SignUpForm() {
       try {
         const formdata = new FormData();
         //이부분 리팩토링 필요.
-        formdata.append("file", files);
+        formdata.append("file", !files ? null : files);
         formdata.append("username", form.username);
         formdata.append("password", form.password);
         formdata.append("nickName", form.nickName);

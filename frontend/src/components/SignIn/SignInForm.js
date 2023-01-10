@@ -147,21 +147,25 @@ function SignInForm({ onToggle }) {
             </RegisterBottomCancelBtn>
             <RegisterBottomOkBtn onClick={onLogin}>로그인</RegisterBottomOkBtn>
           </RegisterBottomSection>
-          <GoogleButton />
-          <Facebook />
           <ModalBtnContainer>
             <ModalBtnBox>
-              <ModalBtnGoogle>
+              <GoogleButton />
+              <Facebook />
+              <ModalBtnKakao href={KAKAO_AUTH_URL}>
+                <img src={"/logo/kakao_login_btn.png"} alt="kakao" />
+              </ModalBtnKakao>
+
+              {/* <ModalBtnGoogle>
                 <img
                   style={{ width: "50px", height: "50px", zInde: "50" }}
                   src={"/logo/google.png"}
                   alt="github"
                 />
               </ModalBtnGoogle>
-              <ModalBtnText>Google 로그인</ModalBtnText>
+              <ModalBtnText>Google 로그인</ModalBtnText> */}
             </ModalBtnBox>
 
-            <ModalBtnBox>
+            {/* <ModalBtnBox>
               <ModalBtnGithub>
                 <img
                   style={{ width: "50px", height: "50px", zInde: "50" }}
@@ -172,15 +176,8 @@ function SignInForm({ onToggle }) {
               <ModalBtnText> Github 로그인</ModalBtnText>
             </ModalBtnBox>
             <ModalBtnBox>
-              <ModalBtnKakao href={KAKAO_AUTH_URL}>
-                <img
-                  style={{ width: "50px", height: "50px", zInde: "50" }}
-                  src={"/logo/kakao.png"}
-                  alt="github"
-                />
-              </ModalBtnKakao>
               <ModalBtnText>Kakao 로그인</ModalBtnText>
-            </ModalBtnBox>
+            </ModalBtnBox> */}
           </ModalBtnContainer>
         </ModalMain>
       </ModalContainer>

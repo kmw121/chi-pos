@@ -5,7 +5,7 @@ import MainContents from "./MainContents";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import { useState } from "react";
 import usePostsSearch from "../../hooks/usePostsSearch";
-function MainPage({ login, setLogin }) {
+function MainPage() {
   const handleTop = () => {
     window.scrollTo({
       top: 0,
@@ -24,7 +24,7 @@ function MainPage({ login, setLogin }) {
   } = usePostsSearch(initialControl);
   return (
     <>
-      <MainHead login={login} setLogin={setLogin} />
+      <MainHead />
       <MainBanner />
       <MainSection setSearchConfig={setSearchConfig} setList={setList} />
       <MainContents

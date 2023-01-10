@@ -6,17 +6,18 @@ import {
   MainHeadNavBtn,
   MainHeadDropdownContainer,
   MainHeadDropdownUl,
-  MainHeadDropdownA,
   MainHeadDropdownLi,
 } from "../components";
 import ModalPortal from "../../Portal/ModalPortal";
 import SignInForm from "../SignIn/SignInForm";
 import { useCookies } from "react-cookie";
 import { logout } from "../../util/logout";
-import { useDispatch } from "react-redux";
-import useGetPostsById from "../../hooks/useGetPostsById";
-function MainHead({ login, setLogin }) {
-  const [cookies, setCookies, removeCookie] = useCookies(["jwtToken"]);
+import { useDispatch, useSelector } from "react-redux";
+function MainHead() {
+  const [cookies, _, __] = useCookies(["jwtToken"]);
+  const { userInfo } = useSelector((state) => {
+    return state.user;
+  });
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const onGoToRegister = () => {
@@ -60,7 +61,15 @@ function MainHead({ login, setLogin }) {
           <MainHeadNavBtn onClick={onGoToRegister}>새 글 쓰기</MainHeadNavBtn>
           {cookies.jwtToken !== undefined ? (
             <MainHeadNavBtn onClick={toggleDropdown}>
-              이미지 들어갈 자리입니다.
+              <img
+                alt="profile"
+                src={
+                  userInfo && userInfo.imageUrl === "nonUrl"
+                    ? "/logo/NextJs.png"
+                    : userInfo.imageUrl
+                }
+                style={{ width: "30px", height: "30px", borderRadius: "10px" }}
+              />
               {dropdownOpen && (
                 <MainHeadDropdownContainer>
                   <MainHeadDropdownUl>
@@ -71,10 +80,7 @@ function MainHead({ login, setLogin }) {
                       설정
                     </MainHeadDropdownLi>
                     <MainHeadDropdownLi
-                      onClick={() => {
-                        logout(dispatch, navigate);
-                        logout(dispatch, navigate);
-                      }}
+                      onClick={() => logout(dispatch, navigate)}
                     >
                       로그아웃
                     </MainHeadDropdownLi>

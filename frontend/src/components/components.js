@@ -234,6 +234,30 @@ export const MainContentsAppStudyInfoRightDetail = styled.div`
   grid-gap: 6px;
   gap: 6px;
 `;
+export const MainContentsAppStudyEmptyBox = styled.ul`
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: column;
+  justify-content: center;
+  padding: 30px 20px 20px 30px;
+  width: 370px;
+  height: 450px;
+  background: #fff;
+  border: 2px solid #d1d1d1;
+  border-radius: 30px;
+  position: relative;
+  cursor: pointer;
+  transition: 0.2s ease-in;
+  text-decoration: none !important;
+  color: inherit;
+  list-style: none;
+`;
+export const MainContentsAppStudyEmtpyBoxInner = styled.li`
+  background: #ced4da;
+  border-radius: 30px;
+  height: 100%;
+  opacity: 0.5;
+`;
 export const MainHeadNav = styled.nav`
   margin: auto;
   max-width: 1180px;
@@ -1062,10 +1086,10 @@ export const MainHeadDropdownA = styled.a`
 
 export const ModalBtnContainer = styled.section`
   margin-top: 4rem;
-  width: 60%;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  width: 60%;
+  justify-content: center;
 `;
 export const ModalBtnBox = styled.div`
   display: flex;
@@ -1096,8 +1120,8 @@ export const ModalBtnGithub = styled.button`
   border: none;
 `;
 export const ModalBtnKakao = styled.a`
-  width: 8rem;
-  height: 8rem;
+  margin-top: 14px;
+  height: 50px;
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -1117,4 +1141,38 @@ export const ModalBtnText = styled.p`
   text-align: center;
   letter-spacing: -0.005em;
   color: #565656;
+`;
+
+//////////////////social login button
+
+export const GoogleBtn = styled.div`
+  width: 100%;
+  height: 55px;
+  background-color: #4285f4;
+  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  margin-bottom: 14px;
+  display: flex;
+  border-radius: 10px;
+`;
+export const GoogleIconWrapper = styled.div`
+  margin-top: 1px;
+  margin-left: 1px;
+  width: 52px;
+  height: 52px;
+  background-color: #fff;
+  border-radius: 10px;
+`;
+export const GoogleIconImg = styled.img`
+  position: absolute;
+  margin-top: 11px;
+  margin-left: 11px;
+  width: 30px;
+  height: 30px;
+`;
+export const GoogleBtnText = styled.p`
+  color: #fff;
+  margin-left: 24px;
+  font-size: 16px;
+  font-weight: 700;
 `;

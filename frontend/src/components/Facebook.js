@@ -1,8 +1,13 @@
+import axios from "axios";
 import FacebookLogin from "react-facebook-login";
+import { API_URL } from "../util/API_URL";
 
 function Facebook() {
-  const responseFacebook = (response) => {
-    console.log(response);
+  const responseFacebook = async (response) => {
+    const res = await axios.post(
+      API_URL + `/ouath/facebook?code=${response.id}`
+    );
+    console.log("res :", res);
   };
 
   return (
@@ -12,7 +17,7 @@ function Facebook() {
       fields="name, email, picture"
       callback={responseFacebook}
       icon="fa-facebook"
-      textButton="ㅍㅔ이스북으로 시작하긔"
+      buttonStyle={{ width: "100%", borderRadius: "10px", fontSize: "15px" }}
     />
   );
 }
