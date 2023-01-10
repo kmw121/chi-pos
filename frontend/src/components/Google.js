@@ -16,7 +16,6 @@ export default function GoogleButton() {
   };
 
   const onFailure = (error) => {
-    console.log("hello world!");
     console.log(error);
   };
   const customStyle = {
@@ -26,11 +25,11 @@ export default function GoogleButton() {
   };
   return (
     <GoogleLogin
-      // render={() => <GoogleGoogle/>}
       clientId="410536498654-65qpckepv8mo646k8dap7ufhscovs0h3.apps.googleusercontent.com"
       onSuccess={onSuccess}
       onFailure={onFailure}
       cookiePolicy={"single_host_origin"}
+      render={({ onClick }) => <GoogleGoogle onClick={onClick} />}
     />
   );
 }
