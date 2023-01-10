@@ -8,14 +8,11 @@ import Setting from "../components/Setting/Setting";
 import StudyPage from "../components/Study/StudyPage";
 import KakaoSocial from "../components/KakaoSocial";
 import KakaoSignUp from "../components/KakaoSignUp/KakaoSignUp";
-function AllRoute({ login, setLogin }) {
+function AllRoute() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="/"
-          element={<MainPage login={login} setLogin={setLogin} />}
-        />
+        <Route path="/" element={<MainPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/myPosts" element={<MyPostsPage />} />

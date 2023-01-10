@@ -31,6 +31,8 @@ import {
   MainContentsAppStudyInfoRightBox,
   MainContentsAppStudyInfoRightDetail,
   MainContentsToggleInput,
+  MainContentsAppStudyEmptyBox,
+  MainContentsAppStudyEmtpyBoxInner,
 } from "../components";
 import { API_URL } from "../../util/API_URL";
 import axios from "axios";
@@ -252,6 +254,19 @@ function MainContents({
                 </MainContentsAppStudyInfo>
               </MainContentsAppStudyA>
             ))}
+          {loadingStatus && (
+            <>
+              <MainContentsAppStudyEmptyBox>
+                <MainContentsAppStudyEmtpyBoxInner></MainContentsAppStudyEmtpyBoxInner>
+              </MainContentsAppStudyEmptyBox>
+              <MainContentsAppStudyEmptyBox>
+                <MainContentsAppStudyEmtpyBoxInner></MainContentsAppStudyEmtpyBoxInner>
+              </MainContentsAppStudyEmptyBox>
+              <MainContentsAppStudyEmptyBox>
+                <MainContentsAppStudyEmtpyBoxInner></MainContentsAppStudyEmtpyBoxInner>
+              </MainContentsAppStudyEmptyBox>
+            </>
+          )}
         </MainContentsAppStudyUl>
         {loadingStatus && (
           <div
@@ -271,11 +286,7 @@ function MainContents({
           </div>
         )}
       </MainContentsAppContainer>
-      {resCode === 1 && (
-        <div ref={setTarget} style={targetStyle}>
-          asdfasdfasdf
-        </div>
-      )}
+      {resCode === 1 && <div ref={setTarget} style={targetStyle} />}
     </MainContentsMain>
   );
 }
