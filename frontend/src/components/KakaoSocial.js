@@ -28,8 +28,8 @@ const KakaoSocial = () => {
           dispatch(setUser(decoded));
           deleteCookie("jwtToken");
           deleteCookie("refreshToken");
-          document.cookie = "jwtToken" +" = " + jwtToken+ "; path=/; http://3.39.164.180:8080"
-          document.cookie = "refreshToken" +" = " + refreshToken+ "; path=/; http://3.39.164.180:8080"
+          document.cookie = "jwtToken" +" = " + jwtToken+ "; path=/; domain=3.39.164.180:8080"
+          document.cookie = "refreshToken" +" = " + refreshToken+ "; path=/; domain=3.39.164.180:8080"
         }
       } catch (err) {
         console.log(err);
