@@ -15,12 +15,12 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 @EnableWebMvc
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    final Path FILE_ROOT = Paths.get("../../img").toAbsolutePath().normalize();
-    private String connectPath = "/upload/**";
+//    final Path FILE_ROOT = Paths.get("../../img").toAbsolutePath().normalize();
+//    private String connectPath = "/upload/**";
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler(connectPath)
-                .addResourceLocations("file:///home/ec2-user/commaProject/img/");
+//        registry.addResourceHandler(connectPath)
+//                .addResourceLocations("file:///home/ec2-user/commaProject/img/");
 
         registry.addResourceHandler("/**/*")
                 .addResourceLocations("classpath:/static/")
