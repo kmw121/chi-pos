@@ -9,8 +9,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-    private String connectPath = "/home/ec2-user/file/**";
-    private String resourcePath = "file:///home/ec2-user/file/";
+    private String connectPath = "/home/file/**";
+    private String resourcePath = "file:///home/file/";
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
