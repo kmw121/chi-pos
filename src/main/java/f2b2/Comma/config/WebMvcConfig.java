@@ -9,8 +9,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-    private String connectPath = "/home/file/**";
-    private String resourcePath = "file:///home/file/";
+//    private String connectPath = "/home/file/**";
+//    private String resourcePath = "file:///home/file/";
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
@@ -28,7 +28,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                                 : new ClassPathResource("/static/index.html");
                     }
                 });
-        registry.addResourceHandler(connectPath)
-                .addResourceLocations(resourcePath);
+//        registry.addResourceHandler(connectPath)
+//                .addResourceLocations(resourcePath);
     }
 }
