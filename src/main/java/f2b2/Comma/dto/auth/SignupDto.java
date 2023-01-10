@@ -59,7 +59,7 @@ public class SignupDto {
                 e.printStackTrace();
             }
             System.out.println(imageFilePath);
-            user.setImageUrl("./file/"+imageFileName);
+            user.setImageUrl("./img/"+imageFileName);
         }
         else{
             user.setImageUrl("nonUrl");
