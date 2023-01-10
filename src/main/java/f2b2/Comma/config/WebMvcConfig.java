@@ -16,7 +16,7 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     final Path FILE_ROOT = Paths.get("../../img").toAbsolutePath().normalize();
-    private String connectPath = "/file/*";
+    private String connectPath = "/file/**";
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
@@ -24,18 +24,18 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler(connectPath)
                 .addResourceLocations(FILE_ROOT.toUri().toString());
 
-        registry.addResourceHandler("/**/*")
-                .addResourceLocations("classpath:/static/")
-                .resourceChain(true)
-                .addResolver(new PathResourceResolver() {
-                    @Override
-                    protected Resource getResource(String resourcePath,
-                                                   Resource location) throws IOException {
-                        Resource requestedResource = location.createRelative(resourcePath);
-                        return requestedResource.exists() && requestedResource.isReadable() ? requestedResource
-                                : new ClassPathResource("/static/index.html");
-                    }
-                });
+//        registry.addResourceHandler("/**/*")
+//                .addResourceLocations("classpath:/static/")
+//                .resourceChain(true)
+//                .addResolver(new PathResourceResolver() {
+//                    @Override
+//                    protected Resource getResource(String resourcePath,
+//                                                   Resource location) throws IOException {
+//                        Resource requestedResource = location.createRelative(resourcePath);
+//                        return requestedResource.exists() && requestedResource.isReadable() ? requestedResource
+//                                : new ClassPathResource("/static/index.html");
+//                    }
+//                });
 
     }
 }
