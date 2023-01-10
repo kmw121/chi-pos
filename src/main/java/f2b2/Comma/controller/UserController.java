@@ -165,7 +165,14 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> user) {
         User loginUser = userService.login(user.get("username"),user.get("password"));
-        System.out.println(Paths.get("../../../../img").toAbsolutePath().normalize());
+        System.out.println("-----------------여기서부터시작--------------------");
+        System.out.println("1번 : " + Paths.get("../../../../../img").toAbsolutePath().normalize().toString());
+        System.out.println("2번 : " + Paths.get("../../../../img").toAbsolutePath().normalize().toString());
+        System.out.println("3번 : " + Paths.get("../../../img").toAbsolutePath().normalize().toString());
+        System.out.println("4번 : " + Paths.get("../../img").toAbsolutePath().normalize().toString());
+        System.out.println("5번 : " + Paths.get("../img").toAbsolutePath().normalize().toString());
+        System.out.println("6번 : " + Paths.get(".img").toAbsolutePath().normalize().toString());
+        System.out.println("-----------------여기서부터끝--------------------");
         return new ResponseEntity<>(new CMRespDto<>(1,"로그인 성공", new JwtDto(jwtTokenProvider.createAccessToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()), jwtTokenProvider.createRefreshToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()))),HttpStatus.OK);
     }
 
