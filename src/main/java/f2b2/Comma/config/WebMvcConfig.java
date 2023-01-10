@@ -11,6 +11,7 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
         registry.addResourceHandler("/**/*")
                 .addResourceLocations("classpath:/static/")
                 .resourceChain(true)
@@ -23,5 +24,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                                 : new ClassPathResource("/static/index.html");
                     }
                 });
+        registry.addResourceHandler("/home/ec2-user/file/*")
+                .addResourceLocations("file:/home/ec2-user/file/");
     }
 }
