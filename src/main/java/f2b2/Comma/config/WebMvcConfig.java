@@ -25,6 +25,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //                    }
 //                });
         registry.addResourceHandler("/home/ec2-user/file/**")
-                .addResourceLocations("file:///home/ec2-user/file/");
+                .addResourceLocations("file:/home/ec2-user/file/")
+                .resourceChain(true);
     }
 }
