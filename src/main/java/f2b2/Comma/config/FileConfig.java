@@ -1,4 +1,4 @@
-package f2b2.Comma.config.provider;
+package f2b2.Comma.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
