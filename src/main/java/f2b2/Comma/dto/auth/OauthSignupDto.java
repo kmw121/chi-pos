@@ -53,7 +53,7 @@ public class OauthSignupDto {
                 e.printStackTrace();
             }
             System.out.println(imageFilePath);
-            user.setImageUrl("./file/"+imageFileName);
+            user.setImageUrl("/upload/"+imageFileName);
         }
         else{
             user.setImageUrl("nonUrl");
