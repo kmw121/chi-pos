@@ -19,8 +19,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private String connectPath = "/file/*";
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
-
         registry.addResourceHandler(connectPath)
                 .addResourceLocations(FILE_ROOT.toUri().toString());
 
