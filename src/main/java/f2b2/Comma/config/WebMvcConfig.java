@@ -15,7 +15,7 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 @EnableWebMvc
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    final Path FILE_ROOT = Paths.get("./img").toAbsolutePath().normalize();
+    final Path FILE_ROOT = Paths.get("../../../../img").toAbsolutePath().normalize();
     private String connectPath = "/file/**";
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
