@@ -165,7 +165,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> user) {
         User loginUser = userService.login(user.get("username"),user.get("password"));
-        final Path FILE_ROOT = Paths.get("../../../../img").toAbsolutePath().normalize();
+        System.out.println(Paths.get("../../../../img").toAbsolutePath().normalize());
         return new ResponseEntity<>(new CMRespDto<>(1,"로그인 성공", new JwtDto(jwtTokenProvider.createAccessToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()), jwtTokenProvider.createRefreshToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()))),HttpStatus.OK);
     }
 
