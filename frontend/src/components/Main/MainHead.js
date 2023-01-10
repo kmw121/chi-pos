@@ -64,9 +64,10 @@ function MainHead() {
               <img
                 alt="profile"
                 src={
-                  userInfo && userInfo.imageUrl === "nonUrl"
-                    ? "/logo/NextJs.png"
-                    : userInfo.imageUrl
+                  userInfo && userInfo.data.imageUrl === ""
+                    ? //여기 next.js 로고는 디폴트값으로 쓸 이미지가 없어서 땜빵으로 넣어놓은 것입니다.
+                      "/logo/NextJs.png"
+                    : userInfo.data.imageUrl
                 }
                 style={{ width: "30px", height: "30px", borderRadius: "10px" }}
               />

@@ -5,9 +5,9 @@ import {
   GoogleIconImg,
 } from "./components";
 
-export default function GoogleGoogle() {
+export default function GoogleGoogle({ onClick }) {
   return (
-    <GoogleBtn>
+    <GoogleBtn onClick={onClick}>
       <GoogleIconWrapper>
         <GoogleIconImg
           alt="google"
