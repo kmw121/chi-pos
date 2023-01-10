@@ -50,7 +50,7 @@ public class SignupDto {
 
         if(file!=null){
             UUID uuid = UUID.randomUUID();
-            String imageFileName = uuid +"_"+file.getOriginalFilename();
+            String imageFileName = uuid.toString();
             Path imageFilePath = Paths.get(uploadFolder+imageFileName);
 
             try{
@@ -59,7 +59,7 @@ public class SignupDto {
                 e.printStackTrace();
             }
             System.out.println(imageFilePath);
-            user.setImageUrl("./file/"+imageFileName);
+            user.setImageUrl("/file/"+imageFileName);
         }
         else{
             user.setImageUrl("nonUrl");
