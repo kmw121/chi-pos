@@ -50,9 +50,8 @@ public class SignupDto {
 
         if(file!=null){
             UUID uuid = UUID.randomUUID();
-            String imageFileName = uuid.toString();
+            String imageFileName = uuid +"_"+file.getOriginalFilename();
             Path imageFilePath = Paths.get(uploadFolder+imageFileName);
-
             try{
                 Files.write(imageFilePath,file.getBytes());
             }catch (Exception e){
