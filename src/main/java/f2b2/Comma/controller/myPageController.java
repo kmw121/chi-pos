@@ -77,8 +77,10 @@ public class myPageController {
         Long userId = Long.parseLong(claims.getBody().get("id").toString());
         User user = userService.find(userId);
 
-        if(!passwordEncoder.matches(signupDto.getPrePassword(),user.getPassword())){
-            return new ResponseEntity<>(new CMRespDto<>(-1, "비밀번호가 올바르지 않습니다.", null), HttpStatus.OK);
+        if(user.getFacebookId()==null&&user.getKakaoId()==null&&user.getGitId()==null&&user.getGoogleId()==null) {
+            if (!passwordEncoder.matches(signupDto.getPrePassword(), user.getPassword())) {
+                return new ResponseEntity<>(new CMRespDto<>(-1, "비밀번호가 올바르지 않습니다.", null), HttpStatus.OK);
+            }
         }
 
         if(signupDto.getNickName()!=null) {
