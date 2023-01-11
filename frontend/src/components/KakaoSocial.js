@@ -2,9 +2,9 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import { API_URL } from "../util/API_URL";
 import ClimbingBoxLoader from "react-spinners/ClimbingBoxLoader";
-import { setCookie, deleteCookie } from "../util/cookie";
+import {setCookie, deleteCookie, getCookie} from "../util/cookie";
 import jwt_decode from "jwt-decode";
-import { setUser } from "../slice/userSlice";
+import {setUser, setUserInfo} from "../slice/userSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 const KakaoSocial = () => {
@@ -30,6 +30,14 @@ const KakaoSocial = () => {
           deleteCookie("refreshToken");
           document.cookie = "jwtToken" +" = " + jwtToken+ "; path=/;"
           document.cookie = "refreshToken" +" = " + refreshToken+ "; path=/;"
+          const nextRes = await axios.get(API_URL + `/user/${decoded.id}`, {
+            headers: {
+              Authorization: `${getCookie("jwtToken")}`,
+            },
+          });
+          dispatch(setUserInfo(nextRes.data));
+
+          navigate("/");
         }
       } catch (err) {
         console.log(err);

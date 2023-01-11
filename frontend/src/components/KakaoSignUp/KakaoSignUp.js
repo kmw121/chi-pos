@@ -124,6 +124,7 @@ function KakaoSignUp() {
             },
           });
           dispatch(setUserInfo(nextRes.data));
+          navigate("/");
         } else {
           if (res.data.code === -1) {
             alert("kakao 회원가입 실패 ");
