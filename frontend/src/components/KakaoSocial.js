@@ -20,24 +20,25 @@ const KakaoSocial = () => {
           setCookie("Kakao", res.data.data);
           navigate("/kakaoSignup");
         } else if (res.data.code === 1) {
-          navigate("/");
-
           const jwtToken = res.data.data.accessToken;
           const refreshToken = res.data.data.refreshToken;
           const decoded = jwt_decode(jwtToken);
           dispatch(setUser(decoded));
-          deleteCookie("jwtToken");
-          deleteCookie("refreshToken");
-          document.cookie = "jwtToken" +" = " + jwtToken+ "; path=/;"
-          document.cookie = "refreshToken" +" = " + refreshToken+ "; path=/;"
           const nextRes = await axios.get(API_URL + `/user/${decoded.id}`, {
             headers: {
-              Authorization: `${getCookie("jwtToken")}`,
+              Authorization: jwtToken,
             },
           });
           dispatch(setUserInfo(nextRes.data));
 
           navigate("/");
+
+          deleteCookie("jwtToken");
+          deleteCookie("refreshToken");
+          document.cookie = "jwtToken" +" = " + jwtToken+ "; path=/;"
+          document.cookie = "refreshToken" +" = " + refreshToken+ "; path=/;"
+
+
         }
       } catch (err) {
         console.log(err);

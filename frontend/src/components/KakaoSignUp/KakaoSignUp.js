@@ -108,23 +108,24 @@ function KakaoSignUp() {
         });
         if (res.data.code === 1) {
           alert("카카오 회원가입 완료~");
-          navigate("/");
           const jwtToken = res.data.data.accessToken;
           const refreshToken = res.data.data.refreshToken;
           const decoded = jwt_decode(jwtToken);
           dispatch(setUser(decoded));
-          deleteCookie("jwtToken");
-          deleteCookie("refreshToken");
-          deleteCookie("Kakao");
-          document.cookie = "jwtToken" + " = " + jwtToken + "; path=/;";
-          document.cookie = "refreshToken" + " = " + refreshToken + "; path=/;";
           const nextRes = await axios.get(API_URL + `/user/${decoded.id}`, {
             headers: {
-              Authorization: `${getCookie("jwtToken")}`,
+              Authorization: jwtToken,
             },
           });
           dispatch(setUserInfo(nextRes.data));
+
           navigate("/");
+
+          deleteCookie("jwtToken");
+          deleteCookie("refreshToken");
+          document.cookie = "jwtToken" +" = " + jwtToken+ "; path=/;"
+          document.cookie = "refreshToken" +" = " + refreshToken+ "; path=/;"
+
         } else {
           if (res.data.code === -1) {
             alert("kakao 회원가입 실패 ");
