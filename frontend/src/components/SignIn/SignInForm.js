@@ -61,8 +61,8 @@ function SignInForm({ onToggle }) {
   const onLogin = async () => {
     try {
       const res = await axios.post(API_URL + "/login", loginForm);
+      console.log(res);
       if (res.data.code === 1) {
-        console.log(res);
         const jwtToken = res.data.data.accessToken;
         const refreshToken = res.data.data.refreshToken;
         const decoded = jwt_decode(jwtToken);
@@ -71,22 +71,18 @@ function SignInForm({ onToggle }) {
         deleteCookie("refreshToken");
         setCookie("jwtToken", jwtToken);
         setCookie("refreshToken", refreshToken);
-        try {
-          const nextRes = await axios.get(API_URL + `/user/${user.id}`, {
-            headers: {
-              Authorization: `${getCookie("jwtToken")}`,
-            },
-          });
-          dispatch(setUserInfo(nextRes.data));
-          setLoginForm((prev) => {
-            return { ...prev, username: "", password: "" };
-          });
-          onToggle();
-          alert(`${loginForm.username}님 반갑습니다!`);
-          window.location.reload();
-        } catch (err) {
-          throw new Error(err);
-        }
+        const nextRes = await axios.get(API_URL + `/user/${decoded.id}`, {
+          headers: {
+            Authorization: `${getCookie("jwtToken")}`,
+          },
+        });
+        dispatch(setUserInfo(nextRes.data));
+        setLoginForm((prev) => {
+          return { ...prev, username: "", password: "" };
+        });
+        onToggle();
+        alert(`${loginForm.username}님 반갑습니다!`);
+        window.location.reload();
       } else if (res.data.code === -1) {
         alert("id/pw를 확인해주세요.");
       }
@@ -105,12 +101,6 @@ function SignInForm({ onToggle }) {
     }
     gapi.load("client:auth2", start);
   });
-  const onSuccess = (res) => {
-    console.log(res);
-  };
-  const onFail = (res) => {
-    console.log(res);
-  };
   return (
     <>
       <ModalBackground onClick={onToggle} />
@@ -154,30 +144,7 @@ function SignInForm({ onToggle }) {
               <ModalBtnKakao href={KAKAO_AUTH_URL}>
                 <img src={"/logo/kakao_login_btn.png"} alt="kakao" />
               </ModalBtnKakao>
-
-              {/* <ModalBtnGoogle>
-                <img
-                  style={{ width: "50px", height: "50px", zInde: "50" }}
-                  src={"/logo/google.png"}
-                  alt="github"
-                />
-              </ModalBtnGoogle>
-              <ModalBtnText>Google 로그인</ModalBtnText> */}
             </ModalBtnBox>
-
-            {/* <ModalBtnBox>
-              <ModalBtnGithub>
-                <img
-                  style={{ width: "50px", height: "50px", zInde: "50" }}
-                  src={"/logo/github.png"}
-                  alt="github"
-                />
-              </ModalBtnGithub>
-              <ModalBtnText> Github 로그인</ModalBtnText>
-            </ModalBtnBox>
-            <ModalBtnBox>
-              <ModalBtnText>Kakao 로그인</ModalBtnText>
-            </ModalBtnBox> */}
           </ModalBtnContainer>
         </ModalMain>
       </ModalContainer>
