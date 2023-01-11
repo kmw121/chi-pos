@@ -23,7 +23,7 @@ export const stacks = [
   { name: "Swift", category: "Mobile", isPopular: false, number: 22 },
   { name: "ReactNative", category: "Mobile", isPopular: false, number: 23 },
   { name: "Unity", category: "Mobile", isPopular: false, number: 24 },
-  { name: "AWS", category: "ETC", isPopular: false, number: 25 },
+  { name: "Aws", category: "ETC", isPopular: false, number: 25 },
   { name: "Kubernetes", category: "ETC", isPopular: false, number: 26 },
   { name: "Docker", category: "ETC", isPopular: false, number: 27 },
   { name: "Git", category: "ETC", isPopular: false, number: 28 },

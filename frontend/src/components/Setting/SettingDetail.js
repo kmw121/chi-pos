@@ -11,6 +11,8 @@ import {
   SettingStackBox,
   SettingCompleteBtn,
   SettingWithdrawalBtn,
+  SettingImgBtnBoxSpan,
+  SettingImgBtnBoxInput,
 } from "../components";
 import { stacks } from "../../util/stack";
 import Select from "react-select";
@@ -26,6 +28,8 @@ function SettingDetail() {
   const { userInfo } = useSelector((state) => {
     return state.user;
   });
+  const { facebookId, gitId, googleId, kakaoId } = userInfo.data;
+  const notSocial = !facebookId && !kakaoId && !gitId && !googleId;
   useEffect(() => {
     if (userInfo && userInfo.data.nickName !== undefined) {
       setNick(() => userInfo.data.nickName);
@@ -40,7 +44,6 @@ function SettingDetail() {
         return { label: a, value: a };
       })
   );
-  console.log("stack : ", stack);
   const [nick, setNick] = useState("");
   const [prePassword, setPrepassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -106,6 +109,18 @@ function SettingDetail() {
       };
     });
   };
+  const handleDeleteImg = () => {
+    if (imgPreview.length) {
+      setImgPreview("");
+    } else {
+      if (window.confirm("기본 이미지로 변경하시겠습니까?")) {
+        // 여기에 필요한 logic : setImgPreview에 기본 사진을 넣는 로직
+        // 그리고 setImgPreview에 기본 사진이 들어가있다면 onSubmit에 files를 바꿔야됨
+        // 기본 사진 넣고 alert으로 바뀌었단걸 알려줘야됨.
+        console.log("기본 이미지로 변경");
+      }
+    }
+  };
   const onSubmit = async () => {
     if (formReg.prePassword) {
       try {
@@ -114,7 +129,7 @@ function SettingDetail() {
         formdata.append("nickname", nick);
         formdata.append("password", newPassword);
         formdata.append("stack");
-        formdata.append("prePassword", prePassword);
+        formdata.append("prePassword", notSocial ? prePassword : null);
         const res = await axios({
           method: "POST",
           url: API_URL + "/changeInfo",
@@ -138,19 +153,26 @@ function SettingDetail() {
         <h1>내 정보 수정</h1>
         <SettingImgBox>
           <SettingImg
-          // src={API_URL + userInfo.data.imageUrl}
-          // alt="asdfasdfasdfasdfasdf"
+            alt="profile"
+            // spring.png 자리에 userInfo.data.imageUrl(이게 null이면 default 이미지 )
+            src={!imgPreview.length ? "/logo/Spring.png" : imgPreview}
           />
           <SettingImgBtnBox>
-            <SettingImgBtnBoxLabel
-              placeholder="이미지 선택"
-              onChange={(e) => {
-                encodeFileToBase64(e.target.files[0]);
-              }}
-              type="file"
-              accept="img/*"
-            />
-            <SettingImgBtnBoxBtn>이미지 제거</SettingImgBtnBoxBtn>
+            <SettingImgBtnBoxLabel>
+              <SettingImgBtnBoxSpan>이미지 선택</SettingImgBtnBoxSpan>
+              <SettingImgBtnBoxInput
+                placeholder="이미지 선택"
+                onChange={(e) => {
+                  encodeFileToBase64(e.target.files[0]);
+                }}
+                type="file"
+                accept="img/*"
+              />
+              {/* span, input  */}
+            </SettingImgBtnBoxLabel>
+            <SettingImgBtnBoxBtn onClick={handleDeleteImg}>
+              이미지 제거
+            </SettingImgBtnBoxBtn>
           </SettingImgBtnBox>
         </SettingImgBox>
         <SettingTitleBox>
@@ -181,44 +203,47 @@ function SettingDetail() {
           관심 있는 기술 태그를 등록해주세요.
         </SettingDescription>
         <hr />
-        <SettingTitleBox>
-          <h3 style={{ width: "20rem" }}>기존 비밀번호</h3>
-          <SettingTitleBoxInput
-            placeholder="기존 비밀번호를 입력해 주세요."
-            value={prePassword}
-            onChange={handlePrePassword}
-          />
-        </SettingTitleBox>
-        <SettingDescription>
-          정보 변경을 위하여 기존 비밀번호를 입력해 주세요.&nbsp;
-          <strong style={{ color: "red" }}>(필수)</strong>
-        </SettingDescription>
-        <hr />
-        <SettingTitleBox>
-          <h3 style={{ width: "20rem" }}>변경할 비밀번호</h3>
-          <SettingTitleBoxInput
-            placeholder="변경할 비밀번호를 입력해 주세요."
-            value={newPassword}
-            onChange={handleNewPassword}
-          />
-        </SettingTitleBox>
-        <SettingDescription>
-          비밀번호를 변경하려면 변경할 비밀번호를 입력해 주세요.
-        </SettingDescription>
-        <hr />
-        <SettingTitleBox>
-          <h3 style={{ width: "20rem" }}>비밀번호 재입력</h3>
-          <SettingTitleBoxInput
-            placeholder="비밀번호를 다시 입력해 주세요."
-            value={newPasswordAgain}
-            onChange={handleNewPasswordAgain}
-          />
-        </SettingTitleBox>
-        <SettingDescription>
-          비밀번호를 변경하려면 변경할 비밀번호를 다시 입력해 주세요.
-        </SettingDescription>
-        <hr />
-
+        {notSocial && (
+          <>
+            <SettingTitleBox>
+              <h3 style={{ width: "20rem" }}>기존 비밀번호</h3>
+              <SettingTitleBoxInput
+                placeholder="기존 비밀번호를 입력해 주세요."
+                value={prePassword}
+                onChange={handlePrePassword}
+              />
+            </SettingTitleBox>
+            <SettingDescription>
+              정보 변경을 위하여 기존 비밀번호를 입력해 주세요.&nbsp;
+              <strong style={{ color: "red" }}>(필수)</strong>
+            </SettingDescription>
+            <hr />
+            <SettingTitleBox>
+              <h3 style={{ width: "20rem" }}>변경할 비밀번호</h3>
+              <SettingTitleBoxInput
+                placeholder="변경할 비밀번호를 입력해 주세요."
+                value={newPassword}
+                onChange={handleNewPassword}
+              />
+            </SettingTitleBox>
+            <SettingDescription>
+              비밀번호를 변경하려면 변경할 비밀번호를 입력해 주세요.
+            </SettingDescription>
+            <hr />
+            <SettingTitleBox>
+              <h3 style={{ width: "20rem" }}>비밀번호 재입력</h3>
+              <SettingTitleBoxInput
+                placeholder="비밀번호를 다시 입력해 주세요."
+                value={newPasswordAgain}
+                onChange={handleNewPasswordAgain}
+              />
+            </SettingTitleBox>
+            <SettingDescription>
+              비밀번호를 변경하려면 변경할 비밀번호를 다시 입력해 주세요.
+            </SettingDescription>
+            <hr />
+          </>
+        )}
         <SettingCompleteBtn>완료</SettingCompleteBtn>
         <SettingWithdrawalBtn onClick={() => withdrawal(dispatch, navigate)}>
           회원탈퇴

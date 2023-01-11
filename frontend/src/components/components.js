@@ -620,7 +620,7 @@ export const SettingImgBtnBox = styled.div`
   align-content: center;
   margin-left: 10px;
 `;
-export const SettingImgBtnBoxLabel = styled.input`
+export const SettingImgBtnBoxLabel = styled.label`
   background-color: #262626;
   color: #fff;
   border-radius: 4px;
@@ -628,10 +628,19 @@ export const SettingImgBtnBoxLabel = styled.input`
   cursor: pointer;
   text-align: center;
   padding-top: 4px;
+  max-width: 7.5rem;
   width: 7.5rem;
   height: 2rem;
   font-weight: 500;
   margin: 5px;
+`;
+export const SettingImgBtnBoxSpan = styled.span`
+  display: inline-block;
+  vertical-align: middle;
+  text-decoration: none;
+`;
+export const SettingImgBtnBoxInput = styled.input`
+  display: none;
 `;
 export const SettingImgBtnBoxBtn = styled.button`
   width: 7.5rem;
