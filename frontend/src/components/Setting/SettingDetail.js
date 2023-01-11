@@ -155,7 +155,14 @@ function SettingDetail() {
           <SettingImg
             alt="profile"
             // spring.png 자리에 userInfo.data.imageUrl(이게 null이면 default 이미지 )
-            src={!imgPreview.length ? "/logo/Spring.png" : imgPreview}
+            src={
+              !imgPreview.length
+                ? userInfo.data.imageUrl !== "nonUrl"
+                  ? userInfo.data.imageUrl
+                  : //default
+                    "/logo/spring.png"
+                : imgPreview
+            }
           />
           <SettingImgBtnBox>
             <SettingImgBtnBoxLabel>
