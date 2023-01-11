@@ -118,7 +118,7 @@ function KakaoSignUp() {
           deleteCookie("Kakao");
           document.cookie = "jwtToken" + " = " + jwtToken + "; path=/;";
           document.cookie = "refreshToken" + " = " + refreshToken + "; path=/;";
-          const nextRes = await axios.get(API_URL + `/user/${user.id}`, {
+          const nextRes = await axios.get(API_URL + `/user/${decoded.id}`, {
             headers: {
               Authorization: `${getCookie("jwtToken")}`,
             },
