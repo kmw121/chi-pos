@@ -35,8 +35,8 @@ const KakaoSocial = () => {
 
           deleteCookie("jwtToken");
           deleteCookie("refreshToken");
-          document.cookie = "jwtToken" +" = " + jwtToken+ "; path=/;"
-          document.cookie = "refreshToken" +" = " + refreshToken+ "; path=/;"
+          document.cookie = "jwtToken" +" = " + jwtToken+ "; path=/; domain = chi-pos.com"
+          document.cookie = "refreshToken" +" = " + refreshToken+ "; path=/; domain = chi-pos.com"
 
 
         }
