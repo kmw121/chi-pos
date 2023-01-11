@@ -50,19 +50,15 @@ public class User extends BaseTimeEntity implements UserDetails  {
     }
 
     @ColumnDefault("null")
-    @JsonIgnore
     private String kakaoId;
 
     @ColumnDefault("null")
-    @JsonIgnore
     private String facebookId;
 
     @ColumnDefault("null")
-    @JsonIgnore
     private String googleId;
 
     @ColumnDefault("null")
-    @JsonIgnore
     private String gitId;
 
     public String getGitId() {
