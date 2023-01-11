@@ -37,9 +37,11 @@ const KakaoSocial = () => {
           deleteCookie("refreshToken");
 
           document.cookie = "jwtToken" +" = " + jwtToken+ "; path=/;"
-          console.log("토큰생성1");
+          console.log("토큰생성1.1");
           document.cookie = "refreshToken" +" = " + refreshToken+ "; path=/;"
-          console.log("토큰생성2");
+          console.log("토큰생성2.1");
+
+          window.location.href='http://chi-pos.com/';
 
 
         }
