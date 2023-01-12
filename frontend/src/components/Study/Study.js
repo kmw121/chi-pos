@@ -71,6 +71,7 @@ function Study() {
           navigate("/");
         } else if (res.data.code === -1) {
           alert("알 수 없는 오류가 발생하였습니다.");
+          console.log(res.data);
           logout();
         }
       } catch (err) {
@@ -106,6 +107,7 @@ function Study() {
           }
         } else if (res.data.code === -1) {
           alert("알 수 없는 오류가 발생하였습니다.");
+          console.log(res.data);
           logout();
         }
       } catch (err) {
