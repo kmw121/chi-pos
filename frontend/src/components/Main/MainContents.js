@@ -87,15 +87,19 @@ function MainContents({
     }
   };
   const handleIsEnd = () => {
+    console.log("isChecked", isChecked);
     if (isChecked) {
       const isEndFilter = (prev) => {
-        return { ...prev, isEnd: true };
+        return { ...prev, isEnd: true, page: 1 };
       };
+      setList([]);
       setSearchConfig(isEndFilter);
     } else if (!isChecked) {
       const isEndFilter = (prev) => {
-        return { ...prev, isEnd: false };
+        return { ...prev, isEnd: false, page: 1 };
       };
+      setList([]);
+
       setSearchConfig(isEndFilter);
     }
   };
@@ -116,6 +120,7 @@ function MainContents({
             try {
               setLoadingStatus(true);
               const res = await axios.post(API_URL + "/posts", searchConfig);
+              console.log("infinity res : ", res);
               if (res.data.code === 1) {
                 setSearchConfig((prev) => {
                   return { ...prev, page: prev.page + 1 };
@@ -135,6 +140,10 @@ function MainContents({
       return () => observer && observer.disconnect();
     }
   }, [target]);
+  console.log(
+    "list in main : ",
+    list.map((a) => a.end)
+  );
   return (
     <MainContentsMain>
       <MainContentsCategoryContainer>

@@ -118,6 +118,7 @@ function Study() {
       try {
         const res = await axios.post(
           API_URL + "/comment",
+          null,
           { postId: post.id, detail: comment },
           {
             headers: {
@@ -185,6 +186,7 @@ function Study() {
       }
     }
   };
+  console.log("id : ", id);
   return (
     <StudyContainer>
       <StudyHeadSection>
