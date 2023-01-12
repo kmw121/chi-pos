@@ -1156,7 +1156,7 @@ export const ModalBtnText = styled.p`
 
 export const GoogleBtn = styled.div`
   width: 100%;
-  height: 55px;
+  height: 45px;
   background-color: #4285f4;
   box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.25);
   cursor: pointer;
@@ -1167,8 +1167,8 @@ export const GoogleBtn = styled.div`
 export const GoogleIconWrapper = styled.div`
   margin-top: 1px;
   margin-left: 1px;
-  width: 52px;
-  height: 52px;
+  width: 42px;
+  height: 42px;
   background-color: #fff;
   border-radius: 10px;
 `;
@@ -1176,12 +1176,12 @@ export const GoogleIconImg = styled.img`
   position: absolute;
   margin-top: 11px;
   margin-left: 11px;
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
 `;
 export const GoogleBtnText = styled.p`
   color: #fff;
-  margin-left: 24px;
+  margin-left: 62px;
   font-size: 16px;
   font-weight: 700;
 `;

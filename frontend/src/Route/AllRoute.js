@@ -6,8 +6,9 @@ import SignUpPage from "../components/SignUp/SignUpPage";
 import MyPostsPage from "../components/MyPosts/MyPostsPage";
 import Setting from "../components/Setting/Setting";
 import StudyPage from "../components/Study/StudyPage";
-import KakaoSocial from "../components/KakaoSocial";
-import KakaoSignUp from "../components/KakaoSignUp/KakaoSignUp";
+import KakaoSocial from "../components/Kakao/KakaoSocial";
+import KakaoSignUp from "../components/Kakao/KakaoSignUp";
+import GoogleSignUp from "../components/Google/GoogleSignUp";
 function AllRoute() {
   return (
     <BrowserRouter>
@@ -20,6 +21,7 @@ function AllRoute() {
         <Route path="/study/:id" element={<StudyPage />} />
         <Route path="/oauth/callback/kakao" element={<KakaoSocial />} />
         <Route path="/kakaoSignup" element={<KakaoSignUp />} />
+        <Route path="/googleSignup" element={<GoogleSignUp />} />
         <Route path="/myPosts/study/:id" element={<StudyPage />} />
       </Routes>
     </BrowserRouter>
