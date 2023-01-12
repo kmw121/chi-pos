@@ -117,7 +117,7 @@ function SignInForm({ onToggle }) {
           />
         </ModalHeader>
         <ModalMain>
-          <ModalWelcome>'프로젝트 이름'에 오신 것을 환영합니다!</ModalWelcome>
+          <ModalWelcome>취포스에 오신 것을 환영합니다!</ModalWelcome>
           <ModalInnerBox>
             <IdInput
               onChange={onEmailValue}
