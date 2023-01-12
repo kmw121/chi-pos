@@ -30,7 +30,7 @@ public class OAuthService{
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=07030fde952adb60be217a2ef0f85931"); // TODO REST_API_KEY 입력
-            sb.append("&redirect_uri=http://3.39.164.180:8080/oauth/callback/kakao"); // TODO 인가코드 받은 redirect_uri 입력
+            sb.append("&redirect_uri=http://chi-pos.com/oauth/callback/kakao"); // TODO 인가코드 받은 redirect_uri 입력
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();
