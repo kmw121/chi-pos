@@ -14,6 +14,7 @@ export default function usePostsSearch(hello) {
   const [resCode, setResCode] = useState(1);
   useEffect(() => {
     async function fetchData() {
+      console.log("useeffect 호출");
       try {
         setLoadingStatus(true);
         const res = await axios.post(API_URL + "/posts", searchConfig);
@@ -29,8 +30,11 @@ export default function usePostsSearch(hello) {
             setList([]);
             setLoadingStatus(false);
           } else {
+            console.log(res.data.data.map((a) => a.end));
             setList((prev) => prev.concat(res.data.data));
             setLoadingStatus(false);
+            console.log("isend useeffect: ", searchConfig.isEnd);
+            console.log("searchConfig : ", searchConfig);
           }
         } else if (res.data.code === -1) {
           setLoadingStatus(false);

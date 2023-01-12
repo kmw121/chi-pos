@@ -8,9 +8,10 @@ const clientId =
   "410536498654-65qpckepv8mo646k8dap7ufhscovs0h3.apps.googleusercontent.com";
 export default function GoogleButton() {
   const onSuccess = async (response) => {
+    console.log(response);
     console.log("response.googleId : ", response.googleId);
     const res = await axios.post(
-      API_URL + `/ouath/google?code=${response.googleId}`
+      API_URL + `/ouath/google?code=${response.accessToken}`
     );
     console.log("res : ", res);
   };
@@ -18,18 +19,14 @@ export default function GoogleButton() {
   const onFailure = (error) => {
     console.log(error);
   };
-  const customStyle = {
-    width: "310px",
-    height: "38px",
-    paddingLeft: "30px",
-  };
   return (
     <GoogleLogin
-      clientId="410536498654-65qpckepv8mo646k8dap7ufhscovs0h3.apps.googleusercontent.com"
+      clientId={clientId}
       onSuccess={onSuccess}
       onFailure={onFailure}
       cookiePolicy={"single_host_origin"}
       render={({ onClick }) => <GoogleGoogle onClick={onClick} />}
+      // redirectUri="http://www.chi-pos.com/accounts/google/login/callback/"
     />
   );
 }
