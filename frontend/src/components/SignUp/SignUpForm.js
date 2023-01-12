@@ -124,7 +124,9 @@ function SignUpForm() {
       try {
         const formdata = new FormData();
         //이부분 리팩토링 필요.
-        formdata.append("file", !files.length ? null : files);
+        if (files.length) {
+          formdata.append("file", files);
+        }
         formdata.append("username", form.username);
         formdata.append("password", form.password);
         formdata.append("nickName", form.nickName);
@@ -139,12 +141,13 @@ function SignUpForm() {
         });
         if (res.data.code === 1) {
           console.log(res);
-          alert("어쩔말하는콩순이~");
+          alert("회원가입이 완료되었습니다.");
           navigate("/");
         } else {
           if (res.data.code === -1) {
-            alert("저쩔말하는콩순이");
+            alert("회원가입에 실패하였습니다.");
             console.log(res);
+            navigate("/");
           }
         }
       } catch (err) {
@@ -209,7 +212,7 @@ function SignUpForm() {
         throw new Error(err);
       }
     } else {
-      alert("닉네임은 2글자 이상입니다.");
+      alert("닉네임은 2글자 이상 ~ 10글자 이하로 해주세요!");
     }
   };
   useEffect(() => {
