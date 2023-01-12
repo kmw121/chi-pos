@@ -79,14 +79,14 @@ public class myPageController {
 
         if(user.getKakaoId()==null&&user.getGoogleId()==null) {
             if (!passwordEncoder.matches(signupDto.getPrePassword(), user.getPassword())) {
-                return new ResponseEntity<>(new CMRespDto<>(-1, "비밀번호가 올바르지 않습니다.", null), HttpStatus.OK);
+                return new ResponseEntity<>(new CMRespDto<>(-1, "기존 비밀번호가 올바르지 않습니다.", null), HttpStatus.OK);
             }
         }
 
         if(!user.getNickName().equals(signupDto.getNickName())) {
             if (signupDto.getNickName() != null) {
                 if (!userRepository.findByNickName(signupDto.getNickName()).isEmpty()) {
-                    return new ResponseEntity<>(new CMRespDto<>(-1, "닉네임이 중복입니다.", null), HttpStatus.OK);
+                    return new ResponseEntity<>(new CMRespDto<>(-1, "이미 존재하는 닉네임입니다.", null), HttpStatus.OK);
                 }
                 user.setNickName(signupDto.getNickName());
             }
