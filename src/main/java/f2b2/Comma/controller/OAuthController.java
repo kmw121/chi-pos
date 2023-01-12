@@ -27,11 +27,8 @@ public class OAuthController {
     @ResponseBody
     @GetMapping("/ouath/kakao")
     public ResponseEntity<?> kakaoCallback(@RequestParam String code) {
-        System.out.println("실행됨.1");
         String kakaoAccessToken = oAuthService.getKakaoAccessToken(code);
-        System.out.println("실행됨.2");
         String userId = oAuthService.createKakaoUser(kakaoAccessToken);
-        System.out.println("실행됨.3");
         User loginUser = userRepository.findByKakaoId(userId).orElseThrow(()->{
             throw new CustomAuthException("카카오 회원가입이 안된 회원",userId);
         });
