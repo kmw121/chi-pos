@@ -96,8 +96,14 @@ public class myPageController {
             }
         }
 
-
+        System.out.println("---------나실행 됨----");
         userStackService.delete(userId);
+        System.out.println("---------나실행 됨----");
+
+        System.out.println(signupDto.getStack().get(0));
+        System.out.println(signupDto.getStack().get(1));
+        System.out.println(signupDto.getStack().get(2));
+
         if(signupDto.getStack()!=null){
             for (Long n : signupDto.getStack()) {
                 userStackService.save(userId,n);
