@@ -14,7 +14,7 @@ const KakaoSocial = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await axios.get('http://chi-pos.com' + `/ouath/kakao?code=${code}`);
+        const res = await axios.get(API_URL + `/ouath/kakao?code=${code}`);
         console.log(res);
         if (res.data.code === 2) {
           setCookie("Kakao", res.data.data);
