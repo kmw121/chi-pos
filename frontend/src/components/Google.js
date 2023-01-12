@@ -10,7 +10,7 @@ export default function GoogleButton() {
   const onSuccess = async (response) => {
     console.log(response);
     console.log("response.googleId : ", response.googleId);
-    const res = await axios.post(
+    const res = await axios.get(
       API_URL + `/ouath/google?code=${response.accessToken}`
     );
     console.log("res : ", res);
