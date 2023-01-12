@@ -96,8 +96,9 @@ public class myPageController {
             }
         }
 
-        if(signupDto.getStack()!=null){
+
             userStackService.delete(userId);
+        if(signupDto.getStack()!=null){
             for (Long n : signupDto.getStack()) {
                 userStackService.save(userId,n);
             }
