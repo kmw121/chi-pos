@@ -113,16 +113,15 @@ public class OAuthService{
 
     public String createGoogleUser(String token) {
 
-        String reqURL = "https://www.googleapis.com/oauth2/v1/userinfo";
+        String reqURL = "https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=" + token;
 
         //access_token을 이용하여 사용자 정보 조회
         try {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            conn.setRequestMethod("POST");
+            conn.setRequestMethod("GET");
             conn.setDoOutput(true);
-            conn.setRequestProperty("Authorization", "Bearer " + token); //전송할 header 작성, access_token전송
 
             //결과 코드가 200이라면 성공
             int responseCode = conn.getResponseCode();
