@@ -123,31 +123,6 @@ public class UserController {
         }
     }
 
-    @Transactional
-    @PostMapping(value = "/facebookSignup", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> facebookSignUp(@ModelAttribute @Valid OauthSignupDto oauthSignupDto, BindingResult bindingResult){
-
-        String preName = oauthSignupDto.getUsername();
-        oauthSignupDto.setUsername("facebook_"+preName);
-
-        if(!userRepository.findByUsername(oauthSignupDto.getUsername()).isEmpty()) {
-            return new ResponseEntity<>(new CMRespDto<>(-1, "페이스북 아이디 중복", null), HttpStatus.OK);
-        }
-        else if(!userRepository.findByNickName(oauthSignupDto.getNickName()).isEmpty()) {
-            return new ResponseEntity<>(new CMRespDto<>(-1, "닉네임 중복", null), HttpStatus.OK);
-        }
-        else {
-            User user = oauthSignupDto.toEntity();
-            user.setFacebookId(preName);
-            User loginUser = userService.save(user);
-            if (oauthSignupDto.getStack() != null) {
-                for (Long n : oauthSignupDto.getStack()) {
-                    userStackService.save(loginUser.getId(), n);
-                }
-            }
-            return new ResponseEntity<>(new CMRespDto<>(1,"로그인 성공", new JwtDto(jwtTokenProvider.createAccessToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()), jwtTokenProvider.createRefreshToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()))),HttpStatus.OK);
-        }
-    }
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> userJWT(@PathVariable Long userId,@RequestHeader HttpHeaders headers){
