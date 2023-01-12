@@ -31,7 +31,7 @@ const KakaoSocial = () => {
           });
           dispatch(setUserInfo(nextRes.data));
 
-          navigate("/");
+          window.location.href='http://chi-pos.com/';
 
 
           deleteCookie("jwtToken");
