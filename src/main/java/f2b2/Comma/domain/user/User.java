@@ -52,22 +52,12 @@ public class User extends BaseTimeEntity implements UserDetails  {
     @ColumnDefault("null")
     private String kakaoId;
 
-    @ColumnDefault("null")
-    private String facebookId;
 
     @ColumnDefault("null")
     private String googleId;
 
-    @ColumnDefault("null")
-    private String gitId;
 
-    public String getGitId() {
-        return gitId;
-    }
 
-    public void setGitId(String gitId) {
-        this.gitId = gitId;
-    }
 
     public String getKakaoId() {
         return kakaoId;
@@ -77,13 +67,7 @@ public class User extends BaseTimeEntity implements UserDetails  {
         this.kakaoId = kakaoId;
     }
 
-    public String getFacebookId() {
-        return facebookId;
-    }
 
-    public void setFacebookId(String facebookId) {
-        this.facebookId = facebookId;
-    }
 
     public String getGoogleId() {
         return googleId;
