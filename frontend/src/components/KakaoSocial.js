@@ -33,10 +33,14 @@ const KakaoSocial = () => {
 
           navigate("/");
 
+
           deleteCookie("jwtToken");
           deleteCookie("refreshToken");
-          document.cookie = "jwtToken" +" = " + jwtToken+ "; path=/;"
-          document.cookie = "refreshToken" +" = " + refreshToken+ "; path=/;"
+
+          document.cookie = "jwtToken" +" = " + jwtToken+ "; path=/; "
+          console.log("토큰생성1");
+          document.cookie = "refreshToken" +" = " + refreshToken+ "; path=/; "
+          console.log("토큰생성2");
 
 
         }

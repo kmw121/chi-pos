@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class FileConfig implements WebMvcConfigurer {
 
 
+
     final Path FILE_ROOT = Paths.get("../../img").toAbsolutePath().normalize();
     private String connectPath = "/upload/**";
         @Override
