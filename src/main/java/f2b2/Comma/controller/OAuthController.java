@@ -47,22 +47,4 @@ public class OAuthController {
         return new ResponseEntity<>(new CMRespDto<>(1,"로그인 성공", new JwtDto(jwtTokenProvider.createAccessToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()), jwtTokenProvider.createRefreshToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()))),HttpStatus.OK);
     }
 
-    @ResponseBody
-    @GetMapping("/ouath/facebook")
-    public ResponseEntity<?> facebookCallback(@RequestParam String code) {
-        String userId = oAuthService.createFacebookUser(code);
-        User loginUser = userRepository.findByFacebookId(userId).orElseThrow(()->{
-            throw new CustomAuthException("페이스북 회원가입이 안된 회원",userId);
-        });
-        return new ResponseEntity<>(new CMRespDto<>(1,"로그인 성공", new JwtDto(jwtTokenProvider.createAccessToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()), jwtTokenProvider.createRefreshToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()))),HttpStatus.OK);
-    }
-    @ResponseBody
-    @GetMapping("/ouath/git")
-    public ResponseEntity<?> gitCallback(@RequestParam String code) {
-        String userId = oAuthService.createGitUser(code);
-        User loginUser = userRepository.findByGitId(userId).orElseThrow(()->{
-            throw new CustomAuthException("깃 회원가입이 안된 회원",userId);
-        });
-        return new ResponseEntity<>(new CMRespDto<>(1,"로그인 성공", new JwtDto(jwtTokenProvider.createAccessToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()), jwtTokenProvider.createRefreshToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()))),HttpStatus.OK);
-    }
 }

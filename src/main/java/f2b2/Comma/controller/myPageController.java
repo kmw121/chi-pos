@@ -109,8 +109,7 @@ public class myPageController {
             }catch (Exception e){
                 e.printStackTrace();
             }
-            System.out.println(imageFilePath);
-            user.setImageUrl(imageFilePath.toString());
+            user.setImageUrl("/upload/"+imageFileName);
         }
 
         return new ResponseEntity<>(new CMRespDto<>(1, " 정보 변경 성공", user), HttpStatus.OK);
