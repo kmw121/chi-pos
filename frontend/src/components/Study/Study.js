@@ -61,7 +61,7 @@ function Study() {
   const onDeadline = async () => {
     if (window.confirm("마감하시겠습니까?")) {
       try {
-        const res = await axios.post(API_URL + `/end/${id}`, {
+        const res = await axios.post(API_URL + `/end/${id}`, null,{
           headers: {
             Authorization: `${getCookie("jwtToken")}`,
           },
@@ -72,7 +72,6 @@ function Study() {
         } else if (res.data.code === -1) {
           alert("알 수 없는 오류가 발생하였습니다.");
           console.log(res.data);
-          logout();
         }
       } catch (err) {
         throw new Error(err);
