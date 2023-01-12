@@ -1,10 +1,10 @@
 import axios from "axios";
 import React, { useEffect } from "react";
-import { API_URL } from "../util/API_URL";
+import { API_URL } from "../../util/API_URL";
 import ClimbingBoxLoader from "react-spinners/ClimbingBoxLoader";
-import {setCookie, deleteCookie, getCookie} from "../util/cookie";
+import { setCookie, deleteCookie } from "../../util/cookie";
 import jwt_decode from "jwt-decode";
-import {setUser, setUserInfo} from "../slice/userSlice";
+import { setUser, setUserInfo } from "../../slice/userSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 const KakaoSocial = () => {
@@ -30,19 +30,14 @@ const KakaoSocial = () => {
             },
           });
           dispatch(setUserInfo(nextRes.data));
-
           navigate("/");
-
-
           deleteCookie("jwtToken");
           deleteCookie("refreshToken");
-
-          document.cookie = "jwtToken" +" = " + jwtToken+ "; path=/; "
+          document.cookie = "jwtToken" + " = " + jwtToken + "; path=/; ";
           console.log("토큰생성1");
-          document.cookie = "refreshToken" +" = " + refreshToken+ "; path=/; "
+          document.cookie =
+            "refreshToken" + " = " + refreshToken + "; path=/; ";
           console.log("토큰생성2");
-
-
         }
       } catch (err) {
         console.log(err);

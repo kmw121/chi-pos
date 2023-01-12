@@ -24,12 +24,14 @@ import withdrawal from "../../util/withdrawal";
 import axios from "axios";
 import { API_URL } from "../../util/API_URL";
 import { getCookie } from "../../util/cookie";
+import { setUserInfo, setUser } from "../../slice/userSlice";
+import { deleteCookie, setCookie } from "../../util/cookie";
 function SettingDetail() {
   const { userInfo } = useSelector((state) => {
     return state.user;
   });
-  const { facebookId, gitId, googleId, kakaoId } = userInfo.data;
-  const notSocial = !facebookId && !kakaoId && !gitId && !googleId;
+  const { googleId, kakaoId } = userInfo.data;
+  const notSocial = !kakaoId && !googleId;
   useEffect(() => {
     if (userInfo && userInfo.data.nickName !== undefined) {
       setNick(() => userInfo.data.nickName);
@@ -76,7 +78,11 @@ function SettingDetail() {
     };
     setFormReg(newPasswordAgainReg);
   };
-  const stackArray = stacks
+
+  const onChangeNickName = (e) => {
+    setNick(e.target.value);
+  };
+  const optionStack = stacks
     .map((stack) => stack.name)
     .map((a) => {
       return {
@@ -84,15 +90,6 @@ function SettingDetail() {
         label: a,
       };
     });
-  // [1,2,3,4,5] 이렇게 숫자로 만드는법... 고민...
-  const aaa = stacks.map((a) => {
-    return { number: a.number, name: a.name };
-  });
-  const beforeStack = new Set([...stack]);
-  const onChangeNickName = (e) => {
-    setNick(nick);
-  };
-  const optionStack = stackArray;
   const onSelectedStack = (value) => {
     setStack((prev) => prev.concat(value));
   };
@@ -122,15 +119,43 @@ function SettingDetail() {
     }
   };
   const onSubmit = async () => {
-    if (formReg.prePassword) {
-      try {
-        const formdata = new FormData();
+    try {
+      const arrArr = stacks.map((a) => {
+        return { number: a.number, name: a.name };
+      });
+      const beforeStack = [...new Set([...stack])].map((a) => a.value);
+      const afterNumberStack = beforeStack
+        .flatMap((a) => arrArr.filter((b) => b.name === a))
+        .map((a) => a.number);
+      console.log("afterNumberStack : ", afterNumberStack);
+      const formdata = new FormData();
+      if (files !== "nonUrl") {
+        console.log("file : ", files);
         formdata.append("file", files);
-        formdata.append("nickname", nick);
-        formdata.append("password", newPassword);
-        formdata.append("stack");
-        formdata.append("prePassword", notSocial ? prePassword : null);
-        const res = await axios({
+        console.log("파일 들어감");
+      }
+      formdata.append("nickName", nick);
+      formdata.append("password", newPassword);
+      formdata.append("stack", afterNumberStack);
+      formdata.append("prePassword", notSocial ? prePassword : null);
+      const res = await axios({
+        method: "POST",
+        url: API_URL + "/changeInfo",
+        mode: "cors",
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `${getCookie("jwtToken")}`,
+        },
+        data: formdata,
+      });
+      if (res.data.code === 1) {
+        dispatch(setUserInfo(res.data));
+        alert("정보가 변경되었습니다.");
+        navigate("/");
+      } else if (res.data.code === -1) {
+        alert(res.data.message);
+      } else if (res.data.code === 2) {
+        const nextRes = await axios({
           method: "POST",
           url: API_URL + "/changeInfo",
           mode: "cors",
@@ -140,10 +165,24 @@ function SettingDetail() {
           },
           data: formdata,
         });
-        console.log("res : ", res);
-      } catch (e) {
-        throw new Error(e);
+        if (nextRes.data.code === 2 || nextRes.data.code === -1) {
+          deleteCookie(["jwtToken"]);
+          deleteCookie(["refreshToken"]);
+          dispatch(setUserInfo([]));
+          dispatch(setUser([]));
+          alert("잘못된 접근입니다.");
+          window.location.reload();
+          navigate("/");
+        } else if (nextRes.data.code !== -1) {
+          deleteCookie("jwtToken");
+          setCookie("jwtToken", nextRes.data.data);
+          dispatch(setUserInfo(res.data));
+          alert("정보가 변경되었습니다.");
+          navigate("/");
+        }
       }
+    } catch (e) {
+      throw new Error(e);
     }
   };
   return (
@@ -175,7 +214,6 @@ function SettingDetail() {
                 type="file"
                 accept="img/*"
               />
-              {/* span, input  */}
             </SettingImgBtnBoxLabel>
             <SettingImgBtnBoxBtn onClick={handleDeleteImg}>
               이미지 제거
@@ -218,6 +256,7 @@ function SettingDetail() {
                 placeholder="기존 비밀번호를 입력해 주세요."
                 value={prePassword}
                 onChange={handlePrePassword}
+                type="password"
               />
             </SettingTitleBox>
             <SettingDescription>
@@ -231,6 +270,7 @@ function SettingDetail() {
                 placeholder="변경할 비밀번호를 입력해 주세요."
                 value={newPassword}
                 onChange={handleNewPassword}
+                type="password"
               />
             </SettingTitleBox>
             <SettingDescription>
@@ -243,6 +283,7 @@ function SettingDetail() {
                 placeholder="비밀번호를 다시 입력해 주세요."
                 value={newPasswordAgain}
                 onChange={handleNewPasswordAgain}
+                type="password"
               />
             </SettingTitleBox>
             <SettingDescription>
@@ -251,7 +292,7 @@ function SettingDetail() {
             <hr />
           </>
         )}
-        <SettingCompleteBtn>완료</SettingCompleteBtn>
+        <SettingCompleteBtn onClick={onSubmit}>완료</SettingCompleteBtn>
         <SettingWithdrawalBtn onClick={() => withdrawal(dispatch, navigate)}>
           회원탈퇴
         </SettingWithdrawalBtn>

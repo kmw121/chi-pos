@@ -15,9 +15,6 @@ import {
   PwInput,
   ModalBtnContainer,
   ModalBtnBox,
-  ModalBtnGoogle,
-  ModalBtnText,
-  ModalBtnGithub,
   ModalBtnKakao,
 } from "../components";
 import axios from "axios";
@@ -28,9 +25,7 @@ import { API_URL } from "../../util/API_URL";
 import { getCookie, setCookie, deleteCookie } from "../../util/cookie";
 import { KAKAO_AUTH_URL } from "../../util/kakaoAuth";
 import { gapi } from "gapi-script";
-import GoogleLogin from "react-google-login";
-import GoogleButton from "../Google";
-import Facebook from "../Facebook";
+import GoogleButton from "../Google/Google";
 function SignInForm({ onToggle }) {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -140,7 +135,6 @@ function SignInForm({ onToggle }) {
           <ModalBtnContainer>
             <ModalBtnBox>
               <GoogleButton />
-              <Facebook />
               <ModalBtnKakao href={KAKAO_AUTH_URL}>
                 <img src={"/logo/kakao_login_btn.png"} alt="kakao" />
               </ModalBtnKakao>
