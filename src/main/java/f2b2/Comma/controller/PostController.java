@@ -185,9 +185,11 @@ public class PostController {
     @Transactional
     @PostMapping("/end/{postId}")
     public ResponseEntity<?> endJWT(@PathVariable Long postId,@RequestHeader HttpHeaders headers){
+        System.out.println("여기까지 됨.");
         Post post = postService.find(postId);
         Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey.getBytes()).parseClaimsJws(headers.get("Authorization").get(0));
         if(post.getUser().getId() != Long.parseLong(claims.getBody().get("id").toString())){
+            System.out.println("이거 오류임.");
             return new ResponseEntity<>(new CMRespDto<>(-1, "로그인 정보와 게시글 작성자가 일치하지 않습니다.", null), HttpStatus.OK);
         };
         post.setEnd("true");
