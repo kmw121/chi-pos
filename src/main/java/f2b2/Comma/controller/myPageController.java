@@ -83,6 +83,10 @@ public class myPageController {
             }
         }
 
+        if(signupDto.getPassword().length()!=0){
+            user.setPassword(passwordEncoder.encode(signupDto.getPassword()));
+        }
+
         if(!user.getNickName().equals(signupDto.getNickName())) {
             if (signupDto.getNickName() != null) {
                 if (!userRepository.findByNickName(signupDto.getNickName()).isEmpty()) {
