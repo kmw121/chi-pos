@@ -118,14 +118,11 @@ function KakaoSignUp() {
             },
           });
           dispatch(setUserInfo(nextRes.data));
-
           navigate("/");
-
           deleteCookie("jwtToken");
           deleteCookie("refreshToken");
           document.cookie = "jwtToken" +" = " + jwtToken+ "; path=/; domain = chi-pos.com"
           document.cookie = "refreshToken" +" = " + refreshToken+ "; path=/; domain = chi-pos.com"
-
         } else {
           if (res.data.code === -1) {
             alert("kakao 회원가입 실패 ");
