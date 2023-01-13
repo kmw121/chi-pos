@@ -13,7 +13,7 @@ import {
   SelectedStackLi,
   SelectedStackUl,
 } from "../components";
-function MainSection({ setSearchConfig, setList }) {
+function MainSection({ setSearchConfig, setList, searchConfig }) {
   const [sectionTextList, setSectionTextList] = useState([
     {
       category: "인기",
@@ -75,6 +75,8 @@ function MainSection({ setSearchConfig, setList }) {
   const onClickStackSelected = (stack) => {
     const isIncluded = selectedStack.includes(stack);
     if (!isIncluded) {
+      // 생각해볼것....
+      //   if (searchConfig.stack.length >= 1) {
       const clickStack = selectedStack.concat(stack);
       const stackNumber = stacks.filter((a) => a.name === stack)[0].number;
       const addStackNumber = (prev) => {
@@ -87,6 +89,7 @@ function MainSection({ setSearchConfig, setList }) {
       setList([]);
       setSearchConfig(addStackNumber);
       setSelectedStack(clickStack);
+      //  }
     } else {
       const deleteStack = selectedStack.filter((a) => a !== stack);
       const stackNumber = stacks.filter((a) => a.name === stack)[0].number;

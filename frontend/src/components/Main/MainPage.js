@@ -26,7 +26,11 @@ function MainPage() {
     <>
       <MainHead />
       <MainBanner />
-      <MainSection setSearchConfig={setSearchConfig} setList={setList} />
+      <MainSection
+        setSearchConfig={setSearchConfig}
+        setList={setList}
+        searchConfig={searchConfig}
+      />
       <MainContents
         list={list}
         loadingStatus={loadingStatus}

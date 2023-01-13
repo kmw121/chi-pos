@@ -1,7 +1,7 @@
 import axios from "axios";
 import { API_URL } from "./API_URL";
 import { getCookie, deleteCookie } from "./cookie";
-import { setUserInfo, setUser } from "../slice/userSlice";
+import { setUserInfo, setUser, setCurrentPost } from "../slice/userSlice";
 export default async function withdrawal(dispatch, navigate) {
   if (window.confirm("회원 탈퇴를 하시겠습니까?")) {
     try {
@@ -15,6 +15,7 @@ export default async function withdrawal(dispatch, navigate) {
         deleteCookie(["refreshToken"]);
         dispatch(setUserInfo([]));
         dispatch(setUser([]));
+        dispatch(setCurrentPost({}));
         alert("회원 탈퇴가 완료되었습니다. 이용해 주셔서 감사합니다.");
         navigate("/");
       } else if (res.data.code === 2) {
@@ -26,6 +27,7 @@ export default async function withdrawal(dispatch, navigate) {
           deleteCookie(["refreshToken"]);
           dispatch(setUserInfo([]));
           dispatch(setUser([]));
+          dispatch(setCurrentPost({}));
           alert("잘못된 접근입니다.");
           window.location.reload();
         } else if (nextRes.data.code === 1) {
@@ -33,6 +35,7 @@ export default async function withdrawal(dispatch, navigate) {
           deleteCookie(["refreshToken"]);
           dispatch(setUserInfo([]));
           dispatch(setUser([]));
+          dispatch(setCurrentPost({}));
           alert("회원 탈퇴가 완료되었습니다. 이용해 주셔서 감사합니다.");
           navigate("/");
         }

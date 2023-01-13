@@ -11,23 +11,47 @@ import toStringByFormatting from "../../util/toStringByFormatting";
 import axios from "axios";
 import { API_URL } from "../../util/API_URL";
 import { getCookie, deleteCookie, setCookie } from "../../util/cookie";
-import { setUserInfo, setUser } from "../../slice/userSlice";
+import { setUserInfo, setUser, setCurrentPost } from "../../slice/userSlice";
 function RegisterContainer() {
-  const [dataForm, steDataForm] = useState({
-    category: "",
-    people: "",
-    howto: "",
-    duration: "",
-    selectedStack: [],
-    contactOption: "카카오톡 오픈채팅",
-    contactPlaceholder: "카카오톡 오픈채팅",
-    contactAddress: "",
-    datePickerValue: new Date(),
+  const { currentPost } = useSelector((state) => {
+    return state.user;
   });
-  const [titleText, setTitleText] = useState("");
-  const [editorValue, setEditorValue] = useState("");
+  // console.log("currentPost : ", currentPost);
+  // console.log(currentPost.categoryType);
+  // console.log(
+  //   new Date(currentPost.startDate) === new RangeError("Invalid time value"),
+  //   typeof new Date(currentPost.startDate)
+  // );
+  // console.log(currentPost)
+  const [dataForm, steDataForm] = useState({
+    category: currentPost.categoryType,
+    people: currentPost.people,
+    howto: currentPost.howto,
+    duration: currentPost.duration,
+    selectedStack: currentPost.postStack
+      ? currentPost.postStack.map((a) => {
+          return {
+            value: a.stack.name,
+            label: a.stack.name,
+            number: a.stack.id,
+          };
+        })
+      : [],
+    contactOption: currentPost.contact,
+    contactPlaceholder: currentPost.contact,
+    contactAddress: currentPost.contactAddress,
+    // invalid date error 처리 필요함 ㅡㅡ
+    datePickerValue:
+      // !new Date(currentPost.startDate)
+      // ?
+      new Date(),
+    //: new Date(currentPost.startDate),
+  });
+  console.log(dataForm.datePickerValue, "zzzzzzzzzzz");
+  const [titleText, setTitleText] = useState(currentPost.title);
+  const [editorValue, setEditorValue] = useState(currentPost.detail);
   const submitForm = {
-    id: null,
+    id: !currentPost.id ? null : currentPost.id,
     categoryType: dataForm.category,
     people: dataForm.people,
     howto: dataForm.howto,
@@ -39,11 +63,13 @@ function RegisterContainer() {
     title: titleText,
     detail: editorValue,
   };
+  console.log("백에 보낼 아이디 null or ? ", submitForm.id);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => {
     return state.user;
   });
+  console.log(dataForm);
   useEffect(() => {
     authCheck(dispatch, navigate, user);
   }, []);
@@ -58,6 +84,7 @@ function RegisterContainer() {
       if (res.data.code === -1) {
         deleteCookie(["jwtToken"]);
         deleteCookie(["refreshToken"]);
+        dispatch(setCurrentPost({}));
         dispatch(setUserInfo([]));
         dispatch(setUser([]));
         alert("잘못된 요청입니다. 다시 로그인 하시길 바랍니다.");
@@ -69,6 +96,7 @@ function RegisterContainer() {
         if (nextRes.data.data === 2 || nextRes.data.data === -1) {
           deleteCookie(["jwtToken"]);
           deleteCookie(["refreshToken"]);
+          dispatch(setCurrentPost({}));
           dispatch(setUserInfo([]));
           dispatch(setUser([]));
           alert("잘못된 접근입니다.");
@@ -81,11 +109,11 @@ function RegisterContainer() {
               headers: { Authorization: `${getCookie("jwtToken")}` },
             });
             if (response.data.code === 1) {
+              dispatch(setCurrentPost({}));
               alert("등록이 완료되었습니다.");
               navigate("/");
             } else if (response.data.code === -1) {
-              console.log(res);
-              console.log(response);
+              dispatch(setCurrentPost({}));
               alert("알 수 없는 오류로 등록에 실패하였습니다.");
               navigate("/");
             }
@@ -100,9 +128,11 @@ function RegisterContainer() {
           });
           console.log("response : ", response);
           if (response.data.code === 1) {
+            dispatch(setCurrentPost({}));
             alert("등록이 완료되었습니다.");
             navigate("/");
           } else if (response.data.code === -1) {
+            dispatch(setCurrentPost({}));
             alert("알 수 없는 오류로 등록에 실패하였습니다.");
             navigate("/");
           }
@@ -112,7 +142,7 @@ function RegisterContainer() {
       }
       dispatch(setUserInfo(res.data));
     } catch (err) {
-      console.log(err);
+      throw new Error(err);
     }
   };
   return (
