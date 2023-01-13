@@ -35,7 +35,7 @@ public class Post extends BaseTimeEntity {
     @Column(columnDefinition = "integer default 0", nullable = false)
     private int view;
 
-    @JsonIgnoreProperties({"posts","userStack","imageUrl","createDate","hibernateLazyInitializer","createdDate","modifiedDate"})
+    @JsonIgnoreProperties({"posts","userStack","createDate","hibernateLazyInitializer","createdDate","modifiedDate"})
     @JoinColumn(name = "userId")
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
