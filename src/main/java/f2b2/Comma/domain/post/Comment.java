@@ -26,7 +26,7 @@ public class Comment extends BaseTimeEntity {
     private Post post;
 
 
-    @JsonIgnoreProperties({"post","password","userStack","createdDate","modifiedDate","username","imageUrl","hibernateLazyInitializer"})
+    @JsonIgnoreProperties({"post","password","userStack","createdDate","modifiedDate","username","hibernateLazyInitializer"})
     @JoinColumn(name = "userId")
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
