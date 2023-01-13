@@ -110,6 +110,7 @@ function SignUpForm() {
     };
     setFormReg(nickNameReg);
   };
+  console.log(files.length === true);
   const onSubmit = async () => {
     // 이 함수 util이나 hook으로 만들어서 쓸까? -> 고민해볼것.
     if (
@@ -124,7 +125,7 @@ function SignUpForm() {
       try {
         const formdata = new FormData();
         //이부분 리팩토링 필요.
-        if (files.length) {
+        if (imgPreview.length) {
           formdata.append("file", files);
         }
         formdata.append("username", form.username);
@@ -238,8 +239,6 @@ function SignUpForm() {
       };
     });
   };
-  console.log("!files.length : ", !files.length);
-  console.log("files : ", files);
   return (
     <RegisterContainerDiv>
       <SignUpFormTitle>
