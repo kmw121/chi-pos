@@ -91,8 +91,10 @@ function SettingDetail() {
       };
     });
   const onSelectedStack = (value) => {
-    setStack((prev) => prev.concat(value));
+    console.log("valie : ", value);
+    setStack(value);
   };
+  console.log("stack : ", stack);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const encodeFileToBase64 = (fileBlob) => {
@@ -129,7 +131,7 @@ function SettingDetail() {
         .map((a) => a.number);
       console.log("afterNumberStack : ", afterNumberStack);
       const formdata = new FormData();
-      if (files !== "nonUrl") {
+      if (notSocial && files !== "nonUrl") {
         console.log("file : ", files);
         formdata.append("file", files);
         console.log("파일 들어감");

@@ -42,6 +42,7 @@ import {
   StudyCommentMainText,
 } from "../components";
 import { logout } from "../../util/logout";
+import { setCurrentPost } from "../../slice/userSlice";
 function Study() {
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -61,7 +62,7 @@ function Study() {
   const onDeadline = async () => {
     if (window.confirm("마감하시겠습니까?")) {
       try {
-        const res = await axios.post(API_URL + `/end/${id}`, null,{
+        const res = await axios.post(API_URL + `/end/${id}`, null, {
           headers: {
             Authorization: `${getCookie("jwtToken")}`,
           },
@@ -119,14 +120,15 @@ function Study() {
       try {
         const res = await axios.post(
           API_URL + "/comment",
-          null,
           { postId: post.id, detail: comment },
           {
             headers: {
               Authorization: `${getCookie("jwtToken")}`,
+              "Content-Type": "application/json",
             },
           }
         );
+        console.log("res : ", res);
         if (res.data.code === 1) {
           alert("댓글이 등록되었습니다!");
           setComment("");
@@ -187,7 +189,11 @@ function Study() {
       }
     }
   };
-  console.log("id : ", id);
+  const handleEditPost = () => {
+    dispatch(setCurrentPost(post));
+    navigate("/register");
+  };
+  console.log("post : ", post);
   return (
     <StudyContainer>
       <StudyHeadSection>
@@ -199,7 +205,11 @@ function Study() {
         <StudyHeadUserAndDate>
           <StudyHeadUserBox>
             <img
-              src={"/logo/NextJs.png"}
+              src={
+                post && post.user.imageUrl === "nonUrl"
+                  ? "/logo/Go.png"
+                  : post && post.user.imageUrl
+              }
               alt="pic"
               style={{
                 width: "3rem",
@@ -219,7 +229,7 @@ function Study() {
         {post && post.user.id === user.id && (
           <StudyAuthBtnSection>
             <StudyAuthBtn onClick={onDeadline}>마감</StudyAuthBtn>
-            <StudyAuthBtn>수정</StudyAuthBtn>
+            <StudyAuthBtn onClick={handleEditPost}>수정</StudyAuthBtn>
             <StudyAuthBtn onClick={onPostDelete}>삭제</StudyAuthBtn>
           </StudyAuthBtnSection>
         )}
@@ -291,7 +301,14 @@ function Study() {
               <StudyCommentLi key={content.createdDate + content.id}>
                 <StudyCommentHead>
                   <StudyCommentHeadBox>
-                    <StudyCommentHeadImg src={"/logo/Git.png"} alt="zz" />
+                    <StudyCommentHeadImg
+                      src={
+                        content.user.imageUrl === "nonUrl"
+                          ? "/logo/Figma.png"
+                          : content.user.imageUrl
+                      }
+                      alt="zz"
+                    />
                     <StudyCommentHeadNameDateBox>
                       <StudyCommentHeadName>
                         {content.user.nickName}

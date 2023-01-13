@@ -121,8 +121,13 @@ function KakaoSignUp() {
           navigate("/");
           deleteCookie("jwtToken");
           deleteCookie("refreshToken");
-          document.cookie = "jwtToken" +" = " + jwtToken+ "; path=/; domain = chi-pos.com"
-          document.cookie = "refreshToken" +" = " + refreshToken+ "; path=/; domain = chi-pos.com"
+          document.cookie =
+            "jwtToken" + " = " + jwtToken + "; path=/; domain = chi-pos.com";
+          document.cookie =
+            "refreshToken" +
+            " = " +
+            refreshToken +
+            "; path=/; domain = chi-pos.com";
         } else {
           if (res.data.code === -1) {
             alert("kakao 회원가입 실패 ");
@@ -162,7 +167,7 @@ function KakaoSignUp() {
         throw new Error(err);
       }
     } else {
-      alert("닉네임은 2글자 이상입니다.");
+      alert("닉네임은 2글자 이상 10글자 이하입니다.");
     }
   };
   //이미지 미리보기 코드

@@ -43,12 +43,13 @@ function GoogleSignUp() {
   const [imgPreview, setImgPreview] = useState("");
   const [files, setFiles] = useState([]);
   const [form, setForm] = useState({
-    username: getCookie("Kakao"),
+    username: getCookie("Google"),
     password: "",
     passwordAgain: "",
     nickName: "",
     stack: [],
   });
+  console.log('getCookie("Google") : ', getCookie("Google"));
   const [dupCheck, setDupCheck] = useState({
     username: true,
     nickName: false,
@@ -101,7 +102,7 @@ function GoogleSignUp() {
 
         const res = await axios({
           method: "POST",
-          url: API_URL + "/kakaoSignup",
+          url: API_URL + "/googleSignup",
           mode: "cors",
           headers: { "Content-Type": "multipart/form-data" },
           data: formdata,
@@ -121,6 +122,7 @@ function GoogleSignUp() {
           navigate("/");
           deleteCookie("jwtToken");
           deleteCookie("refreshToken");
+          deleteCookie("Google");
           document.cookie =
             "jwtToken" + " = " + jwtToken + "; path=/; domain = chi-pos.com";
           document.cookie =
@@ -167,7 +169,7 @@ function GoogleSignUp() {
         throw new Error(err);
       }
     } else {
-      alert("닉네임은 2글자 이상입니다.");
+      alert("닉네임은 2글자 이상 10글자 이하입니다.");
     }
   };
   //이미지 미리보기 코드

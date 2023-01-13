@@ -1,7 +1,7 @@
 import axios from "axios";
 import { API_URL } from "./API_URL";
 import { deleteCookie, getCookie, setCookie } from "./cookie";
-import { setUser, setUserInfo } from "../slice/userSlice";
+import { setUser, setUserInfo, setCurrentPost } from "../slice/userSlice";
 export default async function authCheck(dispatch, navigate, user) {
   if (!user.id) {
     console.log("userid X");
@@ -24,6 +24,7 @@ export default async function authCheck(dispatch, navigate, user) {
         deleteCookie(["refreshToken"]);
         dispatch(setUserInfo([]));
         dispatch(setUser([]));
+        dispatch(setCurrentPost({}));
         alert("로그인이 필요한 페이지 입니다.");
         navigate("/");
       } else if (res.data.code === 2) {
@@ -38,18 +39,21 @@ export default async function authCheck(dispatch, navigate, user) {
           deleteCookie(["refreshToken"]);
           dispatch(setUserInfo([]));
           dispatch(setUser([]));
+          dispatch(setCurrentPost({}));
           alert("잘못된 접근입니다.");
           window.location.reload();
         } else if (nextRes.data.code !== -1) {
           console.log("jwt token exist, refresh token is valid");
           deleteCookie("jwtToken");
           setCookie("jwtToken", nextRes.data.data);
+          dispatch(setUserInfo(res.data));
         }
+      } else if (res.data.code === 1) {
+        console.log("access token is valid");
+        dispatch(setUserInfo(res.data));
       }
-      console.log("access token is valid");
-      dispatch(setUserInfo(res.data));
     } catch (err) {
-      console.log(err);
+      throw new Error(err);
     }
   }
 }

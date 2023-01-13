@@ -140,6 +140,12 @@ function RegisterNumber1({ dataForm, setDataForm }) {
             onChange={onChangeCategory}
             placeholder="스터디/프로젝트"
             options={optionCategory}
+            defaultValue={
+              dataForm.category && {
+                name: dataForm.category,
+                label: dataForm.category,
+              }
+            }
           />
         </RegisterNumber1Li>
         <RegisterNumber1Li>
@@ -148,6 +154,12 @@ function RegisterNumber1({ dataForm, setDataForm }) {
             onChange={onChangePeople}
             placeholder="인원 미정~10명 이상"
             options={optionPeople}
+            defaultValue={
+              dataForm.people && {
+                name: dataForm.people,
+                label: dataForm.people,
+              }
+            }
           />
         </RegisterNumber1Li>
       </RegisterNumber1Ul>
@@ -158,6 +170,12 @@ function RegisterNumber1({ dataForm, setDataForm }) {
             onChange={onChangeHowto}
             placeholder="온라인/오프라인"
             options={optionHowTo}
+            defaultValue={
+              dataForm.howto && {
+                name: dataForm.howto,
+                label: dataForm.howto,
+              }
+            }
           />
         </RegisterNumber1Li>
         <RegisterNumber1Li>
@@ -166,6 +184,12 @@ function RegisterNumber1({ dataForm, setDataForm }) {
             onChange={onChangeDuration}
             placeholder="기간 미정~6개월 이상"
             options={optionDuration}
+            defaultValue={
+              dataForm.duration && {
+                name: dataForm.duration,
+                label: dataForm.duration,
+              }
+            }
           />
         </RegisterNumber1Li>
       </RegisterNumber1Ul>
@@ -177,6 +201,7 @@ function RegisterNumber1({ dataForm, setDataForm }) {
             isMulti
             placeholder="프로젝트 사용 스택"
             options={optionStack}
+            defaultValue={dataForm.selectedStack}
           />
         </RegisterNumber1Li>
         <RegisterNumber1Li>
@@ -266,7 +291,11 @@ function RegisterNumber1({ dataForm, setDataForm }) {
             }}
           />
           <RegisterNumber1ContactInput
-            placeholder={`${dataForm.contactPlaceholder} 주소를 입력해 주세요.`}
+            placeholder={`${
+              dataForm.contactPlaceholder === undefined
+                ? "카카오톡 오픈채팅 "
+                : dataForm.contactPlaceholder
+            } 주소를 입력해 주세요.`}
             value={dataForm.contactAddress}
             onChange={onChangeContactAddress}
           />
