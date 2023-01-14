@@ -42,11 +42,18 @@ export default async function authCheck(dispatch, navigate, user) {
           dispatch(setCurrentPost({}));
           alert("잘못된 접근입니다.");
           window.location.reload();
-        } else if (nextRes.data.code !== -1) {
+        } else if (nextRes.data.code === 1) {
           console.log("jwt token exist, refresh token is valid");
           deleteCookie("jwtToken");
           setCookie("jwtToken", nextRes.data.data);
-          dispatch(setUserInfo(res.data));
+          // dispatch(setUserInfo(res.data));
+          const response = await axios.get(API_URL + `/user/${user.id}`, {
+            headers: { Authorization: `${getCookie("jwtToken")}` },
+          });
+          if (response.data.code === 1) {
+            console.log(response);
+            dispatch(setUserInfo(response.data));
+          }
         }
       } else if (res.data.code === 1) {
         console.log("access token is valid");

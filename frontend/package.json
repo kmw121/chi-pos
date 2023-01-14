@@ -31,10 +31,12 @@
     "react-router-dom": "^6.4.5",
     "react-scripts": "5.0.1",
     "react-select": "^5.7.0",
+    "react-slick": "^0.23.2",
     "react-social-login-buttons": "^3.6.1",
     "react-spinners": "^0.13.7",
     "redux": "^4.2.0",
     "redux-persist": "^6.0.0",
+    "slick-carousel": "^1.8.1",
     "styled-components": "^4.4.1",
     "web-vitals": "^2.1.4"
   },

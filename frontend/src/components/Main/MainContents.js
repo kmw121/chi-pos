@@ -6,6 +6,7 @@ import {
   AiOutlineCloud,
   AiOutlineEdit,
   AiOutlineInstagram,
+  AiOutlineFullscreenExit,
 } from "react-icons/ai";
 import {
   MainContentsAppContainer,
@@ -37,6 +38,7 @@ import {
 import { API_URL } from "../../util/API_URL";
 import axios from "axios";
 import getGenerateRandomKey from "../../util/getGenerateRandomKey";
+import { useSelector } from "react-redux";
 function MainContents({
   setSearchConfig,
   list,
@@ -47,6 +49,9 @@ function MainContents({
   setInitialControl,
   resCode,
 }) {
+  const { userInfo, user } = useSelector((state) => {
+    return state.user;
+  });
   const [isChecked, setIsChecked] = useState(false);
   const [categorySelected, setCategorySelected] = useState([
     {
@@ -100,6 +105,22 @@ function MainContents({
       setList([]);
 
       setSearchConfig(isEndFilter);
+    }
+  };
+  console.log("user.length : ", user.sub.length);
+  const handleOnlyFavorited = () => {
+    if (user.sub.length) {
+      const myFavoriteStack = userInfo.data.userStack.map((a) => a.stack.id);
+      setList([]);
+      setSearchConfig((prev) => {
+        return {
+          ...prev,
+          stack: myFavoriteStack,
+          categoryType: "",
+        };
+      });
+    } else {
+      alert("로그인 후 이용하실 수 있는 기능입니다.");
     }
   };
   const [target, setTarget] = useState(null);
@@ -163,6 +184,13 @@ function MainContents({
           ))}
         </MainContentsCategoryInnerContainer>
         <MainContentsToggle>
+          <MainContentsCategoryItem
+            style={{ color: "black" }}
+            onClick={handleOnlyFavorited}
+          >
+            <AiOutlineFullscreenExit />
+            관심 기술만 보기
+          </MainContentsCategoryItem>
           <MainContentsToggleText>모집 중만 보기</MainContentsToggleText>
           <MainContentsToggleInput
             onChange={handleInputCheck}
@@ -229,7 +257,11 @@ function MainContents({
                 <MainContentsAppStudyInfo>
                   <MainContentsAppStudyInfoUserBox>
                     <img
-                      src={"favicon.ico"}
+                      src={
+                        content.user.imageUrl === "nonUrl"
+                          ? "/c-pos/ms-icon-310x310.png"
+                          : content.user.imageUrl
+                      }
                       alt="hello world"
                       style={{
                         width: "28px",

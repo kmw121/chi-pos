@@ -155,6 +155,11 @@ function MainSection({ setSearchConfig, setList, searchConfig }) {
         {selectedStack.map((stack) => (
           <SelectedStackUl key={stack}>
             <SelectedStackLi>
+              <img
+                src={`/logo/${stack}.png`}
+                alt="stack"
+                style={{ width: "25px", height: "25px" }}
+              />
               {stack} <FiDelete onClick={() => onClickXBtn(stack)} />
             </SelectedStackLi>
           </SelectedStackUl>

@@ -67,14 +67,18 @@ function SettingDetail() {
   const handleNewPassword = (e) => {
     setNewPassword(e.target.value);
     const newPasswordReg = (prev) => {
-      return { ...prev, newPassword: reg_password.test(e.target.value) };
+      return {
+        ...prev,
+        newPassword: reg_password.test(e.target.value),
+        newPasswordAgain: e.target.value === prev.newPasswordAgain,
+      };
     };
     setFormReg(newPasswordReg);
   };
   const handleNewPasswordAgain = (e) => {
     setNewPasswordAgain(e.target.value);
     const newPasswordAgainReg = (prev) => {
-      return { ...prev, newPasswordAgain: reg_password.test(e.target.value) };
+      return { ...prev, newPasswordAgain: e.target.value === newPassword };
     };
     setFormReg(newPasswordAgainReg);
   };
@@ -94,7 +98,7 @@ function SettingDetail() {
     console.log("valie : ", value);
     setStack(value);
   };
-  console.log("stack : ", stack);
+  // console.log("stack : ", stack);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const encodeFileToBase64 = (fileBlob) => {
@@ -108,6 +112,10 @@ function SettingDetail() {
       };
     });
   };
+  // console.log("files : ", files);
+  // console.log(userInfo.data.imageUrl === files);
+  console.log(formReg.newPassword, "new");
+  console.log(formReg.newPasswordAgain, "new again");
   const handleDeleteImg = () => {
     if (imgPreview.length) {
       setImgPreview("");
@@ -121,70 +129,82 @@ function SettingDetail() {
     }
   };
   const onSubmit = async () => {
-    try {
-      const arrArr = stacks.map((a) => {
-        return { number: a.number, name: a.name };
-      });
-      const beforeStack = [...new Set([...stack])].map((a) => a.value);
-      const afterNumberStack = beforeStack
-        .flatMap((a) => arrArr.filter((b) => b.name === a))
-        .map((a) => a.number);
-      console.log("afterNumberStack : ", afterNumberStack);
-      const formdata = new FormData();
-      if (notSocial && files !== "nonUrl") {
-        console.log("file : ", files);
-        formdata.append("file", files);
-        console.log("파일 들어감");
-      }
-      formdata.append("nickName", nick);
-      formdata.append("password", newPassword);
-      formdata.append("stack", afterNumberStack);
-      formdata.append("prePassword", notSocial ? prePassword : null);
-      const res = await axios({
-        method: "POST",
-        url: API_URL + "/changeInfo",
-        mode: "cors",
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `${getCookie("jwtToken")}`,
-        },
-        data: formdata,
-      });
-      if (res.data.code === 1) {
-        dispatch(setUserInfo(res.data));
-        alert("정보가 변경되었습니다.");
-        navigate("/");
-      } else if (res.data.code === -1) {
-        alert(res.data.message);
-      } else if (res.data.code === 2) {
-        const nextRes = await axios({
+    if (
+      (!formReg.newPassword && !formReg.newPasswordAgain) ||
+      (formReg.newPassword && formReg.newPasswordAgain)
+    ) {
+      try {
+        const arrArr = stacks.map((a) => {
+          return { number: a.number, name: a.name };
+        });
+        const beforeStack = [...new Set([...stack])].map((a) => a.value);
+        const afterNumberStack = beforeStack
+          .flatMap((a) => arrArr.filter((b) => b.name === a))
+          .map((a) => a.number);
+        console.log("afterNumberStack : ", afterNumberStack);
+        const formdata = new FormData();
+        if (
+          notSocial &&
+          files !== "nonUrl" &&
+          userInfo.data.imageUrl !== files
+        ) {
+          console.log("file : ", files);
+          formdata.append("file", files);
+          console.log("파일 들어감");
+        }
+        formdata.append("nickName", nick);
+        formdata.append("password", newPassword);
+        formdata.append("stack", afterNumberStack);
+        formdata.append("prePassword", notSocial ? prePassword : null);
+        const res = await axios({
           method: "POST",
           url: API_URL + "/changeInfo",
           mode: "cors",
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `${getCookie("refreshToken")}`,
+            Authorization: `${getCookie("jwtToken")}`,
           },
           data: formdata,
         });
-        if (nextRes.data.code === 2 || nextRes.data.code === -1) {
-          deleteCookie(["jwtToken"]);
-          deleteCookie(["refreshToken"]);
-          dispatch(setUserInfo([]));
-          dispatch(setUser([]));
-          alert("잘못된 접근입니다.");
-          window.location.reload();
-          navigate("/");
-        } else if (nextRes.data.code !== -1) {
-          deleteCookie("jwtToken");
-          setCookie("jwtToken", nextRes.data.data);
+        console.log("res : ", res);
+        if (res.data.code === 1) {
           dispatch(setUserInfo(res.data));
           alert("정보가 변경되었습니다.");
           navigate("/");
+        } else if (res.data.code === -1) {
+          alert(res.data.message);
+        } else if (res.data.code === 2) {
+          const nextRes = await axios({
+            method: "POST",
+            url: API_URL + "/changeInfo",
+            mode: "cors",
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `${getCookie("refreshToken")}`,
+            },
+            data: formdata,
+          });
+          if (nextRes.data.code === 2 || nextRes.data.code === -1) {
+            deleteCookie(["jwtToken"]);
+            deleteCookie(["refreshToken"]);
+            dispatch(setUserInfo([]));
+            dispatch(setUser([]));
+            alert("잘못된 접근입니다.");
+            window.location.reload();
+            navigate("/");
+          } else if (nextRes.data.code !== -1) {
+            deleteCookie("jwtToken");
+            setCookie("jwtToken", nextRes.data.data);
+            dispatch(setUserInfo(res.data));
+            alert("정보가 변경되었습니다.");
+            navigate("/");
+          }
         }
+      } catch (e) {
+        throw new Error(e);
       }
-    } catch (e) {
-      throw new Error(e);
+    } else {
+      alert("비밀번호 창을 비워주세요? 아니면 뭐 확인해주세요? ");
     }
   };
   return (
@@ -195,13 +215,11 @@ function SettingDetail() {
         <SettingImgBox>
           <SettingImg
             alt="profile"
-            // spring.png 자리에 userInfo.data.imageUrl(이게 null이면 default 이미지 )
             src={
               !imgPreview.length
                 ? userInfo.data.imageUrl !== "nonUrl"
                   ? userInfo.data.imageUrl
-                  : //default
-                    "/logo/spring.png"
+                  : "/c-pos/ms-icon-310x310.png"
                 : imgPreview
             }
           />
