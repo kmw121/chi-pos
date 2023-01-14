@@ -94,7 +94,9 @@ function KakaoSignUp() {
       try {
         const formdata = new FormData();
         //이부분 리팩토링 필요.
-        formdata.append("file", files);
+        if (imgPreview.length) {
+          formdata.append("file", files);
+        }
         formdata.append("username", form.username);
         formdata.append("nickName", form.nickName);
         formdata.append("stack", form.stack);

@@ -193,6 +193,7 @@ function Study() {
     dispatch(setCurrentPost(post));
     navigate("/register");
   };
+  console.log(post);
   return (
     <StudyContainer>
       <StudyHeadSection>
@@ -281,7 +282,7 @@ function Study() {
         <StudyCommentInnerBox>
           <StudyCommentInputBox>
             <StudyCommentInputCount>
-              0개의 댓글이 있습니다.
+              {post && post.comments.length}개의 댓글이 있습니다.
             </StudyCommentInputCount>
             <StudyCommentInputText
               value={comment}
