@@ -139,10 +139,20 @@ function Study() {
             { postId: post.id, detail: comment },
             { headers: { Authorization: `${getCookie("refreshToken")}` } }
           );
+          console.log("nextRes : ", nextRes);
           if (nextRes.data.code === 1) {
-            alert("댓글이 등록되었습니다!");
-            setComment("");
-            window.location.reload();
+            deleteCookie("jwtToken");
+            setCookie("jwtToken", nextRes.data.data);
+            const response = await axios.post(
+              API_URL + "/comment",
+              { postId: post.id, detail: comment },
+              { headers: { Authorization: nextRes.data.data } }
+            );
+            if (response.data.code === 1) {
+              alert("댓글이 등록되었습니다!");
+              setComment("");
+              window.location.reload();
+            }
           } else if (nextRes.data.code === 2 || nextRes.data.code === -1) {
             deleteCookie(["jwtToken"]);
             deleteCookie(["refreshToken"]);
