@@ -107,7 +107,6 @@ function MainContents({
       setSearchConfig(isEndFilter);
     }
   };
-  console.log("user.length : ", user.sub.length);
   const handleOnlyFavorited = () => {
     if (user.sub.length) {
       const myFavoriteStack = userInfo.data.userStack.map((a) => a.stack.id);

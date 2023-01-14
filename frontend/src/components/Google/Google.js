@@ -40,6 +40,8 @@ export default function GoogleButton() {
         console.log("토큰생성1");
         document.cookie = "refreshToken" + " = " + refreshToken + "; path=/; ";
         console.log("토큰생성2");
+        alert("구글로 로그인 되었습니다.");
+        window.location.reload();
       }
     } catch (err) {
       throw new Error(err);
