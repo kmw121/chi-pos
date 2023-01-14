@@ -14,14 +14,12 @@ to {
 }
 
 `;
-export const Banner = styled.div`
+export const Banner = styled.img`
   width: 100vw;
   height: 330px;
   background: thistle;
   cursor: pointer;
   background-size: cover;
-  background-blend-mode: hard-light;
-  animation: ${Banner_Animation} 1s linear infinite;
 `;
 export const BannerDotsUl = styled.ul`
   display: block;
@@ -950,7 +948,6 @@ export const StudyCommentInputText = styled.textarea`
   outline: none;
   border: 2px solid #e1e1e1;
   border-radius: 16px;
-  width: 100%;
   min-height: 100px;
   margin-bottom: 10px;
   resize: none;

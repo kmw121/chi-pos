@@ -46,10 +46,10 @@ function MainHead() {
         <a href="/">
           <img
             alt="LOGO"
-            src={"/logo/NextJs.png"}
+            src={"/c-pos/ms-icon-310x310.png"}
             style={{
-              width: "3rem",
-              height: "3rem",
+              width: "5rem",
+              height: "5rem",
               display: "block",
               marginRight: "16px",
               borderRadius: "50%",
@@ -65,11 +65,10 @@ function MainHead() {
                 alt="profile"
                 src={
                   userInfo && userInfo.data.imageUrl === "nonUrl"
-                    ? //여기 next.js 로고는 디폴트값으로 쓸 이미지가 없어서 땜빵으로 넣어놓은 것입니다.
-                      "/logo/NextJs.png"
+                    ? "/c-pos/ms-icon-310x310.png"
                     : userInfo && userInfo.data.imageUrl
                 }
-                style={{ width: "30px", height: "30px", borderRadius: "10px" }}
+                style={{ width: "45px", height: "45px", borderRadius: "10px" }}
               />
               {dropdownOpen && (
                 <MainHeadDropdownContainer>

@@ -193,7 +193,6 @@ function Study() {
     dispatch(setCurrentPost(post));
     navigate("/register");
   };
-  console.log("post : ", post);
   return (
     <StudyContainer>
       <StudyHeadSection>
@@ -207,7 +206,7 @@ function Study() {
             <img
               src={
                 post && post.user.imageUrl === "nonUrl"
-                  ? "/logo/Go.png"
+                  ? "/c-pos/ms-icon-310x310.png"
                   : post && post.user.imageUrl
               }
               alt="pic"
@@ -304,7 +303,7 @@ function Study() {
                     <StudyCommentHeadImg
                       src={
                         content.user.imageUrl === "nonUrl"
-                          ? "/logo/Figma.png"
+                          ? "/c-pos/ms-icon-310x310.png"
                           : content.user.imageUrl
                       }
                       alt="zz"
