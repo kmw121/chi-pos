@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import {
   RegisterContainerDiv,
@@ -50,8 +49,7 @@ function SignUpForm() {
     username: false,
     nickName: false,
   });
-  const reg_email =
-    /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
+  const reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
   const reg_password = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{5,15}$/;
   const reg_nickName = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$/;
   const navigate = useNavigate();
@@ -168,8 +166,7 @@ function SignUpForm() {
         });
         if (res.data.code === -1) {
           if (
-            window.confirm(`사용할 수 있는 이메일입니다.
-  사용하시겠습니까?`)
+            window.confirm(`사용할 수 있는 이메일입니다. 사용하시겠습니까?`)
           ) {
             setDupCheck((prev) => {
               return { ...prev, username: true };
@@ -196,8 +193,7 @@ function SignUpForm() {
         });
         if (res.data.code === -1) {
           if (
-            window.confirm(`사용할 수 있는 닉네임입니다.
-  사용하시겠습니까?`)
+            window.confirm(`사용할 수 있는 닉네임입니다. 사용하시겠습니까?`)
           ) {
             setDupCheck((prev) => {
               return { ...prev, nickName: true };

@@ -148,9 +148,12 @@ export const MainContentsAppStudyA = styled.a`
   border-radius: 30px;
   position: relative;
   cursor: pointer;
-  transition: 0.2s ease-in;
   text-decoration: none !important;
   color: inherit;
+  transition: 0.2s ease-in;
+  &:hover {
+    transform: scale(1.04);
+  }
 `;
 export const MainContentsAppStudyLi = styled.li`
   padding: 0;
@@ -302,14 +305,17 @@ export const CategoryLi = styled.li`
   color: #848484
   cursor: pointer;
   position: relative;
+  transition: 0.1s ease-in;
+  &:hover {
+    transform: scale(1.04);
+  }
   ${(props) =>
     props.isSelected &&
     `
       background-color: white;
       color: black;
     `}
-c
-
+    
   `;
 export const CategoryLiAfter = styled.div`
   content: "";
@@ -339,6 +345,9 @@ export const StackBtnLi = styled.li`
   padding: 12px 20px 12px 15px;
   transition: all 0.1s ease-in;
   cursor: pointer;
+  &:hover {
+    transform: scale(1.04);
+  }
 `;
 export const SelectedStackContainer = styled.div`
   display: flex;
@@ -904,6 +913,19 @@ export const StudyInfoGridTitle = styled.span`
 export const StudyInfoGridContent = styled.span`
   color: #333;
 `;
+export const StudyInfoGridA = styled.a`
+  display: flex;
+  grid-gap: 8px;
+  gap: 8px;
+  font-size: 16px;
+  padding: 8px 12px;
+  text-decoration-color: #4a5e75;
+  font-weight: 700;
+  text-decoration-line: underline;
+  background: #f2f4f8;
+  border-radius: 10px;
+  color: inherit;
+`;
 export const StudyProjectBox = styled.div`
   margin-top: 132px;
   font-size: 1.125rem;
@@ -1179,6 +1201,6 @@ export const GoogleIconImg = styled.img`
 export const GoogleBtnText = styled.p`
   color: #fff;
   margin-left: 62px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
 `;

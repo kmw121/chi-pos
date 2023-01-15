@@ -296,7 +296,7 @@ function RegisterNumber1({ dataForm, setDataForm }) {
                 ? "카카오톡 오픈채팅 "
                 : dataForm.contactPlaceholder
             } 주소를 입력해 주세요.`}
-            value={dataForm.contactAddress}
+            value={dataForm.contactAddress || ""}
             onChange={onChangeContactAddress}
           />
         </RegisterNumber1Li>
