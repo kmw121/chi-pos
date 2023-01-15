@@ -16,13 +16,6 @@ function RegisterContainer() {
   const { currentPost } = useSelector((state) => {
     return state.user;
   });
-  // console.log("currentPost : ", currentPost);
-  // console.log(currentPost.categoryType);
-  // console.log(
-  //   new Date(currentPost.startDate) === new RangeError("Invalid time value"),
-  //   typeof new Date(currentPost.startDate)
-  // );
-  // console.log(currentPost)
   const [dataForm, steDataForm] = useState({
     category: currentPost.categoryType,
     people: currentPost.people,
@@ -47,7 +40,6 @@ function RegisterContainer() {
       new Date(),
     //: new Date(currentPost.startDate),
   });
-  console.log(dataForm.datePickerValue, "zzzzzzzzzzz");
   const [titleText, setTitleText] = useState(currentPost.title);
   const [editorValue, setEditorValue] = useState(currentPost.detail);
   const submitForm = {
@@ -58,18 +50,18 @@ function RegisterContainer() {
     duration: dataForm.duration,
     stack: dataForm.selectedStack.map((stack) => stack.number),
     startDate: toStringByFormatting(new Date(dataForm.datePickerValue)),
-    contact: dataForm.contactOption,
+    contact: !dataForm.contactOption
+      ? "카카오톡 오픈채팅"
+      : dataForm.contactOption,
     contactAddress: dataForm.contactAddress,
     title: titleText,
     detail: editorValue,
   };
-  console.log("백에 보낼 아이디 null or ? ", submitForm.id);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => {
     return state.user;
   });
-  console.log(dataForm);
   useEffect(() => {
     authCheck(dispatch, navigate, user);
   }, []);

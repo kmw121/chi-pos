@@ -112,10 +112,6 @@ function SettingDetail() {
       };
     });
   };
-  // console.log("files : ", files);
-  // console.log(userInfo.data.imageUrl === files);
-  console.log(formReg.newPassword, "new");
-  console.log(formReg.newPasswordAgain, "new again");
   const handleDeleteImg = () => {
     if (imgPreview.length) {
       setImgPreview("");
@@ -141,7 +137,6 @@ function SettingDetail() {
         const afterNumberStack = beforeStack
           .flatMap((a) => arrArr.filter((b) => b.name === a))
           .map((a) => a.number);
-        console.log("afterNumberStack : ", afterNumberStack);
         const formdata = new FormData();
         if (
           notSocial &&
@@ -166,7 +161,6 @@ function SettingDetail() {
           },
           data: formdata,
         });
-        console.log("res : ", res);
         if (res.data.code === 1) {
           dispatch(setUserInfo(res.data));
           alert("정보가 변경되었습니다.");
@@ -195,9 +189,23 @@ function SettingDetail() {
           } else if (nextRes.data.code !== -1) {
             deleteCookie("jwtToken");
             setCookie("jwtToken", nextRes.data.data);
-            dispatch(setUserInfo(res.data));
-            alert("정보가 변경되었습니다.");
-            navigate("/");
+            const response = await axios({
+              method: "POST",
+              url: API_URL + "/changeInfo",
+              mode: "cors",
+              headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: nextRes.data.data,
+              },
+              data: formdata,
+            });
+            if (response.data.code === 1) {
+              dispatch(setUserInfo(response.data));
+              alert("정보가 변경되었습니다.");
+              navigate("/");
+            } else {
+              throw new Error();
+            }
           }
         }
       } catch (e) {

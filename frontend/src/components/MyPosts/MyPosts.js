@@ -24,7 +24,6 @@ function MyPosts() {
     navigate("/");
     navigate(`study/${id}`);
   };
-  console.log("post : ", post);
   useEffect(() => {
     authCheck(dispatch, navigate, user);
   }, []);

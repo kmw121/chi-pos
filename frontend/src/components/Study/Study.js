@@ -1,6 +1,10 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { AiOutlineArrowLeft, AiOutlineCloseCircle } from "react-icons/ai";
+import {
+  AiOutlineArrowLeft,
+  AiOutlineCloseCircle,
+  AiOutlineLink,
+} from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { API_URL } from "../../util/API_URL";
@@ -40,6 +44,7 @@ import {
   StudyCommentHeadDate,
   StudyCommentMain,
   StudyCommentMainText,
+  StudyInfoGridA,
 } from "../components";
 import { logout } from "../../util/logout";
 import { setCurrentPost } from "../../slice/userSlice";
@@ -203,7 +208,6 @@ function Study() {
     dispatch(setCurrentPost(post));
     navigate("/register");
   };
-  console.log(post);
   return (
     <StudyContainer>
       <StudyHeadSection>
@@ -266,7 +270,10 @@ function Study() {
           </StudyInfoGridLi>
           <StudyInfoGridLi>
             <StudyInfoGridTitle>연락 방법</StudyInfoGridTitle>
-            <StudyInfoGridContent>{post && post.contact}</StudyInfoGridContent>
+            <StudyInfoGridA href={post && `https://${post.contactAddress}`}>
+              {post && post.contact}
+              <AiOutlineLink style={{ width: "16px", height: "16px" }} />
+            </StudyInfoGridA>
           </StudyInfoGridLi>
           <StudyInfoGridLi>
             <StudyInfoGridTitle>예상 기간</StudyInfoGridTitle>

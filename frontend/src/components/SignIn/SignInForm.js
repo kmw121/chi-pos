@@ -53,6 +53,11 @@ function SignInForm({ onToggle }) {
     };
     setLoginForm(onChangePw);
   };
+  const onPwPress = (e) => {
+    if (e.keyCode === 13) {
+      onLogin();
+    }
+  };
   const onLogin = async () => {
     try {
       const res = await axios.post(API_URL + "/login", loginForm);
@@ -121,6 +126,7 @@ function SignInForm({ onToggle }) {
             />
             <PwInput
               onChange={onPwValue}
+              onKeyDown={onPwPress}
               value={loginForm.password}
               placeholder="PASSWORD"
               type="password"
