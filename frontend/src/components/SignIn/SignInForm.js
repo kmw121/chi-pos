@@ -16,11 +16,12 @@ import {
   ModalBtnContainer,
   ModalBtnBox,
   ModalBtnKakao,
+  ModalLogoImg,
 } from "../components";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { setUser, setUserInfo } from "../../slice/userSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { API_URL } from "../../util/API_URL";
 import { getCookie, setCookie, deleteCookie } from "../../util/cookie";
 import { KAKAO_AUTH_URL } from "../../util/kakaoAuth";
@@ -37,9 +38,6 @@ function SignInForm({ onToggle }) {
   const [loginForm, setLoginForm] = useState({
     username: "",
     password: "",
-  });
-  const { user } = useSelector((state) => {
-    return state.user;
   });
   const onEmailValue = (e) => {
     const onChangeName = (prev) => {
@@ -106,15 +104,8 @@ function SignInForm({ onToggle }) {
       <ModalBackground onClick={onToggle} />
       <ModalContainer>
         <ModalHeader onClick={(e) => e.stopPropagation()}>
-          <img
-            style={{ width: "30px", height: "30px" }}
-            alt="logo here"
-            src="./logo/Spring.png"
-          />
-          <AiOutlineClose
-            onClick={onToggle}
-            style={{ cursor: "pointer", width: "30px", height: "30px" }}
-          />
+          <ModalLogoImg alt="logo here" src="./logo/Spring.png" />
+          <AiOutlineClose onClick={onToggle} className="signInClose" />
         </ModalHeader>
         <ModalMain>
           <ModalWelcome>취포스에 오신 것을 환영합니다!</ModalWelcome>

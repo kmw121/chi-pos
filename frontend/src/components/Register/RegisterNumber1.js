@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Select from "react-select";
 import { stacks } from "../../util/stack";
 import "react-datepicker/dist/react-datepicker.css";
@@ -104,11 +104,6 @@ function RegisterNumber1({ dataForm, setDataForm }) {
       return { ...prev, contactAddress: e.target.value };
     });
   };
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = ("0" + (today.getMonth() + 1)).slice(-2);
-  const day = ("0" + today.getDate()).slice(-2);
-  const dateString = year + "년 " + month + "월 " + day + "일";
   const _ = require("lodash");
   const years = _.range(2022, getYear(new Date()) + 4, 1);
   const months = [
@@ -224,13 +219,7 @@ function RegisterNumber1({ dataForm, setDataForm }) {
                 prevMonthButtonDisabled,
                 nextMonthButtonDisabled,
               }) => (
-                <div
-                  style={{
-                    margin: 10,
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
+                <div className="registerDatePickerInner">
                   <button
                     onClick={decreaseMonth}
                     disabled={prevMonthButtonDisabled}

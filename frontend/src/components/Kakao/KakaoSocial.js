@@ -7,6 +7,7 @@ import jwt_decode from "jwt-decode";
 import { setUser, setUserInfo } from "../../slice/userSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { KakaoSocialBox } from "../components";
 const KakaoSocial = () => {
   let code = new URL(window.location.href).searchParams.get("code");
   const dispatch = useDispatch();
@@ -15,7 +16,6 @@ const KakaoSocial = () => {
     async function fetchData() {
       try {
         const res = await axios.get(API_URL + `/ouath/kakao?code=${code}`);
-        console.log(res);
         if (res.data.code === 2) {
           setCookie("Kakao", res.data.data);
           navigate("/kakaoSignup");
@@ -33,30 +33,28 @@ const KakaoSocial = () => {
           navigate("/");
           deleteCookie("jwtToken");
           deleteCookie("refreshToken");
-          document.cookie = "jwtToken" + " = " + jwtToken + "; path=/; ";
-          console.log("토큰생성1");
-          document.cookie =
-            "refreshToken" + " = " + refreshToken + "; path=/; ";
-          console.log("토큰생성2");
+          setCookie("jwtToken", jwtToken, { path: "/", domain: "chi-pos.com" });
+          setCookie("refreshToken", refreshToken, {
+            path: "/",
+            domain: "chi-pos.com",
+          });
+          // document.cookie = "jwtToken" + " = " + jwtToken + "; path=/; ";
+          // console.log("토큰생성1");
+          // document.cookie =
+          //   "refreshToken" + " = " + refreshToken + "; path=/; ";
+          // console.log("토큰생성2");
         }
       } catch (err) {
-        console.log(err);
+        throw new Error(err);
       }
     }
     fetchData();
   }, []);
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-      }}
-    >
+    <KakaoSocialBox>
       <ClimbingBoxLoader color="#ffe8cc" loading size="30" />
-      <h1>로딩즁...</h1>
-    </div>
+      <h1>잠시만 기다려 주세요</h1>
+    </KakaoSocialBox>
   );
 };
 export default KakaoSocial;

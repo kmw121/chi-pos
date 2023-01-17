@@ -72,7 +72,6 @@ function RegisterContainer() {
           Authorization: `${getCookie("jwtToken")}`,
         },
       });
-      console.log("res : ", res);
       if (res.data.code === -1) {
         deleteCookie(["jwtToken"]);
         deleteCookie(["refreshToken"]);
@@ -118,7 +117,6 @@ function RegisterContainer() {
           const response = await axios.post(API_URL + "/post", submitForm, {
             headers: { Authorization: `${getCookie("jwtToken")}` },
           });
-          console.log("response : ", response);
           if (response.data.code === 1) {
             dispatch(setCurrentPost({}));
             alert("등록이 완료되었습니다.");

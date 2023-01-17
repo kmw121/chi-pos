@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API_URL } from "../util/API_URL";
-import { getCookie, deleteCookie } from "../util/cookie";
+import { getCookie, deleteCookie, setCookie } from "../util/cookie";
 import { setUser, setUserInfo } from "../slice/userSlice";
 import { useEffect, useState } from "react";
 export default function useGetMyPost(dispatch, navigate) {
@@ -26,8 +26,22 @@ export default function useGetMyPost(dispatch, navigate) {
             dispatch(setUser([]));
             alert("잘못된 접근입니다. 다시 로그인 해주세요.");
             navigate("/");
-          } else if (nextRes.data.code !== -1) {
-            console.log("refresh token 으로 로그인");
+          } else if (nextRes.data.code === 1) {
+            setCookie("jwtToken", nextRes.data.data);
+            setCookie();
+            const response = await axios.get(API_URL + "/myPost", {
+              headers: {
+                Authorization: `${nextRes.data.data}`,
+              },
+            });
+            if (response.data.code !== 1) {
+              deleteCookie(["jwtToken"]);
+              deleteCookie(["refreshToken"]);
+              dispatch(setUserInfo([]));
+              dispatch(setUser([]));
+              alert("잘못된 접근입니다. 다시 로그인 해주세요.");
+              navigate("/");
+            }
           }
         }
       } catch (err) {

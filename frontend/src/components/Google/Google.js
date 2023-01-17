@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import GoogleLogin from "react-google-login";
 import GoogleButtonStyle from "./GoogleButtonStyle";
 import axios from "axios";
@@ -36,10 +36,10 @@ export default function GoogleButton() {
         navigate("/");
         deleteCookie("jwtToken");
         deleteCookie("refreshToken");
-        document.cookie = "jwtToken" + " = " + jwtToken + "; path=/; ";
-        console.log("토큰생성1");
-        document.cookie = "refreshToken" + " = " + refreshToken + "; path=/; ";
-        console.log("토큰생성2");
+        // document.cookie = "jwtToken" + " = " + jwtToken + "; path=/; ";
+        // document.cookie = "refreshToken" + " = " + refreshToken + "; path=/; ";
+        setCookie("jwtToken", jwtToken, { path: "/" });
+        setCookie("refreshToken", refreshToken, { path: "/" });
         alert("구글로 로그인 되었습니다.");
         window.location.reload();
       }

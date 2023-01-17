@@ -7,6 +7,8 @@ import {
   MainHeadDropdownContainer,
   MainHeadDropdownUl,
   MainHeadDropdownLi,
+  MainHeadNavLeftImg,
+  MainHeadRightImg,
 } from "../components";
 import ModalPortal from "../../Portal/ModalPortal";
 import SignInForm from "../SignIn/SignInForm";
@@ -44,31 +46,19 @@ function MainHead() {
     <>
       <MainHeadNav>
         <a href="/">
-          <img
-            alt="LOGO"
-            src={"/c-pos/ms-icon-310x310.png"}
-            style={{
-              width: "5rem",
-              height: "5rem",
-              display: "block",
-              marginRight: "16px",
-              borderRadius: "50%",
-              objectFit: "cover",
-            }}
-          />
+          <MainHeadNavLeftImg alt="LOGO" src={"/c-pos/ms-icon-310x310.png"} />
         </a>
         <MainHeadNavRight>
           <MainHeadNavBtn onClick={onGoToRegister}>새 글 쓰기</MainHeadNavBtn>
           {cookies.jwtToken !== undefined ? (
             <MainHeadNavBtn onClick={toggleDropdown}>
-              <img
+              <MainHeadRightImg
                 alt="profile"
                 src={
                   userInfo && userInfo.data.imageUrl === "nonUrl"
                     ? "/c-pos/ms-icon-310x310.png"
                     : userInfo && userInfo.data.imageUrl
                 }
-                style={{ width: "45px", height: "45px", borderRadius: "10px" }}
               />
               {dropdownOpen && (
                 <MainHeadDropdownContainer>

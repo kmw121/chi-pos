@@ -95,10 +95,8 @@ function SettingDetail() {
       };
     });
   const onSelectedStack = (value) => {
-    console.log("valie : ", value);
     setStack(value);
   };
-  // console.log("stack : ", stack);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const encodeFileToBase64 = (fileBlob) => {
@@ -138,14 +136,8 @@ function SettingDetail() {
           .flatMap((a) => arrArr.filter((b) => b.name === a))
           .map((a) => a.number);
         const formdata = new FormData();
-        if (
-          notSocial &&
-          files !== "nonUrl" &&
-          userInfo.data.imageUrl !== files
-        ) {
-          console.log("file : ", files);
+        if (imgPreview && userInfo.data.imageUrl !== files) {
           formdata.append("file", files);
-          console.log("파일 들어감");
         }
         formdata.append("nickName", nick);
         formdata.append("password", newPassword);
@@ -249,7 +241,7 @@ function SettingDetail() {
           </SettingImgBtnBox>
         </SettingImgBox>
         <SettingTitleBox>
-          <h3 style={{ width: "20rem" }}>닉네임</h3>
+          <h3 className="settingMainText">닉네임</h3>
           <SettingTitleBoxInput
             placeholder=""
             value={nick}
@@ -261,8 +253,8 @@ function SettingDetail() {
         </SettingDescription>
         <hr />
         <SettingStackBox>
-          <h3 style={{ width: "20rem" }}>관심 기술 태그</h3>
-          <div style={{ width: "300px" }}>
+          <h3 className="settingMainText">관심 기술 태그</h3>
+          <div className="settingTagSelect">
             <Select
               onChange={onSelectedStack}
               isMulti
@@ -279,7 +271,7 @@ function SettingDetail() {
         {notSocial && (
           <>
             <SettingTitleBox>
-              <h3 style={{ width: "20rem" }}>기존 비밀번호</h3>
+              <h3 className="settingMainText">기존 비밀번호</h3>
               <SettingTitleBoxInput
                 placeholder="기존 비밀번호를 입력해 주세요."
                 value={prePassword}
@@ -289,11 +281,11 @@ function SettingDetail() {
             </SettingTitleBox>
             <SettingDescription>
               정보 변경을 위하여 기존 비밀번호를 입력해 주세요.&nbsp;
-              <strong style={{ color: "red" }}>(필수)</strong>
+              <strong className="colorRed">(필수)</strong>
             </SettingDescription>
             <hr />
             <SettingTitleBox>
-              <h3 style={{ width: "20rem" }}>변경할 비밀번호</h3>
+              <h3 className="settingMainText">변경할 비밀번호</h3>
               <SettingTitleBoxInput
                 placeholder="변경할 비밀번호를 입력해 주세요."
                 value={newPassword}
@@ -306,7 +298,7 @@ function SettingDetail() {
             </SettingDescription>
             <hr />
             <SettingTitleBox>
-              <h3 style={{ width: "20rem" }}>비밀번호 재입력</h3>
+              <h3 className="settingMainText">비밀번호 재입력</h3>
               <SettingTitleBoxInput
                 placeholder="비밀번호를 다시 입력해 주세요."
                 value={newPasswordAgain}
