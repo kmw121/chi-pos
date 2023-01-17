@@ -6,6 +6,10 @@ import {
   MyPostsTitleCategory,
   MyPostsTitleCategoryItem,
   MainContentsAppStudyInfoRightDetail,
+  MyPostsTitleTextDiv,
+  MyPostsContentsContainer,
+  MyPostsContentsTopBox,
+  MyPostsContentsBottomBox,
 } from "../components";
 import { AiOutlineEye, AiOutlineMessage } from "react-icons/ai";
 import { BsFillJournalBookmarkFill } from "react-icons/bs";
@@ -33,47 +37,21 @@ function MyPosts() {
         <MyPostsTitle>
           <MyPostsTitleCategory>
             <MyPostsTitleCategoryItem>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  marginBottom: "50px",
-                }}
-              >
+              <MyPostsTitleTextDiv>
                 <BsFillJournalBookmarkFill />
                 <span>작성 목록</span>
-              </div>
+              </MyPostsTitleTextDiv>
               {post.map((content, idx) => (
-                <div
+                <MyPostsContentsContainer
                   key={content.createdDate + content.id + content.startDate}
-                  style={{
-                    width: "100%",
-                    height: "130px",
-                    display: "flex",
-                    marginBottom: "30px",
-                    border: "8px solid",
-                    padding: "1rem",
-                    borderImage:
-                      "linear-gradient(to left, turquoise, greenyellow) 1 0",
-                  }}
                   onClick={() => onGoToPost(content.id)}
                 >
-                  <div
-                    style={{
-                      width: "70%",
-                      boxSizing: "border-box",
-                      padding: "10px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      flexDirection: "column",
-                    }}
-                  >
-                    <div style={{ fontSize: "14px" }}>No. {idx + 1}</div>
-                    <div style={{}}>
+                  <MyPostsContentsTopBox>
+                    <div className="myPostContentsNumber">No. {idx + 1}</div>
+                    <div>
                       {content.title} ({content.howto})
                     </div>
-                    <div style={{ fontSize: "15px" }}>
+                    <div className="myPostContentsText">
                       #{content.categoryType}&nbsp;#{content.people}&nbsp;#
                       {content.duration}&nbsp;
                       {content.postStack.map((inside) => (
@@ -82,32 +60,21 @@ function MyPosts() {
                         </span>
                       ))}
                     </div>
-                  </div>
-                  <div
-                    style={{
-                      width: "20%",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      flexDirection: "column",
-                    }}
-                  >
+                  </MyPostsContentsTopBox>
+
+                  <MyPostsContentsBottomBox>
                     <MainContentsAppStudyInfoRightDetail>
-                      <AiOutlineEye style={{ width: "22px", height: "22px" }} />
-                      <span style={{ color: "black", fontSize: "22px" }}>
-                        {content.view}
-                      </span>
-                    </MainContentsAppStudyInfoRightDetail>{" "}
+                      <AiOutlineEye className="myPostIcon" />
+                      <span className="myPostSpan">{content.view}</span>
+                    </MainContentsAppStudyInfoRightDetail>
                     <MainContentsAppStudyInfoRightDetail>
-                      <AiOutlineMessage
-                        style={{ width: "22px", height: "22px" }}
-                      />
-                      <span style={{ color: "black", fontSize: "22px" }}>
+                      <AiOutlineMessage className="myPostIcon" />
+                      <span className="myPostSpan">
                         {content.comments.length}
                       </span>
                     </MainContentsAppStudyInfoRightDetail>
-                  </div>
-                </div>
+                  </MyPostsContentsBottomBox>
+                </MyPostsContentsContainer>
               ))}
             </MyPostsTitleCategoryItem>
           </MyPostsTitleCategory>

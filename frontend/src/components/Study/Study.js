@@ -45,6 +45,7 @@ import {
   StudyCommentMain,
   StudyCommentMainText,
   StudyInfoGridA,
+  StudyHeadUserBoxImg,
 } from "../components";
 import { logout } from "../../util/logout";
 import { setCurrentPost } from "../../slice/userSlice";
@@ -211,28 +212,17 @@ function Study() {
   return (
     <StudyContainer>
       <StudyHeadSection>
-        <AiOutlineArrowLeft
-          style={{ width: "25px", height: "25px", cursor: "pointer" }}
-          onClick={onGoBack}
-        />
+        <AiOutlineArrowLeft className="studyLeftBtn" onClick={onGoBack} />
         <StudyHeadTitle>{post && post.title}</StudyHeadTitle>
         <StudyHeadUserAndDate>
           <StudyHeadUserBox>
-            <img
+            <StudyHeadUserBoxImg
               src={
                 post && post.user.imageUrl === "nonUrl"
                   ? "/c-pos/ms-icon-310x310.png"
                   : post && post.user.imageUrl
               }
               alt="pic"
-              style={{
-                width: "3rem",
-                height: "3rem",
-                display: "block",
-                marginRight: "16px",
-                borderRadius: "50%",
-                objectFit: "cover",
-              }}
             />
             <StudyHeadUserName>{post && post.user.nickName}</StudyHeadUserName>
           </StudyHeadUserBox>
@@ -272,7 +262,7 @@ function Study() {
             <StudyInfoGridTitle>연락 방법</StudyInfoGridTitle>
             <StudyInfoGridA href={post && `https://${post.contactAddress}`}>
               {post && post.contact}
-              <AiOutlineLink style={{ width: "16px", height: "16px" }} />
+              <AiOutlineLink className="studyLink" />
             </StudyInfoGridA>
           </StudyInfoGridLi>
           <StudyInfoGridLi>
@@ -337,14 +327,7 @@ function Study() {
                   </StudyCommentHeadBox>
                   {post && user.id === content.user.id && (
                     <AiOutlineCloseCircle
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        cursor: "pointer",
-                        width: "28px",
-                        height: "28px",
-                        justifyContent: "center",
-                      }}
+                      className="studyCommentDelete"
                       onClick={() => onDeleteComment(content.id)}
                     />
                   )}

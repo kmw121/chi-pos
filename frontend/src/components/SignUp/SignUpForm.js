@@ -14,6 +14,7 @@ import {
   SignUpInput,
   SignUpInputContainer,
   SignUpInputImg,
+  SignUpImgPreview,
 } from "../components";
 import Select from "react-select";
 import { stacks } from "../../util/stack";
@@ -108,7 +109,6 @@ function SignUpForm() {
     };
     setFormReg(nickNameReg);
   };
-  console.log(files.length === true);
   const onSubmit = async () => {
     // 이 함수 util이나 hook으로 만들어서 쓸까? -> 고민해볼것.
     if (
@@ -139,18 +139,15 @@ function SignUpForm() {
           data: formdata,
         });
         if (res.data.code === 1) {
-          console.log(res);
           alert("회원가입이 완료되었습니다.");
           navigate("/");
         } else {
           if (res.data.code === -1) {
             alert("회원가입에 실패하였습니다.");
-            console.log(res);
             navigate("/");
           }
         }
       } catch (err) {
-        console.log(err);
         throw new Error(err);
       }
     } else {
@@ -247,10 +244,7 @@ function SignUpForm() {
         <SignUpFormLi>
           <SignUpFormLabel>
             <span>이메일</span>
-            <button
-              onClick={onDupCheckEmail}
-              style={{ marginRight: "4.55rem" }}
-            >
+            <button className="signUpBtn" onClick={onDupCheckEmail}>
               중복확인
             </button>
           </SignUpFormLabel>
@@ -264,10 +258,7 @@ function SignUpForm() {
         <SignUpFormLi>
           <SignUpFormLabel>
             <span>닉네임</span>
-            <button
-              onClick={onDupCheckNickName}
-              style={{ marginRight: "4.55rem" }}
-            >
+            <button onClick={onDupCheckNickName} className="signUpBtn">
               중복확인
             </button>
           </SignUpFormLabel>
@@ -322,11 +313,7 @@ function SignUpForm() {
             />
             <div className="img_box">
               {imgPreview && (
-                <img
-                  style={{ width: "60px", height: "60px" }}
-                  src={imgPreview}
-                  alt="preview-img"
-                />
+                <SignUpImgPreview src={imgPreview} alt="preview-img" />
               )}
             </div>
           </SignUpInputContainer>

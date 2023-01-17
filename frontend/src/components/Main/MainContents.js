@@ -1,5 +1,6 @@
-import React, { useRef, useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import FadeLoader from "react-spinners/FadeLoader";
+import "../../App.css";
 import {
   AiOutlineEye,
   AiOutlineMessage,
@@ -34,6 +35,9 @@ import {
   MainContentsToggleInput,
   MainContentsAppStudyEmptyBox,
   MainContentsAppStudyEmtpyBoxInner,
+  MainContentsAppStudyStackImg,
+  MainContentsAppStudyInfoUserImg,
+  MainLoadingBox,
 } from "../components";
 import { API_URL } from "../../util/API_URL";
 import axios from "axios";
@@ -108,7 +112,9 @@ function MainContents({
     }
   };
   const handleOnlyFavorited = () => {
-    if (user.sub.length) {
+    if (!user.length) {
+      alert("로그인 후 이용하실 수 있는 기능입니다.");
+    } else if (user && user.sub.length) {
       const myFavoriteStack = userInfo.data.userStack.map((a) => a.stack.id);
       setList([]);
       setSearchConfig((prev) => {
@@ -118,8 +124,6 @@ function MainContents({
           categoryType: "",
         };
       });
-    } else {
-      alert("로그인 후 이용하실 수 있는 기능입니다.");
     }
   };
   const [target, setTarget] = useState(null);
@@ -184,7 +188,7 @@ function MainContents({
         </MainContentsCategoryInnerContainer>
         <MainContentsToggle>
           <MainContentsCategoryItem
-            style={{ color: "black" }}
+            className="mainCategoryText"
             onClick={handleOnlyFavorited}
           >
             <AiOutlineFullscreenExit />
@@ -203,7 +207,6 @@ function MainContents({
       </MainContentsCategoryContainer>
       <MainContentsAppContainer>
         <MainContentsAppStudyUl>
-          {/* ///////////////////////////////// */}
           {list &&
             list.map((content, index) => (
               <MainContentsAppStudyA
@@ -240,12 +243,7 @@ function MainContents({
                   <MainContentsAppStudyImgUl>
                     {content.postStack.map((stack) => (
                       <MainContentsAppStudyImgLi key={stack.stack.id}>
-                        <img
-                          style={{
-                            width: "48px",
-                            height: "48px",
-                            // borderRadius: "30px",
-                          }}
+                        <MainContentsAppStudyStackImg
                           src={`./logo/${stack.stack.name}.png`}
                           alt={stack.stack.name}
                         />
@@ -255,19 +253,13 @@ function MainContents({
                 </MainContentsAppStudyLi>
                 <MainContentsAppStudyInfo>
                   <MainContentsAppStudyInfoUserBox>
-                    <img
+                    <MainContentsAppStudyInfoUserImg
                       src={
                         content.user.imageUrl === "nonUrl"
                           ? "/c-pos/ms-icon-310x310.png"
                           : content.user.imageUrl
                       }
                       alt="hello world"
-                      style={{
-                        width: "28px",
-                        height: "28px",
-                        borderRadius: "30px",
-                        marginRight: "10px",
-                      }}
                     />
                     <MainContentsAppStudyInfoUserName>
                       {content.user.nickName}
@@ -275,13 +267,11 @@ function MainContents({
                   </MainContentsAppStudyInfoUserBox>
                   <MainContentsAppStudyInfoRightBox>
                     <MainContentsAppStudyInfoRightDetail>
-                      <AiOutlineEye style={{ width: "28px", height: "28px" }} />
+                      <AiOutlineEye className="mainContenIcon" />
                       <p>{content.view}</p>
                     </MainContentsAppStudyInfoRightDetail>
                     <MainContentsAppStudyInfoRightDetail>
-                      <AiOutlineMessage
-                        style={{ width: "28px", height: "28px" }}
-                      />
+                      <AiOutlineMessage className="mainContenIcon" />
                       <p>{content.comments.length}</p>
                     </MainContentsAppStudyInfoRightDetail>
                   </MainContentsAppStudyInfoRightBox>
@@ -303,13 +293,7 @@ function MainContents({
           )}
         </MainContentsAppStudyUl>
         {loadingStatus && (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+          <MainLoadingBox>
             <FadeLoader
               color="#aaa"
               height={15}
@@ -317,7 +301,7 @@ function MainContents({
               radius={2}
               margin={2}
             />
-          </div>
+          </MainLoadingBox>
         )}
       </MainContentsAppContainer>
       {resCode === 1 && <div ref={setTarget} style={targetStyle} />}

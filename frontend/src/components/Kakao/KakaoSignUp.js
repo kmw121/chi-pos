@@ -13,6 +13,7 @@ import {
   SignUpInput,
   SignUpInputContainer,
   SignUpInputImg,
+  ImgPreview,
 } from "../components";
 import axios from "axios";
 import { stacks } from "../../util/stack";
@@ -20,7 +21,7 @@ import { API_URL } from "../../util/API_URL";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { getCookie, deleteCookie, setCookie } from "../../util/cookie";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import jwt_decode from "jwt-decode";
 import { setUser, setUserInfo } from "../../slice/userSlice";
 function KakaoSignUp() {
@@ -79,9 +80,6 @@ function KakaoSignUp() {
     };
     setFormReg(nickNameReg);
   };
-  const { user } = useSelector((state) => {
-    return state.user;
-  });
   const onSubmit = async () => {
     // 이 함수 util이나 hook으로 만들어서 쓸까? -> 고민해볼것.
     if (
@@ -123,13 +121,19 @@ function KakaoSignUp() {
           navigate("/");
           deleteCookie("jwtToken");
           deleteCookie("refreshToken");
-          document.cookie =
-            "jwtToken" + " = " + jwtToken + "; path=/; domain = chi-pos.com";
-          document.cookie =
-            "refreshToken" +
-            " = " +
-            refreshToken +
-            "; path=/; domain = chi-pos.com";
+          setCookie("jwtToken", jwtToken, { path: "/", domain: "chi-pos.com" });
+          setCookie("refreshToken", refreshToken, {
+            path: "/",
+            domain: "chi-pos.com",
+          });
+
+          // document.cookie =
+          //   "jwtToken" + " = " + jwtToken + "; path=/; domain = chi-pos.com";
+          // document.cookie =
+          //   "refreshToken" +
+          //   " = " +
+          //   refreshToken +
+          //   "; path=/; domain = chi-pos.com";
         } else {
           if (res.data.code === -1) {
             alert("kakao 회원가입 실패 ");
@@ -232,13 +236,7 @@ function KakaoSignUp() {
               accept="img/*"
             />
             <div className="img_box">
-              {imgPreview && (
-                <img
-                  style={{ width: "60px", height: "60px" }}
-                  src={imgPreview}
-                  alt="preview-img"
-                />
-              )}
+              {imgPreview && <ImgPreview src={imgPreview} alt="preview-img" />}
             </div>
           </SignUpInputContainer>
         </SignUpFormLi>

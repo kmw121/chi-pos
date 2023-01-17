@@ -12,6 +12,8 @@ import {
   StackBtnUl,
   SelectedStackLi,
   SelectedStackUl,
+  StackImgStyle,
+  SelectedStackImgStyle,
 } from "../components";
 function MainSection({ setSearchConfig, setList, searchConfig }) {
   const [sectionTextList, setSectionTextList] = useState([
@@ -140,11 +142,7 @@ function MainSection({ setSearchConfig, setList, searchConfig }) {
             onClick={() => onClickStackSelected(stack.name)}
             key={stack.name}
           >
-            <img
-              alt="stack_logo"
-              src={`./logo/${stack.name}.png`}
-              style={{ width: "30px", height: "30px" }}
-            />
+            <StackImgStyle alt="stack_logo" src={`./logo/${stack.name}.png`} />
             <span onClick={() => onClickStackSelected(stack.name)}>
               {stack.name}
             </span>
@@ -155,11 +153,7 @@ function MainSection({ setSearchConfig, setList, searchConfig }) {
         {selectedStack.map((stack) => (
           <SelectedStackUl key={stack}>
             <SelectedStackLi>
-              <img
-                src={`/logo/${stack}.png`}
-                alt="stack"
-                style={{ width: "25px", height: "25px" }}
-              />
+              <SelectedStackImgStyle src={`/logo/${stack}.png`} alt="stack" />
               {stack} <FiDelete onClick={() => onClickXBtn(stack)} />
             </SelectedStackLi>
           </SelectedStackUl>

@@ -207,6 +207,10 @@ export const MainContentsAppStudyImgLi = styled.li`
   width: 48px;
   height: 48px;
 `;
+export const MainContentsAppStudyStackImg = styled.img`
+  width: 48px;
+  height: 48px;
+`;
 export const MainContentsAppStudyInfo = styled.section`
   display: flex;
   font-size: 18px;
@@ -218,6 +222,12 @@ export const MainContentsAppStudyInfoUserBox = styled.div`
   display: flex;
   align-items: center;
   position: relative;
+`;
+export const MainContentsAppStudyInfoUserImg = styled.img`
+  width: 28px;
+  height: 28px;
+  border-radius: 30px;
+  margin-right: 10px;
 `;
 export const MainContentsAppStudyInfoUserName = styled.div`
   font-size: 18px;
@@ -259,6 +269,11 @@ export const MainContentsAppStudyEmtpyBoxInner = styled.li`
   height: 100%;
   opacity: 0.5;
 `;
+export const MainLoadingBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 export const MainHeadNav = styled.nav`
   margin: auto;
   max-width: 1180px;
@@ -268,11 +283,24 @@ export const MainHeadNav = styled.nav`
   height: 85px;
   padding: 0 10px;
 `;
+export const MainHeadNavLeftImg = styled.img`
+  width: 5rem;
+  height: 5rem;
+  display: block;
+  margin-right: 16px;
+  border-radius: 50%;
+  object-fit: cover;
+`;
 export const MainHeadNavRight = styled.div`
   display: flex;
   gap: 30px;
   align-items: center;
   position: relative;
+`;
+export const MainHeadRightImg = styled.img`
+  width: 45px;
+  height: 45px;
+  border-radius: 10px;
 `;
 export const MainHeadNavBtn = styled.button`
   cursor: pointer;
@@ -335,6 +363,10 @@ export const StackBtnUl = styled.ul`
   gap: 15px;
   margin-bottom: 40px;
 `;
+export const StackImgStyle = styled.img`
+  width: 30px;
+  height: 30px;
+`;
 export const StackBtnLi = styled.li`
   display: flex;
   grid-gap: 10px;
@@ -378,6 +410,10 @@ export const SelectedStackLi = styled.li`
   align-items: center;
   cursor: pointer;
   transition: all 0.1s ease-in;
+`;
+export const SelectedStackImgStyle = styled.img`
+  width: 25px;
+  height: 25px;
 `;
 export const SelectedFilterClear = styled.span`
   font-size: 24px;
@@ -594,7 +630,36 @@ export const MyPostsTitleCategoryItem = styled.div`
   flex-direction: column;
   width: 90%;
 `;
-
+export const MyPostsTitleTextDiv = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 50px;
+`;
+export const MyPostsContentsContainer = styled.div`
+  width: 100%;
+  height: 130px;
+  display: flex;
+  margin-bottom: 30px;
+  border: 8px solid;
+  padding: 1rem;
+  border-image: linear-gradient(to left, turquoise, greenyellow) 1 0;
+`;
+export const MyPostsContentsTopBox = styled.div`
+  width: 70%;
+  box-sizing: border-box;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+export const MyPostsContentsBottomBox = styled.div`
+  width: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
 /////////////////////////////////////////////////////////////
 //////////////////////SETTING////////////////////////////////
 /////////////////////////////////////////////////////////////
@@ -745,7 +810,10 @@ export const SignUpInputImg = styled.input`
   display: flex;
   justify-content: center;
 `;
-
+export const SignUpImgPreview = styled.img`
+  width: 60px;
+  height: 60px;
+`;
 /////////////////////////////////////////////
 ////////////////SIGN IN//////////////////////
 /////////////////////////////////////////////
@@ -790,6 +858,10 @@ export const ModalHeader = styled.div`
   align-items: center;
   border-radius: 8px 8px 0 0;
   height: 3rem;
+`;
+export const ModalLogoImg = styled.img`
+  width: 30px;
+  height: 30px;
 `;
 export const ModalMain = styled.div`
   background: #fff;
@@ -878,6 +950,14 @@ export const StudyHeadUserBox = styled.div`
   display: flex;
   align-items: center;
   position: relative;
+`;
+export const StudyHeadUserBoxImg = styled.img`
+  width: 3rem;
+  height: 3rem;
+  display: block;
+  margin-right: 16px;
+  border-radius: 50%;
+  object-fit: cover;
 `;
 export const StudyHeadUserName = styled.div`
   color: #333;
@@ -1203,4 +1283,15 @@ export const GoogleBtnText = styled.p`
   margin-left: 62px;
   font-size: 15px;
   font-weight: 700;
+`;
+
+export const ImgPreview = styled.img`
+  width: 60px;
+  height: 60px;
+`;
+export const KakaoSocialBox = styled.div`
+  position: "fixed";
+  top: "50%";
+  left: "50%";
+  transform: "translate(-50%, -50%)";
 `;

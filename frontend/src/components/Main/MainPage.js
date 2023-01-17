@@ -5,6 +5,7 @@ import MainContents from "./MainContents";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import { useState } from "react";
 import usePostsSearch from "../../hooks/usePostsSearch";
+import "../../App.css";
 function MainPage() {
   const handleTop = () => {
     window.scrollTo({
@@ -43,15 +44,7 @@ function MainPage() {
         resCode={resCode}
       />
       <BsFillArrowUpCircleFill
-        style={{
-          width: "50px",
-          height: "50px",
-          position: "fixed",
-          bottom: "10px",
-          right: "10px",
-          cursor: "pointer",
-          opacity: "0.5",
-        }}
+        className="mainHandleTopIcon"
         onClick={handleTop}
       />
     </>
