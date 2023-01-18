@@ -188,7 +188,6 @@ function KakaoSignUp() {
       };
     });
   };
-  console.log("유효성 : ", formReg);
   return (
     <RegisterContainerDiv>
       <SignUpFormTitle>
