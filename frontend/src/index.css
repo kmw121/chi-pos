@@ -83,3 +83,10 @@ code {
   width: 16px;
   height: 16px;
 }
+
+@media (max-width: 500px) {
+  .signInClose {
+    width: 20px;
+    height: 20px;
+  }
+}

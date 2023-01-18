@@ -14,6 +14,7 @@ import {
   SelectedStackUl,
   StackImgStyle,
   SelectedStackImgStyle,
+  StackBtnSpan,
 } from "../components";
 function MainSection({ setSearchConfig, setList, searchConfig }) {
   const [sectionTextList, setSectionTextList] = useState([
@@ -143,9 +144,9 @@ function MainSection({ setSearchConfig, setList, searchConfig }) {
             key={stack.name}
           >
             <StackImgStyle alt="stack_logo" src={`./logo/${stack.name}.png`} />
-            <span onClick={() => onClickStackSelected(stack.name)}>
+            <StackBtnSpan onClick={() => onClickStackSelected(stack.name)}>
               {stack.name}
-            </span>
+            </StackBtnSpan>
           </StackBtnLi>
         ))}
       </StackBtnUl>

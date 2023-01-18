@@ -1,25 +1,14 @@
 import styled, { keyframes } from "styled-components";
-export const Banner_Animation = keyframes`
-from {
-  -webkit-filter: hue-rotate(0);
-  -moz-filter: hue-rotate(0);
-  -ms-filter: hue-rotate(0);
-  filter: hue-rotate(0);
-}
-to {
-  -webkit-filter: hue-rotate(360deg);
-  -moz-filter: hue-rotate(360deg);
-  -ms-filter: hue-rotate(360deg);
-  filter: hue-rotate(360deg);
-}
-
-`;
+import px2vw from "../util/px2vw.js";
 export const Banner = styled.img`
   width: 100vw;
   height: 330px;
   background: thistle;
   cursor: pointer;
   background-size: cover;
+  @media (max-width: 500px) {
+    height: 180px;
+  }
 `;
 export const BannerDotsUl = styled.ul`
   display: block;
@@ -70,12 +59,19 @@ export const MainContentsCategoryItem = styled.div`
       background-color: white;
       color: black;
     `}
+  @media (max-width:500px) {
+    margin-right: 10px;
+    font-size: 16px;
+  }
 `;
 export const MainContentsToggle = styled.div`
   display: flex;
   align-items: center;
   position: absolute;
   right: 0;
+  @media (max-width: 500px) {
+    display: none;
+  }
 `;
 export const MainContentsToggleText = styled.span`
   color: #444;
@@ -83,6 +79,9 @@ export const MainContentsToggleText = styled.span`
   font-weight: 700;
   letter-spacing: -0.03em;
   margin-right: 20px;
+  // @media (max-width: 500px) {
+  //   font-size: 12px;
+  // }
 `;
 export const MainContentsToggleLabel = styled.label`
   position: absolute;
@@ -282,6 +281,11 @@ export const MainHeadNav = styled.nav`
   align-items: center;
   height: 85px;
   padding: 0 10px;
+
+  @media (max-width: 500px) {
+    height: 50px;
+    padding: 0 3px;
+  }
 `;
 export const MainHeadNavLeftImg = styled.img`
   width: 5rem;
@@ -290,12 +294,20 @@ export const MainHeadNavLeftImg = styled.img`
   margin-right: 16px;
   border-radius: 50%;
   object-fit: cover;
+  @media (max-width: 500px) {
+    width: 2.7rem;
+    height: 2.7rem;
+    margin-right: 10px;
+  }
 `;
 export const MainHeadNavRight = styled.div`
   display: flex;
   gap: 30px;
   align-items: center;
   position: relative;
+  @media (max-width: 500px) {
+    gap: 12px;
+  }
 `;
 export const MainHeadRightImg = styled.img`
   width: 45px;
@@ -309,6 +321,9 @@ export const MainHeadNavBtn = styled.button`
   outline: none;
   border: none;
   background-color: #fff;
+  @media (max-width: 500px) {
+    font-size: 0.78rem;
+  }
 `;
 export const SectionContainer = styled.section`
   max-width: 1200px;
@@ -324,6 +339,11 @@ export const CategoryUl = styled.ul`
   padding-bottom: 20px;
   padding-left: 16px;
   margin-bottom: 30px;
+  @media (max-width: 500px) {
+    gap: 30px;
+    padding-left: 10px;
+    margin-bottom: 15px;
+  }
 `;
 export const CategoryLi = styled.li`
   display: flex;
@@ -343,7 +363,9 @@ export const CategoryLi = styled.li`
       background-color: white;
       color: black;
     `}
-    
+  @media(max-width:500px){
+    font-size:0.7rem;
+  }    
   `;
 export const CategoryLiAfter = styled.div`
   content: "";
@@ -362,10 +384,20 @@ export const StackBtnUl = styled.ul`
   grid-gap: 15px;
   gap: 15px;
   margin-bottom: 40px;
+  @media (max-width: 500px) {
+    padding: 5px;
+    margin-bottom: 20px;
+    gap: 10px;
+    width: 90%;
+  }
 `;
 export const StackImgStyle = styled.img`
   width: 30px;
   height: 30px;
+  @media (max-width: 500px) {
+    width: 15px;
+    height: 15px;
+  }
 `;
 export const StackBtnLi = styled.li`
   display: flex;
@@ -380,6 +412,12 @@ export const StackBtnLi = styled.li`
   &:hover {
     transform: scale(1.04);
   }
+  @media (max-width: 500px) {
+    height: 10px;
+  }
+`;
+export const StackBtnSpan = styled.span`
+  font-size: 11px;
 `;
 export const SelectedStackContainer = styled.div`
   display: flex;
@@ -387,6 +425,9 @@ export const SelectedStackContainer = styled.div`
   align-items: center;
   grid-gap: 30px;
   gap: 30px;
+  @media (max-width: 500px) {
+    gap: 0px;
+  }
 `;
 export const SelectedStackUl = styled.ul`
   display: flex;
@@ -394,6 +435,10 @@ export const SelectedStackUl = styled.ul`
   align-items: center;
   grid-gap: 30px;
   gap: 30px;
+  @media (max-width: 500px) {
+    margin-right: 10px;
+    margin-left: 0px;
+  }
 `;
 export const SelectedStackLi = styled.li`
   display: flex;
@@ -410,15 +455,27 @@ export const SelectedStackLi = styled.li`
   align-items: center;
   cursor: pointer;
   transition: all 0.1s ease-in;
+  @media (max-width: 500px) {
+    font-size: 11px;
+    height: 17px;
+    padding: 3px 8px;
+  }
 `;
 export const SelectedStackImgStyle = styled.img`
   width: 25px;
   height: 25px;
+  @media (max-width: 500px) {
+    width: 18px;
+    height: 18px;
+  }
 `;
 export const SelectedFilterClear = styled.span`
   font-size: 24px;
   color: #333;
   cursor: pointer;
+  @media (max-width: 500px) {
+    font-size: 12px;
+  }
 `;
 export const RegisterBottomSection = styled.section`
   display: flex;
@@ -461,6 +518,10 @@ export const RegisterContainerDiv = styled.div`
   grid-gap: 50px;
   gap: 50px;
   position: relative;
+  @media (max-width: 500px) {
+    width: 97%;
+    padding: 30px 5px;
+  }
 `;
 export const RegisterNumber1Title = styled.div`
   display: flex;
@@ -536,6 +597,9 @@ export const RegisterNumber2TitleText = styled.h2`
   line-height: 40px;
   letter-spacing: -0.05em;
   margin: 0;
+  @media (max-width: 500px) {
+    font-size: 18px;
+  }
 `;
 export const RegisterNumber2TitleCircle = styled.span`
   margin-right: 8px;
@@ -550,6 +614,10 @@ export const RegisterNumber2TitleCircle = styled.span`
   font-weight: 700;
   line-height: 19px;
   color: #fff;
+  @media (max-width: 500px) {
+    width: 22px;
+    height: 22px;
+  }
 `;
 export const RegisterNumber2NameLabel = styled.label`
   display: inline-block;
@@ -577,6 +645,9 @@ export const SignUpFormTitle = styled.div`
   align-items: center;
   padding: 16px;
   border-bottom: 3px solid #f2f2f2;
+  @media (max-width: 500px) {
+    padding: 5px;
+  }
 `;
 export const SignUpFormLabel = styled.div`
   display: flex;
@@ -591,6 +662,10 @@ export const SignUpFormUl = styled.ul`
   grid-gap: 15px;
   gap: 65px;
   list-style: none;
+  @media (max-width: 500px) {
+    padding: 0 5px;
+    gap: 10px;
+  }
 `;
 export const SignUpFormLi = styled.li`
   display: flex;
@@ -795,6 +870,10 @@ export const SignUpInput = styled.input`
   margin-top: 10px;
   display: flex;
   justify-content: center;
+  @media (max-width: 500px) {
+    font-size: 12px;
+    height: 20px;
+  }
 `;
 export const SignUpInputContainer = styled.div`
   display: flex;
@@ -849,6 +928,9 @@ export const ModalContainer = styled.div`
   margin: 0 auto;
   z-index: 1000;
   animation: ${boxFade} 0.3s linear;
+  @media (max-width: 550px) {
+    width: 300px;
+  }
 `;
 export const ModalHeader = styled.div`
   background: #f8f9fa;
@@ -858,10 +940,18 @@ export const ModalHeader = styled.div`
   align-items: center;
   border-radius: 8px 8px 0 0;
   height: 3rem;
+  @media (max-width: 550px) {
+    padding: 0 5 px;
+    height: 45px;
+  }
 `;
 export const ModalLogoImg = styled.img`
   width: 30px;
   height: 30px;
+  @media (max-width: 550px) {
+    width: 26px;
+    height: 26px;
+  }
 `;
 export const ModalMain = styled.div`
   background: #fff;
@@ -874,11 +964,10 @@ export const ModalMain = styled.div`
 export const ModalWelcome = styled.h1`
   display: block;
   font-size: 2em;
-  margin-block-start: 0.67em;
-  margin-block-end: 0.67em;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
   font-weight: bold;
+  @media (max-width: 500px) {
+    font-size: 20px;
+  }
 `;
 export const ModalInnerBox = styled.div`
   margin-top: 4rem;
@@ -887,6 +976,10 @@ export const ModalInnerBox = styled.div`
   justify-content: space-between;
   align-items: center;
   flex-direction: column;
+  @media (max-width: 500px) {
+    margin-top: 10px;
+    width: 135%;
+  }
 `;
 export const IdInput = styled.input`
   width: 70%;
@@ -899,6 +992,11 @@ export const IdInput = styled.input`
   background-color: rgb(233, 233, 233);
   margin-bottom: 30px;
   text-align: center;
+  @media (max-width: 500px) {
+    margin-bottom: 15px;
+    font-size: 13px;
+    height: 30px;
+  }
 `;
 export const PwInput = styled.input`
   width: 70%;
@@ -911,7 +1009,52 @@ export const PwInput = styled.input`
   background-color: rgb(233, 233, 233);
   text-align: center;
   margin-bottom: 40px;
+  @media (max-width: 500px) {
+    margin-bottom: 15px;
+    font-size: 13px;
+    height: 30px;
+  }
 `;
+export const ModalBottomSection = styled.section`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 1rem;
+  @media (max-width: 500px) {
+    margin-top: 10px;
+  }
+`;
+export const ModalBottomCancelBtn = styled.button`
+  cursor: pointer;
+  outline: none;
+  border: none;
+  border-radius: 4px;
+  padding: 0 1.25rem;
+  height: 2rem;
+  font-size: 1rem;
+  background: #e9ecef;
+  color: #495057;
+  margin-right: 1rem;
+  @media (max-width: 500px) {
+    font-size: 12px;
+  }
+`;
+export const ModalBottomOkBtn = styled.button`
+  font-weight: 700;
+  background-color: #262626;
+  color: #fff;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  border-radius: 4px;
+  padding: 0 1.25rem;
+  height: 2rem;
+  font-size: 1rem;
+  @media (max-width: 500px) {
+    font-size: 12px;
+  }
+`;
+
 /////////////////////////////////////////////
 //////////////////STUDY//////////////////////
 /////////////////////////////////////////////
@@ -923,11 +1066,17 @@ export const StudyContainer = styled.div`
   flex-direction: column;
   margin: 0 auto;
   padding: 1.5rem 1.5rem 5rem;
+  @media (max-width: 500px) {
+    width: 80%;
+  }
 `;
 export const StudyHeadSection = styled.section`
   display: flex;
   flex-direction: column;
   margin-top: 3rem;
+  @media (max-width: 500px) {
+    margin-top: 20px;
+  }
 `;
 export const StudyHeadTitle = styled.div`
   margin-top: 2.5rem;
@@ -936,6 +1085,10 @@ export const StudyHeadTitle = styled.div`
   line-height: 126.5%;
   letter-spacing: -0.005em;
   color: #000;
+  @media (max-width: 500px) {
+    font-size: 1.5rem;
+    margin-top: 20px;
+  }
 `;
 export const StudyHeadUserAndDate = styled.div`
   margin-top: 32px;
@@ -958,6 +1111,11 @@ export const StudyHeadUserBoxImg = styled.img`
   margin-right: 16px;
   border-radius: 50%;
   object-fit: cover;
+  @media (max-width: 500px) {
+    width: 2rem;
+    height: 2rem;
+    margin-right: 12px;
+  }
 `;
 export const StudyHeadUserName = styled.div`
   color: #333;
@@ -966,10 +1124,16 @@ export const StudyHeadUserName = styled.div`
   font-weight: 700;
   padding-right: 15px;
   border-right: 2px solid #e1e1e1;
+  @media (max-width: 500px) {
+    font-size: 1rem;
+  }
 `;
 export const StudyHeadRegisterDate = styled.div`
   font-size: 18px;
   color: #717171;
+  @media (max-width: 500px) {
+    font-size: 1rem;
+  }
 `;
 export const StudyInfoGridUl = styled.ul`
   display: grid;
@@ -978,6 +1142,11 @@ export const StudyInfoGridUl = styled.ul`
   row-gap: 24px;
   margin-top: 60px;
   list-style: none;
+  @media (max-width: 500px) {
+    grid-template-columns: repeat(1, 6fr);
+    padding: 0;
+    row-gap: 12px;
+  }
 `;
 export const StudyInfoGridLi = styled.li`
   display: flex;
@@ -989,9 +1158,15 @@ export const StudyInfoGridLi = styled.li`
 export const StudyInfoGridTitle = styled.span`
   color: #717171;
   margin-right: 40px;
+  @media (max-width: 500px) {
+    font-size: 16px;
+  }
 `;
 export const StudyInfoGridContent = styled.span`
   color: #333;
+  @media (max-width: 500px) {
+    font-size: 16px;
+  }
 `;
 export const StudyInfoGridA = styled.a`
   display: flex;
@@ -1020,6 +1195,9 @@ export const StudyProjectInfo = styled.h2`
   font-weight: 700;
   padding-bottom: 24px;
   border-bottom: 3px solid #f2f2f2;
+  @media (max-width: 500px) {
+    font-size: 20px;
+  }
 `;
 export const StudyProjectDetail = styled.div`
   width: 100%;
@@ -1093,6 +1271,9 @@ export const StudyAuthBtn = styled.button`
 export const StudyCommentUl = styled.ul`
   width: 100%;
   box-sizing: border-box;
+  @media (max-width: 500px) {
+    padding: 0;
+  }
 `;
 export const StudyCommentLi = styled.li`
   display: flex;
@@ -1120,6 +1301,10 @@ export const StudyCommentHeadImg = styled.img`
   border-radius: 50%;
   object-fit: cover;
   box-sizing: border-box;
+  @media (max-width: 500px) {
+    width: 30px;
+    height: 30px;
+  }
 `;
 export const StudyCommentHeadNameDateBox = styled.div`
   display: flex;
@@ -1137,6 +1322,9 @@ export const StudyCommentHeadDate = styled.div`
   letter-spacing: -0.005em;
   box-sizing: border-box;
   color: #9f9f9f;
+  @media (max-width: 500px) {
+    font-size: 12px;
+  }
 `;
 export const StudyCommentMain = styled.section`
   font-size: 1.125rem;
@@ -1153,6 +1341,9 @@ export const StudyCommentMainText = styled.p`
   word-break: break-all;
   box-sizing: border-box;
   overflow-wrap: break-word;
+  @media (max-width: 500px) {
+    font-size: 1rem;
+  }
 `;
 ///////////////////////////////////////
 /////////////MAIN HEAD DROPDOWN////////
@@ -1198,34 +1389,14 @@ export const ModalBtnContainer = styled.section`
   align-items: center;
   width: 60%;
   justify-content: center;
+  @media (max-width: 500px) {
+    margin-top: 30px;
+  }
 `;
 export const ModalBtnBox = styled.div`
   display: flex;
   flex-direction: column;
-`;
-export const ModalBtnGoogle = styled.button`
-  width: 8rem;
-  height: 8rem;
-  border-radius: 10px;
-  display: flex;
   align-items: center;
-  justify-content: center;
-  outline: none;
-  transition: all 0.125s ease-in 0s;
-  color: #fff;
-  box-shadow: 0 5px 25px rgb(0 0 0 / 15%);
-  border: none;
-`;
-export const ModalBtnGithub = styled.button`
-  width: 8rem;
-  height: 8rem;
-  border-radius: 10px;
-  outline: none;
-  transition: all 0.125s ease-in 0s;
-  color: #fff;
-  background-color: #272e33;
-  box-shadow: 0 5px 25px rgb(0 0 0 / 15%);
-  border: none;
 `;
 export const ModalBtnKakao = styled.a`
   margin-top: 14px;
@@ -1240,15 +1411,16 @@ export const ModalBtnKakao = styled.a`
   box-shadow: 0 5px 25px rgb(0 0 0 / 15%);
   background-color: #fae100;
   border: none;
+  @media (max-width: 500px) {
+    width: 250px;
+    height: 40px;
+  }
 `;
-export const ModalBtnText = styled.p`
-  margin-top: 10px;
-  font-weight: 700;
-  font-size: 1rem;
-  line-height: 126.5%;
-  text-align: center;
-  letter-spacing: -0.005em;
-  color: #565656;
+export const ModalBtnKakaoIcon = styled.img`
+  @media (max-width: 500px) {
+    width: 250px;
+    height: 40px;
+  }
 `;
 
 //////////////////social login button
@@ -1262,6 +1434,10 @@ export const GoogleBtn = styled.div`
   margin-bottom: 14px;
   display: flex;
   border-radius: 10px;
+  @media (max-width: 500px) {
+    width: 250px;
+    height: 40px;
+  }
 `;
 export const GoogleIconWrapper = styled.div`
   margin-top: 1px;
@@ -1270,6 +1446,10 @@ export const GoogleIconWrapper = styled.div`
   height: 42px;
   background-color: #fff;
   border-radius: 10px;
+  @media (max-width: 500px) {
+    width: 38px;
+    height: 38px;
+  }
 `;
 export const GoogleIconImg = styled.img`
   position: absolute;
@@ -1277,12 +1457,19 @@ export const GoogleIconImg = styled.img`
   margin-left: 11px;
   width: 24px;
   height: 24px;
+  @media (max-width: 500px) {
+    width: 18px;
+    height: 18px;
+  }
 `;
 export const GoogleBtnText = styled.p`
   color: #fff;
   margin-left: 62px;
   font-size: 15px;
   font-weight: 700;
+  @media (max-width: 500px) {
+    font-size: 13px;
+  }
 `;
 
 export const ImgPreview = styled.img`

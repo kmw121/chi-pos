@@ -2,9 +2,6 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import getPreventScrolling from "../../util/getPreventScrolling";
 import {
-  RegisterBottomCancelBtn,
-  RegisterBottomSection,
-  RegisterBottomOkBtn,
   ModalMain,
   ModalBackground,
   ModalContainer,
@@ -17,6 +14,10 @@ import {
   ModalBtnBox,
   ModalBtnKakao,
   ModalLogoImg,
+  ModalBottomSection,
+  ModalBottomCancelBtn,
+  ModalBottomOkBtn,
+  ModalBtnKakaoIcon,
 } from "../components";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
@@ -104,7 +105,7 @@ function SignInForm({ onToggle }) {
       <ModalBackground onClick={onToggle} />
       <ModalContainer>
         <ModalHeader onClick={(e) => e.stopPropagation()}>
-          <ModalLogoImg alt="logo here" src="./logo/Spring.png" />
+          <ModalLogoImg alt="logo here" src={"/c-pos/ms-icon-310x310.png"} />
           <AiOutlineClose onClick={onToggle} className="signInClose" />
         </ModalHeader>
         <ModalMain>
@@ -123,17 +124,18 @@ function SignInForm({ onToggle }) {
               type="password"
             />
           </ModalInnerBox>
-          <RegisterBottomSection>
-            <RegisterBottomCancelBtn onClick={onToggle}>
-              취소
-            </RegisterBottomCancelBtn>
-            <RegisterBottomOkBtn onClick={onLogin}>로그인</RegisterBottomOkBtn>
-          </RegisterBottomSection>
+          <ModalBottomSection>
+            <ModalBottomCancelBtn onClick={onToggle}>취소</ModalBottomCancelBtn>
+            <ModalBottomOkBtn onClick={onLogin}>로그인</ModalBottomOkBtn>
+          </ModalBottomSection>
           <ModalBtnContainer>
             <ModalBtnBox>
               <GoogleButton />
               <ModalBtnKakao href={KAKAO_AUTH_URL}>
-                <img src={"/logo/kakao_login_btn.png"} alt="kakao" />
+                <ModalBtnKakaoIcon
+                  src={"/logo/kakao_login_btn.png"}
+                  alt="kakao"
+                />
               </ModalBtnKakao>
             </ModalBtnBox>
           </ModalBtnContainer>

@@ -50,7 +50,6 @@ function GoogleSignUp() {
     nickName: "",
     stack: [],
   });
-  console.log('getCookie("Google") : ', getCookie("Google"));
   const [dupCheck, setDupCheck] = useState({
     username: true,
     nickName: false,
@@ -138,7 +137,6 @@ function GoogleSignUp() {
         } else {
           if (res.data.code === -1) {
             alert("구글 회원가입 실패 ");
-            console.log(res);
           }
         }
       } catch (err) {
@@ -189,7 +187,6 @@ function GoogleSignUp() {
       };
     });
   };
-  console.log("유효성 : ", formReg);
   return (
     <RegisterContainerDiv>
       <SignUpFormTitle>
