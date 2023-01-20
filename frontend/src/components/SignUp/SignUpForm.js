@@ -295,6 +295,7 @@ function SignUpForm() {
       <SignUpFormUl>
         <SignUpFormLi>
           <Select
+            className="react-select-signup"
             onChange={onSelectedStack}
             isMulti
             placeholder="프로젝트 사용 스택"

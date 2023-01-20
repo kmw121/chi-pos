@@ -2,7 +2,7 @@ import styled, { keyframes } from "styled-components";
 import px2vw from "../util/px2vw.js";
 export const Banner = styled.img`
   width: 100vw;
-  height: 330px;
+  height: 400px;
   background: thistle;
   cursor: pointer;
   background-size: cover;
@@ -438,6 +438,7 @@ export const SelectedStackUl = styled.ul`
   @media (max-width: 500px) {
     margin-right: 10px;
     margin-left: 0px;
+    padding: 0;
   }
 `;
 export const SelectedStackLi = styled.li`
@@ -519,7 +520,7 @@ export const RegisterContainerDiv = styled.div`
   gap: 50px;
   position: relative;
   @media (max-width: 500px) {
-    width: 97%;
+    width: 90%;
     padding: 30px 5px;
   }
 `;
@@ -536,6 +537,9 @@ export const RegisterNumber1TitleText = styled.h2`
   line-height: 40px;
   letter-spacing: -0.05em;
   margin: 0;
+  @media (max-width: 500px) {
+    font-size: 18px;
+  }
 `;
 export const RegisterNumber1TitleCircle = styled.span`
   margin-right: 8px;
@@ -557,6 +561,10 @@ export const RegisterNumber1Ul = styled.ul`
   grid-gap: 15px;
   gap: 15px;
   list-style: none;
+  @media (max-width: 500px) {
+    flex-direction: column;
+    padding: 5px;
+  }
 `;
 export const RegisterNumber1Li = styled.li`
   flex: 1 1;
@@ -672,6 +680,7 @@ export const SignUpFormLi = styled.li`
   flex-direction: column;
   flex: 1 1;
   margin: 0;
+  width: 50%;
 `;
 /////////////////////////////////////////////////////////////
 //////////////////////MY POST////////////////////////////////
@@ -679,12 +688,17 @@ export const SignUpFormLi = styled.li`
 
 export const MyPostsContainer = styled.section`
   padding-top: 5rem;
+  @media (max-width: 500px) {
+    padding-top: 0px;
+  }
 `;
 export const MyPostsBlock = styled.div`
   margin: 0 auto;
   min-height: 100vh;
-  // width는 반응형임
   width: 1200px;
+  @media (max-width: 500px) {
+    width: 90%;
+  }
 `;
 export const MyPostsTitle = styled.main`
   display: flex;
@@ -746,6 +760,10 @@ export const SettingContainer = styled.div`
   margin-right: auto;
   width: 800px;
   padding-bottom: 5rem;
+  @media (max-width: 500px) {
+    width: 90%;
+    margin-top: 10px;
+  }
 `;
 export const SettingImgBox = styled.div`
   display: flex;
@@ -817,6 +835,10 @@ export const SettingTitleBoxInput = styled.input`
   height: 2.5rem;
   outline: none;
   box-sizing: border-box;
+  @media (max-width: 500px) {
+    font-size: 12px;
+    width: 100%;
+  }
 `;
 export const SettingDescription = styled.p`
   margin-top: 0.875rem;

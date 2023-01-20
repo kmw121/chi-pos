@@ -15,6 +15,7 @@ import SignInForm from "../SignIn/SignInForm";
 import { useCookies } from "react-cookie";
 import { logout } from "../../util/logout";
 import { useDispatch, useSelector } from "react-redux";
+import { setCurrentPost } from "../../slice/userSlice";
 function MainHead() {
   const [cookies, _, __] = useCookies(["jwtToken"]);
   const { userInfo } = useSelector((state) => {
@@ -23,6 +24,7 @@ function MainHead() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const onGoToRegister = () => {
+    dispatch(setCurrentPost({}));
     navigate("/register");
   };
   const onGoToSignUp = () => {
