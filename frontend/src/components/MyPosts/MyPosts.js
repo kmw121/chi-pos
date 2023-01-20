@@ -38,8 +38,8 @@ function MyPosts() {
           <MyPostsTitleCategory>
             <MyPostsTitleCategoryItem>
               <MyPostsTitleTextDiv>
-                <BsFillJournalBookmarkFill />
-                <span>작성 목록</span>
+                <BsFillJournalBookmarkFill className="myPostBookIcon" />
+                <span className="myPostMyPost">작성 목록</span>
               </MyPostsTitleTextDiv>
               {post.map((content, idx) => (
                 <MyPostsContentsContainer
@@ -48,7 +48,7 @@ function MyPosts() {
                 >
                   <MyPostsContentsTopBox>
                     <div className="myPostContentsNumber">No. {idx + 1}</div>
-                    <div>
+                    <div className="myPostContentsTitle">
                       {content.title} ({content.howto})
                     </div>
                     <div className="myPostContentsText">
