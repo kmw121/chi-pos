@@ -46,3 +46,22 @@
   font-size: 16px;
   color: hsl(0, 0%, 20%);
 }
+@media (max-width: 500px) {
+  .customDatePickerWidth,
+  .customDatePickerWidth > div.react-datepicker-wrapper,
+  .customDatePickerWidth
+    > div
+    > div.react-datepicker__input-container
+    .customDatePickerWidth
+    > div
+    > div.react-datepicker__input-container
+    input {
+    width: 100%;
+  }
+  .customDatePickerWidth
+    > .react-datepicker-wrapper
+    > .react-datepicker__input-container
+    > input {
+    width: 100%;
+  }
+}
