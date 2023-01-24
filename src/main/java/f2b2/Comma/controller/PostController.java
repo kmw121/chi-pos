@@ -90,13 +90,6 @@ public class PostController {
 
     @PostMapping("/posts")
     public ResponseEntity<?> findPosts(@RequestBody PostsDto postsDto){
-
-        System.out.println("page : " + postsDto.getPage());
-        System.out.println("size : " + postsDto.getSize());
-        System.out.println("stack : " + postsDto.getStack());
-        System.out.println("isEnd : " + postsDto.getIsEnd());
-        System.out.println("category : " + postsDto.getCategoryType());
-
         String query = " where ";
         boolean flag = true;
 
@@ -154,9 +147,6 @@ public class PostController {
         if(flag){
             List<Post> posts = postService.findAll("SELECT DISTINCT p FROM Post p order by p.modifiedDate desc ", start, size);
 
-            for(Post p : posts) {
-                System.out.println(p.getId() + "번째 글");
-            }
 
             if(posts.size()==0){
                 return new ResponseEntity<>(new CMRespDto<>(-1, "글이 존재하지 않습니다.", null), HttpStatus.OK);
@@ -169,9 +159,6 @@ public class PostController {
 
             List<Post> posts = postService.findAll("SELECT DISTINCT p FROM Post p "+query + " order by p.modifiedDate desc ",start,size);
 
-            for(Post p : posts) {
-                System.out.println(p.getId() + "번째 글");
-            }
 
             if(posts.size()==0){
                 return new ResponseEntity<>(new CMRespDto<>(-1, "글이 존재하지 않습니다.", null), HttpStatus.OK);
@@ -185,11 +172,9 @@ public class PostController {
     @Transactional
     @PostMapping("/end/{postId}")
     public ResponseEntity<?> endJWT(@PathVariable Long postId,@RequestHeader HttpHeaders headers){
-        System.out.println("여기까지 됨.");
         Post post = postService.find(postId);
         Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey.getBytes()).parseClaimsJws(headers.get("Authorization").get(0));
         if(post.getUser().getId() != Long.parseLong(claims.getBody().get("id").toString())){
-            System.out.println("이거 오류임.");
             return new ResponseEntity<>(new CMRespDto<>(-1, "로그인 정보와 게시글 작성자가 일치하지 않습니다.", null), HttpStatus.OK);
         };
         post.setEnd("true");

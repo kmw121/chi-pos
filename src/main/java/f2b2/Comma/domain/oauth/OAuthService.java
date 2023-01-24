@@ -21,11 +21,9 @@ public class OAuthService{
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            //POST 요청을 위해 기본값이 false인 setDoOutput을 true로
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
 
-            //POST 요청에 필요로 요구하는 파라미터 스트림을 통해 전송
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
@@ -49,7 +47,6 @@ public class OAuthService{
             }
             System.out.println("response body : " + result);
 
-            //Gson 라이브러리에 포함된 클래스로 JSON파싱 객체 생성
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
 
@@ -72,7 +69,6 @@ public class OAuthService{
 
         String reqURL = "https://kapi.kakao.com/v2/user/me";
 
-        //access_token을 이용하여 사용자 정보 조회
         try {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -81,11 +77,9 @@ public class OAuthService{
             conn.setDoOutput(true);
             conn.setRequestProperty("Authorization", "Bearer " + token); //전송할 header 작성, access_token전송
 
-            //결과 코드가 200이라면 성공
             int responseCode = conn.getResponseCode();
             System.out.println("responseCode : " + responseCode);
 
-            //요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String line = "";
             String result = "";
@@ -95,7 +89,6 @@ public class OAuthService{
             }
             System.out.println("response body : " + result);
 
-            //Gson 라이브러리로 JSON파싱
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
 
@@ -115,7 +108,6 @@ public class OAuthService{
 
         String reqURL = "https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=" + token;
 
-        //access_token을 이용하여 사용자 정보 조회
         try {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -123,11 +115,9 @@ public class OAuthService{
             conn.setRequestMethod("GET");
             conn.setDoOutput(true);
 
-            //결과 코드가 200이라면 성공
             int responseCode = conn.getResponseCode();
             System.out.println("responseCode : " + responseCode);
 
-            //요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String line = "";
             String result = "";
@@ -137,7 +127,7 @@ public class OAuthService{
             }
             System.out.println("response body : " + result);
 
-            //Gson 라이브러리로 JSON파싱
+
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
 

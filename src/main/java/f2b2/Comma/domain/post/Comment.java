@@ -18,9 +18,6 @@ public class Comment extends BaseTimeEntity {
 
 
     @JsonIgnore
-//    @JsonIgnoreProperties({"comments","postStack","category","people","duration",
-//            "postStack","startDate","contact","contactAddress","title","detail"
-//            ,"createDate"})
     @JoinColumn(name = "postId")
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
