@@ -1,7 +1,12 @@
 import axios from "axios";
 import { API_URL } from "./API_URL";
 import { deleteCookie, getCookie, setCookie } from "./cookie";
-import { setUser, setUserInfo, setCurrentPost } from "../slice/userSlice";
+import {
+  setUser,
+  setUserInfo,
+  setCurrentPost,
+  setIsLogin,
+} from "../slice/userSlice";
 export default async function authCheck(dispatch, navigate, user) {
   if (!user.id) {
     alert("로그인이 필요한 페이지 입니다.");
@@ -10,6 +15,7 @@ export default async function authCheck(dispatch, navigate, user) {
     deleteCookie(["refreshToken"]);
     dispatch(setUserInfo([]));
     dispatch(setUser([]));
+    dispatch(setIsLogin(false));
   } else {
     try {
       const res = await axios.get(API_URL + `/user/${user.id}`, {
@@ -23,6 +29,7 @@ export default async function authCheck(dispatch, navigate, user) {
         dispatch(setUserInfo([]));
         dispatch(setUser([]));
         dispatch(setCurrentPost({}));
+        dispatch(setIsLogin(false));
         alert("로그인이 필요한 페이지 입니다.");
         navigate("/");
       } else if (res.data.code === 2) {
@@ -35,10 +42,9 @@ export default async function authCheck(dispatch, navigate, user) {
           dispatch(setUserInfo([]));
           dispatch(setUser([]));
           dispatch(setCurrentPost({}));
+          dispatch(setIsLogin(false));
           alert("잘못된 접근입니다.");
-          window.location.reload();
         } else if (nextRes.data.code === 1) {
-          deleteCookie("jwtToken");
           setCookie("jwtToken", nextRes.data.data);
           const response = await axios.get(API_URL + `/user/${user.id}`, {
             headers: { Authorization: `${getCookie("jwtToken")}` },

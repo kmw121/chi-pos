@@ -24,7 +24,7 @@ import withdrawal from "../../util/withdrawal";
 import axios from "axios";
 import { API_URL } from "../../util/API_URL";
 import { getCookie } from "../../util/cookie";
-import { setUserInfo, setUser } from "../../slice/userSlice";
+import { setUserInfo, setUser, setIsLogin } from "../../slice/userSlice";
 import { deleteCookie, setCookie } from "../../util/cookie";
 function SettingDetail() {
   const { userInfo } = useSelector((state) => {
@@ -38,7 +38,6 @@ function SettingDetail() {
     }
   }, []);
   const reg_password = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{5,15}$/;
-  const reg_nickName = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$/;
   const [stack, setStack] = useState(
     userInfo.data.userStack
       .map((a) => a.stack.name)
@@ -59,28 +58,25 @@ function SettingDetail() {
   });
   const handlePrePassword = (e) => {
     setPrepassword(e.target.value);
-    const prePasswordReg = (prev) => {
+    setFormReg((prev) => {
       return { ...prev, prePassword: reg_password.test(e.target.value) };
-    };
-    setFormReg(prePasswordReg);
+    });
   };
   const handleNewPassword = (e) => {
     setNewPassword(e.target.value);
-    const newPasswordReg = (prev) => {
+    setFormReg((prev) => {
       return {
         ...prev,
         newPassword: reg_password.test(e.target.value),
         newPasswordAgain: e.target.value === prev.newPasswordAgain,
       };
-    };
-    setFormReg(newPasswordReg);
+    });
   };
   const handleNewPasswordAgain = (e) => {
     setNewPasswordAgain(e.target.value);
-    const newPasswordAgainReg = (prev) => {
+    setFormReg((prev) => {
       return { ...prev, newPasswordAgain: e.target.value === newPassword };
-    };
-    setFormReg(newPasswordAgainReg);
+    });
   };
 
   const onChangeNickName = (e) => {
@@ -175,10 +171,10 @@ function SettingDetail() {
             deleteCookie(["refreshToken"]);
             dispatch(setUserInfo([]));
             dispatch(setUser([]));
+            dispatch(setIsLogin(false));
             alert("잘못된 접근입니다.");
-            window.location.reload();
             navigate("/");
-          } else if (nextRes.data.code !== -1) {
+          } else if (nextRes.data.code === 1) {
             deleteCookie("jwtToken");
             setCookie("jwtToken", nextRes.data.data);
             const response = await axios({

@@ -24,6 +24,8 @@ import { getCookie, deleteCookie, setCookie } from "../../util/cookie";
 import { useDispatch } from "react-redux";
 import jwt_decode from "jwt-decode";
 import { setUser, setUserInfo } from "../../slice/userSlice";
+import ModalPortal from "../../Portal/ModalPortal";
+import AlertModal from "../AlertModal/AlertModal";
 function KakaoSignUp() {
   let stackNumber = 1;
   const stackArray = stacks
@@ -54,6 +56,11 @@ function KakaoSignUp() {
     username: true,
     nickName: false,
   });
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalText, setModalText] = useState("");
+  const onClickModal = () => {
+    setModalOpen(!modalOpen);
+  };
   const reg_nickName = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$/;
   const navigate = useNavigate();
   const onGoBack = () => {
@@ -107,7 +114,8 @@ function KakaoSignUp() {
           data: formdata,
         });
         if (res.data.code === 1) {
-          alert("카카오 회원가입 완료~");
+          setModalText(() => "카카오 회원가입이 완료되었습니다.");
+          setModalOpen(() => true);
           const jwtToken = res.data.data.accessToken;
           const refreshToken = res.data.data.refreshToken;
           const decoded = jwt_decode(jwtToken);
@@ -126,14 +134,6 @@ function KakaoSignUp() {
             path: "/",
             domain: "chi-pos.com",
           });
-
-          // document.cookie =
-          //   "jwtToken" + " = " + jwtToken + "; path=/; domain = chi-pos.com";
-          // document.cookie =
-          //   "refreshToken" +
-          //   " = " +
-          //   refreshToken +
-          //   "; path=/; domain = chi-pos.com";
         } else {
           if (res.data.code === -1) {
             alert("kakao 회원가입 실패 ");
@@ -176,7 +176,6 @@ function KakaoSignUp() {
       alert("닉네임은 2글자 이상 10글자 이하입니다.");
     }
   };
-  //이미지 미리보기 코드
   const encodeFileToBase64 = (fileBlob) => {
     const reader = new FileReader();
     setFiles(fileBlob);
@@ -189,64 +188,73 @@ function KakaoSignUp() {
     });
   };
   return (
-    <RegisterContainerDiv>
-      <SignUpFormTitle>
-        <RegisterNumber2TitleCircle>✩</RegisterNumber2TitleCircle>
-        <RegisterNumber2TitleText>
-          &nbsp; 회원 정보를 입력해주세요.
-        </RegisterNumber2TitleText>
-      </SignUpFormTitle>
-      <SignUpFormUl>
-        <SignUpFormLi>
-          <SignUpFormLabel>
-            <span>닉네임</span>
-            <button
-              onClick={onDupCheckNickName}
-              style={{ marginRight: "4.55rem" }}
-            >
-              중복확인
-            </button>
-          </SignUpFormLabel>
-          <SignUpInput
-            onChange={onChangeNickName}
-            value={form.nickName}
-            placeholder=""
-            disabled={dupCheck.nickName}
-          />
-        </SignUpFormLi>
-      </SignUpFormUl>
-      <SignUpFormUl>
-        <SignUpFormLi>
-          <Select
-            onChange={onSelectedStack}
-            isMulti
-            placeholder="프로젝트 사용 스택"
-            options={stackArray}
-          />
-        </SignUpFormLi>
-        <SignUpFormLi>
-          <SignUpFormLabel>프로필 사진</SignUpFormLabel>
-          <SignUpInputContainer>
-            <SignUpInputImg
-              onChange={(e) => {
-                encodeFileToBase64(e.target.files[0]);
-              }}
-              type="file"
-              accept="img/*"
+    <>
+      <RegisterContainerDiv>
+        <SignUpFormTitle>
+          <RegisterNumber2TitleCircle>✩</RegisterNumber2TitleCircle>
+          <RegisterNumber2TitleText>
+            &nbsp; 회원 정보를 입력해주세요.
+          </RegisterNumber2TitleText>
+        </SignUpFormTitle>
+        <SignUpFormUl>
+          <SignUpFormLi>
+            <SignUpFormLabel>
+              <span>닉네임</span>
+              <button
+                onClick={onDupCheckNickName}
+                style={{ marginRight: "4.55rem" }}
+              >
+                중복확인
+              </button>
+            </SignUpFormLabel>
+            <SignUpInput
+              onChange={onChangeNickName}
+              value={form.nickName}
+              placeholder=""
+              disabled={dupCheck.nickName}
             />
-            <div className="img_box">
-              {imgPreview && <ImgPreview src={imgPreview} alt="preview-img" />}
-            </div>
-          </SignUpInputContainer>
-        </SignUpFormLi>
-      </SignUpFormUl>
-      <RegisterBottomSection>
-        <RegisterBottomCancelBtn onClick={onGoBack}>
-          취소
-        </RegisterBottomCancelBtn>
-        <RegisterBottomOkBtn onClick={onSubmit}>회원가입</RegisterBottomOkBtn>
-      </RegisterBottomSection>
-    </RegisterContainerDiv>
+          </SignUpFormLi>
+        </SignUpFormUl>
+        <SignUpFormUl>
+          <SignUpFormLi>
+            <Select
+              onChange={onSelectedStack}
+              isMulti
+              placeholder="프로젝트 사용 스택"
+              options={stackArray}
+            />
+          </SignUpFormLi>
+          <SignUpFormLi>
+            <SignUpFormLabel>프로필 사진</SignUpFormLabel>
+            <SignUpInputContainer>
+              <SignUpInputImg
+                onChange={(e) => {
+                  encodeFileToBase64(e.target.files[0]);
+                }}
+                type="file"
+                accept="img/*"
+              />
+              <div className="img_box">
+                {imgPreview && (
+                  <ImgPreview src={imgPreview} alt="preview-img" />
+                )}
+              </div>
+            </SignUpInputContainer>
+          </SignUpFormLi>
+        </SignUpFormUl>
+        <RegisterBottomSection>
+          <RegisterBottomCancelBtn onClick={onGoBack}>
+            취소
+          </RegisterBottomCancelBtn>
+          <RegisterBottomOkBtn onClick={onSubmit}>회원가입</RegisterBottomOkBtn>
+        </RegisterBottomSection>
+      </RegisterContainerDiv>
+      {modalOpen && (
+        <ModalPortal>
+          <AlertModal onToggle={onClickModal} text={modalText}></AlertModal>
+        </ModalPortal>
+      )}
+    </>
   );
 }
 

@@ -4,6 +4,7 @@ const initialState = {
   user: [],
   userInfo: [],
   currentPost: {},
+  isLogin: false,
 };
 
 export const userSlice = createSlice({
@@ -19,8 +20,16 @@ export const userSlice = createSlice({
     setCurrentPost: (state, action) => {
       state.currentPost = action.payload;
     },
+    setIsLogin: (state, action) => {
+      state.isLogin = action.payload;
+    },
   },
 });
 
-export const { setUser, setUserInfo, setCurrentPost } = userSlice.actions;
+export const {
+  setUser,
+  setUserInfo,
+  setCurrentPost,
+  setIsLogin,
+} = userSlice.actions;
 export default userSlice.reducer;

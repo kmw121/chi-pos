@@ -48,7 +48,7 @@ import {
   StudyHeadUserBoxImg,
 } from "../components";
 import { logout } from "../../util/logout";
-import { setCurrentPost } from "../../slice/userSlice";
+import { setCurrentPost, setIsLogin } from "../../slice/userSlice";
 function Study() {
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -78,7 +78,6 @@ function Study() {
           navigate("/");
         } else if (res.data.code === -1) {
           alert("알 수 없는 오류가 발생하였습니다.");
-          console.log(res.data);
         }
       } catch (err) {
         throw new Error(err);
@@ -108,6 +107,7 @@ function Study() {
           } else if (nextRes.data.code === -1 || nextRes.data.code === 2) {
             deleteCookie(["jwtToken"]);
             deleteCookie(["refreshToken"]);
+            dispatch(setIsLogin(false));
             alert("잘못된 접근입니다. 다시 로그인해주세요.");
             navigate("/");
           }
@@ -121,6 +121,7 @@ function Study() {
       }
     }
   };
+  console.log(currentPost);
   const onPostComment = async () => {
     if (window.confirm("댓글을 등록하시겠습니까?")) {
       try {
@@ -162,6 +163,7 @@ function Study() {
           } else if (nextRes.data.code === 2 || nextRes.data.code === -1) {
             deleteCookie(["jwtToken"]);
             deleteCookie(["refreshToken"]);
+            dispatch(setIsLogin(false));
             alert("잘못된 접근입니다. 다시 로그인해주세요.");
             navigate("/");
           }
@@ -191,6 +193,7 @@ function Study() {
           if (nextRes.data.code === 2 || nextRes.data.code === -1) {
             deleteCookie(["jwtToken"]);
             deleteCookie(["refreshToken"]);
+            dispatch(setIsLogin(false));
             alert("잘못된 접근입니다. 다시 로그인해주세요.");
             navigate("/");
           } else if (nextRes.data.code === 1) {

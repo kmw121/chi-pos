@@ -11,7 +11,12 @@ import toStringByFormatting from "../../util/toStringByFormatting";
 import axios from "axios";
 import { API_URL } from "../../util/API_URL";
 import { getCookie, deleteCookie, setCookie } from "../../util/cookie";
-import { setUserInfo, setUser, setCurrentPost } from "../../slice/userSlice";
+import {
+  setUserInfo,
+  setUser,
+  setCurrentPost,
+  setIsLogin,
+} from "../../slice/userSlice";
 function RegisterContainer() {
   const { currentPost } = useSelector((state) => {
     return state.user;
@@ -78,6 +83,7 @@ function RegisterContainer() {
         dispatch(setCurrentPost({}));
         dispatch(setUserInfo([]));
         dispatch(setUser([]));
+        dispatch(setIsLogin(false));
         alert("잘못된 요청입니다. 다시 로그인 하시길 바랍니다.");
         navigate("/");
       } else if (res.data.code === 2) {
@@ -91,7 +97,8 @@ function RegisterContainer() {
           dispatch(setUserInfo([]));
           dispatch(setUser([]));
           alert("잘못된 접근입니다.");
-          window.location.reload();
+          dispatch(setIsLogin(false));
+          navigate("/");
         } else if (nextRes.data.data !== -1) {
           deleteCookie("jwtToken");
           setCookie("jwtToken", nextRes.data.data);

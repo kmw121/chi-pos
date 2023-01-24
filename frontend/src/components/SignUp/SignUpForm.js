@@ -16,6 +16,8 @@ import {
   SignUpInputImg,
   SignUpImgPreview,
 } from "../components";
+import AlertModal from "../AlertModal/AlertModal";
+import ModalPortal from "../../Portal/ModalPortal";
 import Select from "react-select";
 import { stacks } from "../../util/stack";
 import axios from "axios";
@@ -37,6 +39,8 @@ function SignUpForm() {
     passwordAgain: false,
     nickName: false,
   });
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalText, setModalText] = useState("");
   const [imgPreview, setImgPreview] = useState("");
   const [files, setFiles] = useState([]);
   const [form, setForm] = useState({
@@ -50,6 +54,9 @@ function SignUpForm() {
     username: false,
     nickName: false,
   });
+  const onClickModal = () => {
+    setModalOpen(!modalOpen);
+  };
   const reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
   const reg_password = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{5,15}$/;
   const reg_nickName = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$/;
@@ -58,15 +65,12 @@ function SignUpForm() {
     navigate(-1);
   };
   const onChangeUsername = (e) => {
-    const setUsername = (prev) => {
+    setForm((prev) => {
       return { ...prev, username: e.target.value };
-    };
-    setForm(setUsername);
-    setUsername(e.target.value);
-    const usernameReg = (prev) => {
+    });
+    setFormReg((prev) => {
       return { ...prev, username: reg_email.test(e.target.value) };
-    };
-    setFormReg(usernameReg);
+    });
   };
   const onSelectedStack = (value) => {
     setForm((prev) => {
@@ -74,40 +78,34 @@ function SignUpForm() {
     });
   };
   const onChangePassword = (e) => {
-    const setPassword = (prev) => {
+    setForm((prev) => {
       return { ...prev, password: e.target.value };
-    };
-    setForm(setPassword);
-    const passwordReg = (prev) => {
+    });
+    setFormReg((prev) => {
       return { ...prev, password: reg_password.test(e.target.value) };
-    };
-    setFormReg(passwordReg);
+    });
   };
   const onChangePasswordAgain = (e) => {
-    const setPasswordAgain = (prev) => {
+    setForm((prev) => {
       return { ...prev, passwordAgain: e.target.value };
-    };
-    setForm(setPasswordAgain);
-    const passwordAgainReg = (prev) => {
+    });
+    setFormReg((prev) => {
       return {
         ...prev,
         passwordAgain: prev.password === prev.passwordAgain,
       };
-    };
-    setFormReg(passwordAgainReg);
+    });
   };
   const onChangeNickName = (e) => {
-    const setNickName = (prev) => {
+    setForm((prev) => {
       return { ...prev, nickName: e.target.value };
-    };
-    setForm(setNickName);
-    const nickNameReg = (prev) => {
+    });
+    setFormReg((prev) => {
       return {
         ...prev,
         nickName: reg_nickName.test(e.target.value),
       };
-    };
-    setFormReg(nickNameReg);
+    });
   };
   const onSubmit = async () => {
     // 이 함수 util이나 hook으로 만들어서 쓸까? -> 고민해볼것.
@@ -139,7 +137,7 @@ function SignUpForm() {
           data: formdata,
         });
         if (res.data.code === 1) {
-          alert("회원가입이 완료되었습니다.");
+          setModalText(() => "회원가입이 완료되었습니다.");
           navigate("/");
         } else {
           if (res.data.code === -1) {
@@ -168,7 +166,8 @@ function SignUpForm() {
             setDupCheck((prev) => {
               return { ...prev, username: true };
             });
-            alert("이메일을 설정하셨습니다.");
+            setModalText(() => "이메일을 설정하셨습니다.");
+            setModalOpen(true);
           } else {
             alert("취소되었습니다.");
           }
@@ -195,7 +194,8 @@ function SignUpForm() {
             setDupCheck((prev) => {
               return { ...prev, nickName: true };
             });
-            alert("닉네임을 설정하셨습니다.");
+            setModalText(() => "닉네임을 설정하셨습니다.");
+            setModalOpen(true);
           } else {
             alert("취소되었습니다.");
           }
@@ -206,7 +206,8 @@ function SignUpForm() {
         throw new Error(err);
       }
     } else {
-      alert("닉네임은 2글자 이상 ~ 10글자 이하로 해주세요!");
+      setModalText(() => "닉네임은 2글자 이상 ~ 10글자 이하로 해주세요!");
+      setModalOpen(true);
     }
   };
   useEffect(() => {
@@ -233,100 +234,116 @@ function SignUpForm() {
     });
   };
   return (
-    <RegisterContainerDiv>
-      <SignUpFormTitle>
-        <RegisterNumber2TitleCircle>✩</RegisterNumber2TitleCircle>
-        <RegisterNumber2TitleText>
-          &nbsp; 회원 정보를 입력해주세요.
-        </RegisterNumber2TitleText>
-      </SignUpFormTitle>
-      <SignUpFormUl>
-        <SignUpFormLi>
-          <SignUpFormLabel>
-            <span>이메일</span>
-            <button className="signUpBtn" onClick={onDupCheckEmail}>
-              중복확인
-            </button>
-          </SignUpFormLabel>
-          <SignUpInput
-            value={form.username}
-            onChange={onChangeUsername}
-            placeholder="ex ) ABCD1234@naver.com"
-            disabled={dupCheck.username}
-          />
-        </SignUpFormLi>
-        <SignUpFormLi>
-          <SignUpFormLabel>
-            <span>닉네임</span>
-            <button onClick={onDupCheckNickName} className="signUpBtn">
-              중복확인
-            </button>
-          </SignUpFormLabel>
-          <SignUpInput
-            onChange={onChangeNickName}
-            value={form.nickName}
-            placeholder=""
-            disabled={dupCheck.nickName}
-          />
-        </SignUpFormLi>
-      </SignUpFormUl>
-      <SignUpFormUl>
-        <SignUpFormLi>
-          <SignUpFormLabel>비밀번호</SignUpFormLabel>
-          <SignUpInput
-            onChange={onChangePassword}
-            value={form.password}
-            maxLength="15"
-            type="password"
-            placeholder=""
-          />
-        </SignUpFormLi>
-        <SignUpFormLi>
-          <SignUpFormLabel>비밀번호 확인</SignUpFormLabel>
-          <SignUpInput
-            onChange={onChangePasswordAgain}
-            value={form.passwordAgain}
-            maxLength="15"
-            type="password"
-            placeholder=""
-          />
-        </SignUpFormLi>
-      </SignUpFormUl>
-      <SignUpFormUl>
-        <SignUpFormLi>
-          <Select
-            className="react-select-signup"
-            onChange={onSelectedStack}
-            isMulti
-            placeholder="프로젝트 사용 스택"
-            options={stackArray}
-          />
-        </SignUpFormLi>
-        <SignUpFormLi>
-          <SignUpFormLabel>프로필 사진</SignUpFormLabel>
-          <SignUpInputContainer>
-            <SignUpInputImg
-              onChange={(e) => {
-                encodeFileToBase64(e.target.files[0]);
-              }}
-              type="file"
-              accept="img/*"
+    <>
+      <RegisterContainerDiv>
+        <SignUpFormTitle>
+          <RegisterNumber2TitleCircle>✩</RegisterNumber2TitleCircle>
+          <RegisterNumber2TitleText>
+            &nbsp; 회원 정보를 입력해주세요.
+          </RegisterNumber2TitleText>
+        </SignUpFormTitle>
+        <SignUpFormUl>
+          <SignUpFormLi>
+            <SignUpFormLabel>
+              <span>이메일</span>
+              <button
+                className="signUpBtn"
+                onClick={() => {
+                  onDupCheckEmail();
+                }}
+              >
+                중복확인
+              </button>
+            </SignUpFormLabel>
+            <SignUpInput
+              value={form.username}
+              onChange={onChangeUsername}
+              placeholder="ex ) ABCD1234@naver.com"
+              disabled={dupCheck.username}
             />
-            <div className="img_box">
-              {imgPreview && (
-                <SignUpImgPreview src={imgPreview} alt="preview-img" />
-              )}
-            </div>
-          </SignUpInputContainer>
-        </SignUpFormLi>
-      </SignUpFormUl>
-      <RegisterBottomSection>
-        <RegisterBottomCancelBtn onClick={onGoBack}>
-          취소
-        </RegisterBottomCancelBtn>
-        <RegisterBottomOkBtn onClick={onSubmit}>회원가입</RegisterBottomOkBtn>
-      </RegisterBottomSection>
-    </RegisterContainerDiv>
+          </SignUpFormLi>
+          <SignUpFormLi>
+            <SignUpFormLabel>
+              <span>닉네임</span>
+              <button onClick={onDupCheckNickName} className="signUpBtn">
+                중복확인
+              </button>
+            </SignUpFormLabel>
+            <SignUpInput
+              onChange={onChangeNickName}
+              value={form.nickName}
+              placeholder=""
+              disabled={dupCheck.nickName}
+            />
+          </SignUpFormLi>
+        </SignUpFormUl>
+        <SignUpFormUl>
+          <SignUpFormLi>
+            <SignUpFormLabel>비밀번호</SignUpFormLabel>
+            <SignUpInput
+              onChange={onChangePassword}
+              value={form.password}
+              maxLength="15"
+              type="password"
+              placeholder=""
+            />
+          </SignUpFormLi>
+          <SignUpFormLi>
+            <SignUpFormLabel>비밀번호 확인</SignUpFormLabel>
+            <SignUpInput
+              onChange={onChangePasswordAgain}
+              value={form.passwordAgain}
+              maxLength="15"
+              type="password"
+              placeholder=""
+            />
+          </SignUpFormLi>
+        </SignUpFormUl>
+        <SignUpFormUl>
+          <SignUpFormLi>
+            <Select
+              className="react-select-signup"
+              onChange={onSelectedStack}
+              isMulti
+              placeholder="프로젝트 사용 스택"
+              options={stackArray}
+            />
+          </SignUpFormLi>
+          <SignUpFormLi>
+            <SignUpFormLabel>프로필 사진</SignUpFormLabel>
+            <SignUpInputContainer>
+              <SignUpInputImg
+                onChange={(e) => {
+                  encodeFileToBase64(e.target.files[0]);
+                }}
+                type="file"
+                accept="img/*"
+              />
+              <div className="img_box">
+                {imgPreview && (
+                  <SignUpImgPreview src={imgPreview} alt="preview-img" />
+                )}
+              </div>
+            </SignUpInputContainer>
+          </SignUpFormLi>
+        </SignUpFormUl>
+        <RegisterBottomSection>
+          <RegisterBottomCancelBtn onClick={onGoBack}>
+            취소
+          </RegisterBottomCancelBtn>
+          <RegisterBottomOkBtn onClick={onSubmit}>회원가입</RegisterBottomOkBtn>
+        </RegisterBottomSection>
+      </RegisterContainerDiv>
+      {modalOpen && (
+        <ModalPortal>
+          <AlertModal
+            handleButton={onClickModal}
+            onToggle={onClickModal}
+            text={modalText}
+          ></AlertModal>
+        </ModalPortal>
+      )}
+    </>
   );
 }
 

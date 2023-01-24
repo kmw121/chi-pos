@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCurrentPost } from "../../slice/userSlice";
 function MainHead() {
   const [cookies, _, __] = useCookies(["jwtToken"]);
-  const { userInfo } = useSelector((state) => {
+  const { userInfo, isLogin } = useSelector((state) => {
     return state.user;
   });
   const navigate = useNavigate();
@@ -44,6 +44,7 @@ function MainHead() {
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
+
   return (
     <>
       <MainHeadNav>
@@ -52,7 +53,7 @@ function MainHead() {
         </a>
         <MainHeadNavRight>
           <MainHeadNavBtn onClick={onGoToRegister}>새 글 쓰기</MainHeadNavBtn>
-          {cookies.jwtToken !== undefined ? (
+          {isLogin ? (
             <MainHeadNavBtn onClick={toggleDropdown}>
               <MainHeadRightImg
                 alt="profile"

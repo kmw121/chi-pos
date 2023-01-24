@@ -16,7 +16,7 @@ import {
   SelectedStackImgStyle,
   StackBtnSpan,
 } from "../components";
-function MainSection({ setSearchConfig, setList, searchConfig }) {
+function MainSection({ setSearchConfig, setList }) {
   const [sectionTextList, setSectionTextList] = useState([
     {
       category: "인기",
@@ -58,22 +58,24 @@ function MainSection({ setSearchConfig, setList, searchConfig }) {
   ]);
   const [selectedStack, setSelectedStack] = useState([]);
   const onClickCategorySelected = (category) => {
-    const changeList = sectionTextList.map((a) =>
-      a.category === category
-        ? { ...a, isSelected: true }
-        : { ...a, isSelected: false }
+    setSectionTextList(
+      sectionTextList.map((a) =>
+        a.category === category
+          ? { ...a, isSelected: true }
+          : { ...a, isSelected: false }
+      )
     );
-    setSectionTextList(changeList);
   };
   const onClickCategoryStackChanged = (category) => {
-    const changeStack = [...stacks].filter((a) =>
-      category.category === "모두보기"
-        ? a.name !== ""
-        : category.category === "인기"
-        ? a.isPopular === true
-        : a.category.includes(category.name)
+    setSectionStack(
+      [...stacks].filter((a) =>
+        category.category === "모두보기"
+          ? a.name !== ""
+          : category.category === "인기"
+          ? a.isPopular === true
+          : a.category.includes(category.name)
+      )
     );
-    setSectionStack(changeStack);
   };
   const onClickStackSelected = (stack) => {
     const isIncluded = selectedStack.includes(stack);
@@ -94,30 +96,26 @@ function MainSection({ setSearchConfig, setList, searchConfig }) {
       setSelectedStack(clickStack);
       //  }
     } else {
-      const deleteStack = selectedStack.filter((a) => a !== stack);
       const stackNumber = stacks.filter((a) => a.name === stack)[0].number;
-      const deleteStackNumber = (prev) => {
+      setSearchConfig((prev) => {
         return { ...prev, stack: prev.stack.filter((n) => n !== stackNumber) };
-      };
-      setSearchConfig(deleteStackNumber);
-      setSelectedStack(deleteStack);
+      });
+      setSelectedStack(selectedStack.filter((a) => a !== stack));
     }
   };
   const onClickXBtn = (stack) => {
-    const deleteStack = selectedStack.filter((a) => a !== stack);
     const stackNumber = stacks.filter((a) => a.name === stack)[0].number;
-    const deleteStackNumber = (prev) => {
+    setSearchConfig((prev) => {
       return { ...prev, stack: prev.stack.filter((n) => n !== stackNumber) };
-    };
-    setSearchConfig(deleteStackNumber);
-    setSelectedStack(deleteStack);
+    });
+    setSelectedStack(selectedStack.filter((a) => a !== stack));
   };
   const onFilterClear = () => {
     setSelectedStack([]);
-    const searchConfigClear = (prev) => {
+    setList([]);
+    setSearchConfig((prev) => {
       return { ...prev, stack: [], categoryType: "" };
-    };
-    setSearchConfig(searchConfigClear);
+    });
   };
   const isFilterSelected = selectedStack.length !== 0;
   return (
