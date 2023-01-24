@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import { API_URL } from "../../util/API_URL";
 import ClimbingBoxLoader from "react-spinners/ClimbingBoxLoader";
-import { setCookie, deleteCookie } from "../../util/cookie";
+import { setCookie } from "../../util/cookie";
 import jwt_decode from "jwt-decode";
 import { setUser, setUserInfo } from "../../slice/userSlice";
 import { useDispatch } from "react-redux";
@@ -31,18 +31,11 @@ const KakaoSocial = () => {
           });
           dispatch(setUserInfo(nextRes.data));
           navigate("/");
-          deleteCookie("jwtToken");
-          deleteCookie("refreshToken");
           setCookie("jwtToken", jwtToken, { path: "/", domain: "chi-pos.com" });
           setCookie("refreshToken", refreshToken, {
             path: "/",
             domain: "chi-pos.com",
           });
-          // document.cookie = "jwtToken" + " = " + jwtToken + "; path=/; ";
-          // console.log("토큰생성1");
-          // document.cookie =
-          //   "refreshToken" + " = " + refreshToken + "; path=/; ";
-          // console.log("토큰생성2");
         }
       } catch (err) {
         throw new Error(err);

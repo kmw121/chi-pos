@@ -3,9 +3,8 @@ import MainBanner from "./MainBanner";
 import MainSection from "./MainSection";
 import MainContents from "./MainContents";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
-import { useState } from "react";
-import usePostsSearch from "../../hooks/usePostsSearch";
 import "../../App.css";
+import usePostsSearch from "../../hooks/usePostsSearch";
 function MainPage() {
   const handleTop = () => {
     window.scrollTo({
@@ -13,16 +12,14 @@ function MainPage() {
       behavior: "smooth",
     });
   };
-  const [initialControl, setInitialControl] = useState(true);
   const {
     list,
     loadingStatus,
-    setLoadingStatus,
     setList,
     searchConfig,
     setSearchConfig,
-    resCode,
-  } = usePostsSearch(initialControl);
+    isEnd,
+  } = usePostsSearch();
   return (
     <>
       <MainHead />
@@ -35,13 +32,9 @@ function MainPage() {
       <MainContents
         list={list}
         loadingStatus={loadingStatus}
-        setLoadingStatus={setLoadingStatus}
         setList={setList}
-        searchConfig={searchConfig}
         setSearchConfig={setSearchConfig}
-        initialControl={initialControl}
-        setInitialControl={setInitialControl}
-        resCode={resCode}
+        isEnd={isEnd}
       />
       <BsFillArrowUpCircleFill
         className="mainHandleTopIcon"

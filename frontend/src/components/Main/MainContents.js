@@ -43,15 +43,14 @@ import { API_URL } from "../../util/API_URL";
 import axios from "axios";
 import getGenerateRandomKey from "../../util/getGenerateRandomKey";
 import { useSelector } from "react-redux";
+import { useIntersect } from "../../hooks/useIntersect";
+import { getCookie } from "../../util/cookie";
 function MainContents({
   setSearchConfig,
   list,
-  searchConfig,
-  setLoadingStatus,
   loadingStatus,
   setList,
-  setInitialControl,
-  resCode,
+  isEnd,
 }) {
   const { userInfo, user } = useSelector((state) => {
     return state.user;
@@ -72,18 +71,18 @@ function MainContents({
   ]);
   const onClickFilterCategory = (text) => {
     setList([]);
-    const changeFilterCategory = (prev) => {
+    setSearchConfig((prev) => {
       return { ...prev, categoryType: text, page: 1 };
-    };
-    setSearchConfig(changeFilterCategory);
+    });
   };
   const onClickCategorySelected = (category) => {
-    const changeList = categorySelected.map((content) =>
-      content.text === category
-        ? { ...content, isSelected: true }
-        : { ...content, isSelected: false }
+    setCategorySelected(
+      categorySelected.map((content) =>
+        content.text === category
+          ? { ...content, isSelected: true }
+          : { ...content, isSelected: false }
+      )
     );
-    setCategorySelected(changeList);
   };
   const handleInputCheck = () => {
     setIsChecked(!isChecked);
@@ -112,7 +111,7 @@ function MainContents({
     }
   };
   const handleOnlyFavorited = () => {
-    if (!user.length) {
+    if (!getCookie("jwtToken")) {
       alert("로그인 후 이용하실 수 있는 기능입니다.");
     } else if (user && user.sub.length) {
       const myFavoriteStack = userInfo.data.userStack.map((a) => a.stack.id);
@@ -126,42 +125,14 @@ function MainContents({
       });
     }
   };
-  const [target, setTarget] = useState(null);
-  const targetStyle = { width: "100%", height: "100px" };
-  useEffect(() => {
-    setInitialControl(() => true);
-  }, []);
-
-  useEffect(() => {
-    let observer;
-    if (resCode === 1) {
-      if (target) {
-        const onIntersect = async ([entry], observer) => {
-          setInitialControl(false);
-          if (entry.isIntersecting) {
-            observer.unobserve(entry.target);
-            try {
-              setLoadingStatus(true);
-              const res = await axios.post(API_URL + "/posts", searchConfig);
-              if (res.data.code === 1) {
-                setSearchConfig((prev) => {
-                  return { ...prev, page: prev.page + 1 };
-                });
-                setLoadingStatus(false);
-              }
-            } catch (err) {
-              setLoadingStatus(false);
-              throw new Error(err);
-            }
-          }
-          observer.observe(entry.target);
-        };
-        observer = new IntersectionObserver(onIntersect, { threshold: 0.8 });
-        observer.observe(target);
-      }
-      return () => observer && observer.disconnect();
+  const ref = useIntersect(async (entry, observer) => {
+    observer.unobserve(entry.target);
+    if (!isEnd && !loadingStatus) {
+      setSearchConfig((prev) => {
+        return { ...prev, page: prev.page + 1 };
+      });
     }
-  }, [target]);
+  });
   return (
     <MainContentsMain>
       <MainContentsCategoryContainer>
@@ -207,6 +178,7 @@ function MainContents({
       </MainContentsCategoryContainer>
       <MainContentsAppContainer>
         <MainContentsAppStudyUl>
+          {/* ////////////////////////////////////////////////////////// */}
           {list &&
             list.map((content, index) => (
               <MainContentsAppStudyA
@@ -304,7 +276,8 @@ function MainContents({
           </MainLoadingBox>
         )}
       </MainContentsAppContainer>
-      {resCode === 1 && <div ref={setTarget} style={targetStyle} />}
+      <div ref={ref} style={{ height: "1px" }} />
+      {/* {resCode === 1 && <div ref={setTarget} style={targetStyle} />} */}
     </MainContentsMain>
   );
 }

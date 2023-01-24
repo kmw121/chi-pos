@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { API_URL } from "../util/API_URL";
-export default function usePostsSearch(hello) {
+export default function usePostsSearch() {
   const [list, setList] = useState([]);
   const [loadingStatus, setLoadingStatus] = useState(false);
   const [searchConfig, setSearchConfig] = useState({
@@ -11,30 +11,18 @@ export default function usePostsSearch(hello) {
     isEnd: true,
     categoryType: "",
   });
-  const [resCode, setResCode] = useState(1);
+  const [isEnd, setIsEnd] = useState(false);
   useEffect(() => {
     async function fetchData() {
       try {
         setLoadingStatus(true);
         const res = await axios.post(API_URL + "/posts", searchConfig);
         if (res.data.code === 1) {
-          if (hello) {
-            setSearchConfig({
-              page: 1,
-              stack: [],
-              size: 6,
-              isEnd: true,
-              categoryType: "",
-            });
-            setList([]);
-            setLoadingStatus(false);
-          } else {
-            setList((prev) => prev.concat(res.data.data));
-            setLoadingStatus(false);
-          }
+          setList(() => list.concat(res.data.data));
+          setLoadingStatus(false);
         } else if (res.data.code === -1) {
           setLoadingStatus(false);
-          setResCode(() => -1);
+          setIsEnd(true);
         }
       } catch (err) {
         throw new Error(err);
@@ -44,12 +32,12 @@ export default function usePostsSearch(hello) {
   }, [searchConfig]);
   return {
     list,
-    loadingStatus,
     setList,
-    setLoadingStatus,
     searchConfig,
     setSearchConfig,
-    resCode,
-    setResCode,
+    loadingStatus,
+    setLoadingStatus,
+    isEnd,
+    setIsEnd,
   };
 }
