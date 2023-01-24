@@ -1,5 +1,4 @@
 import styled, { keyframes } from "styled-components";
-import px2vw from "../util/px2vw.js";
 export const Banner = styled.img`
   width: 100vw;
   height: 400px;
@@ -1503,4 +1502,51 @@ export const KakaoSocialBox = styled.div`
   top: "50%";
   left: "50%";
   transform: "translate(-50%, -50%)";
+`;
+
+////////////////////////////////////////////
+///////////////ALERT MODAL//////////////////
+////////////////////////////////////////////
+
+export const AlertModalBox = styled.div`
+  width: 250px;
+  height: 180px;
+  box-shadow: 0 2px 12px 0 rgb(0 0 0 / 9%);
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+  z-index: 1000;
+  background: white;
+  border-radius: 18px;
+  animation: ${boxFade} 0.3s linear;
+  @media (max-width: 550px) {
+    width: 300px;
+  }
+`;
+export const AlertModalText = styled.div`
+  font-size: 18px;
+  font-weight: bold;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+export const AlertModalButton = styled.button`
+  cursor: pointer;
+  outline: none;
+  border: none;
+  border-radius: 4px;
+  padding: 0 1.25rem;
+  height: 2rem;
+  font-size: 1rem;
+  background: #e9ecef;
+  color: #495057;
+  margin-right: 1rem;
+  position: absolute;
+  right: 5px;
+  bottom: 10px;
 `;

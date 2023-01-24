@@ -1,5 +1,10 @@
 import { deleteCookie } from "./cookie";
-import { setUser, setUserInfo, setCurrentPost } from "../slice/userSlice";
+import {
+  setUser,
+  setUserInfo,
+  setCurrentPost,
+  setIsLogin,
+} from "../slice/userSlice";
 export const logout = (dispatch, navigate) => {
   navigate("/");
   document.cookie = "jwtToken=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/;";
@@ -9,7 +14,7 @@ export const logout = (dispatch, navigate) => {
   dispatch(setUserInfo([]));
   dispatch(setUser([]));
   dispatch(setCurrentPost({}));
+  dispatch(setIsLogin(false));
   alert("로그아웃되었습니다.");
   navigate("/");
-  window.location.reload();
 };

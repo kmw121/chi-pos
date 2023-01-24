@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
-import getPreventScrolling from "../../util/getPreventScrolling";
+import { useGetPreventScrolling } from "../../hooks/useGetPreventScrolling";
 import {
   ModalMain,
   ModalBackground,
@@ -21,36 +21,29 @@ import {
 } from "../components";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-import { setUser, setUserInfo } from "../../slice/userSlice";
+import { setIsLogin, setUser, setUserInfo } from "../../slice/userSlice";
 import { useDispatch } from "react-redux";
 import { API_URL } from "../../util/API_URL";
-import { getCookie, setCookie, deleteCookie } from "../../util/cookie";
+import { getCookie, setCookie } from "../../util/cookie";
 import { KAKAO_AUTH_URL } from "../../util/kakaoAuth";
 import { gapi } from "gapi-script";
 import GoogleButton from "../Google/Google";
 function SignInForm({ onToggle }) {
   const dispatch = useDispatch();
-  useEffect(() => {
-    getPreventScrolling();
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, []);
+  useGetPreventScrolling();
   const [loginForm, setLoginForm] = useState({
     username: "",
     password: "",
   });
   const onEmailValue = (e) => {
-    const onChangeName = (prev) => {
+    setLoginForm((prev) => {
       return { ...prev, username: e.target.value };
-    };
-    setLoginForm(onChangeName);
+    });
   };
   const onPwValue = (e) => {
-    const onChangePw = (prev) => {
+    setLoginForm((prev) => {
       return { ...prev, password: e.target.value };
-    };
-    setLoginForm(onChangePw);
+    });
   };
   const onPwPress = (e) => {
     if (e.keyCode === 13) {
@@ -60,14 +53,11 @@ function SignInForm({ onToggle }) {
   const onLogin = async () => {
     try {
       const res = await axios.post(API_URL + "/login", loginForm);
-      console.log(res);
       if (res.data.code === 1) {
         const jwtToken = res.data.data.accessToken;
         const refreshToken = res.data.data.refreshToken;
         const decoded = jwt_decode(jwtToken);
         dispatch(setUser(decoded));
-        deleteCookie("jwtToken");
-        deleteCookie("refreshToken");
         setCookie("jwtToken", jwtToken);
         setCookie("refreshToken", refreshToken);
         const nextRes = await axios.get(API_URL + `/user/${decoded.id}`, {
@@ -81,7 +71,7 @@ function SignInForm({ onToggle }) {
         });
         onToggle();
         alert(`${loginForm.username}님 반갑습니다!`);
-        window.location.reload();
+        dispatch(setIsLogin(true));
       } else if (res.data.code === -1) {
         alert("id/pw를 확인해주세요.");
       }
