@@ -19,15 +19,20 @@ import {
   ModalBottomOkBtn,
   ModalBtnKakaoIcon,
 } from "../components";
-import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { setIsLogin, setUser, setUserInfo } from "../../slice/userSlice";
 import { useDispatch } from "react-redux";
-import { API_URL } from "../../util/API_URL";
 import { getCookie, setCookie } from "../../util/cookie";
 import { KAKAO_AUTH_URL } from "../../util/kakaoAuth";
 import { gapi } from "gapi-script";
-import GoogleButton from "../Google/Google";
+import GoogleSocialLoginButton from "../Google/GoogleSocialLoginButton";
+import postLogin from "../../util/postLogin";
+import getUserInfo from "../../util/getUserInfo";
+import { toast, ToastContainer } from "react-toastify";
+import { injectStyle } from "react-toastify/dist/inject-style";
+if (typeof window !== "undefined") {
+  injectStyle();
+}
 function SignInForm({ onToggle }) {
   const dispatch = useDispatch();
   useGetPreventScrolling();
@@ -52,28 +57,23 @@ function SignInForm({ onToggle }) {
   };
   const onLogin = async () => {
     try {
-      const res = await axios.post(API_URL + "/login", loginForm);
-      if (res.data.code === 1) {
-        const jwtToken = res.data.data.accessToken;
-        const refreshToken = res.data.data.refreshToken;
-        const decoded = jwt_decode(jwtToken);
+      const loginResponse = await postLogin(loginForm);
+      if (loginResponse.data.code === 1) {
+        const { accessToken, refreshToken } = loginResponse.data.data;
+        const decoded = jwt_decode(accessToken);
         dispatch(setUser(decoded));
-        setCookie("jwtToken", jwtToken);
+        setCookie("jwtToken", accessToken);
         setCookie("refreshToken", refreshToken);
-        const nextRes = await axios.get(API_URL + `/user/${decoded.id}`, {
-          headers: {
-            Authorization: `${getCookie("jwtToken")}`,
-          },
-        });
-        dispatch(setUserInfo(nextRes.data));
+        const getUser = await getUserInfo(decoded, accessToken);
+        dispatch(setUserInfo(getUser.data));
         setLoginForm((prev) => {
           return { ...prev, username: "", password: "" };
         });
         onToggle();
-        alert(`${loginForm.username}님 반갑습니다!`);
+        toast.success(`${loginForm.username}님 반갑습니다!`);
         dispatch(setIsLogin(true));
-      } else if (res.data.code === -1) {
-        alert("id/pw를 확인해주세요.");
+      } else if (loginResponse.data.code === -1) {
+        toast.error("id/pw를 확인해주세요.");
       }
     } catch (err) {
       throw new Error(err);
@@ -120,7 +120,7 @@ function SignInForm({ onToggle }) {
           </ModalBottomSection>
           <ModalBtnContainer>
             <ModalBtnBox>
-              <GoogleButton />
+              <GoogleSocialLoginButton />
               <ModalBtnKakao href={KAKAO_AUTH_URL}>
                 <ModalBtnKakaoIcon
                   src={"/logo/kakao_login_btn.png"}
@@ -130,6 +130,7 @@ function SignInForm({ onToggle }) {
             </ModalBtnBox>
           </ModalBtnContainer>
         </ModalMain>
+        <ToastContainer />
       </ModalContainer>
     </>
   );

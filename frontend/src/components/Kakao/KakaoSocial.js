@@ -1,6 +1,4 @@
-import axios from "axios";
 import React, { useEffect } from "react";
-import { API_URL } from "../../util/API_URL";
 import ClimbingBoxLoader from "react-spinners/ClimbingBoxLoader";
 import { setCookie } from "../../util/cookie";
 import jwt_decode from "jwt-decode";
@@ -8,6 +6,8 @@ import { setUser, setUserInfo } from "../../slice/userSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { KakaoSocialBox } from "../components";
+import getKakaoAuth from "../../util/getKakaoAuth";
+import getUserInfo from "../../util/getUserInfo";
 const KakaoSocial = () => {
   let code = new URL(window.location.href).searchParams.get("code");
   const dispatch = useDispatch();
@@ -15,23 +15,21 @@ const KakaoSocial = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await axios.get(API_URL + `/ouath/kakao?code=${code}`);
-        if (res.data.code === 2) {
-          setCookie("Kakao", res.data.data);
+        const kakaoAuth = await getKakaoAuth(code);
+        if (kakaoAuth.data.code === 2) {
+          setCookie("Kakao", kakaoAuth.data.data);
           navigate("/kakaoSignup");
-        } else if (res.data.code === 1) {
-          const jwtToken = res.data.data.accessToken;
-          const refreshToken = res.data.data.refreshToken;
-          const decoded = jwt_decode(jwtToken);
+        } else if (kakaoAuth.data.code === 1) {
+          const { accessToken, refreshToken } = kakaoAuth.data.data;
+          const decoded = jwt_decode(accessToken);
           dispatch(setUser(decoded));
-          const nextRes = await axios.get(API_URL + `/user/${decoded.id}`, {
-            headers: {
-              Authorization: jwtToken,
-            },
-          });
-          dispatch(setUserInfo(nextRes.data));
+          const getUser = getUserInfo(decoded, accessToken);
+          dispatch(setUserInfo(getUser.data));
           navigate("/");
-          setCookie("jwtToken", jwtToken, { path: "/", domain: "chi-pos.com" });
+          setCookie("jwtToken", accessToken, {
+            path: "/",
+            domain: "chi-pos.com",
+          });
           setCookie("refreshToken", refreshToken, {
             path: "/",
             domain: "chi-pos.com",

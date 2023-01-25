@@ -12,12 +12,10 @@ import {
 } from "../components";
 import ModalPortal from "../../Portal/ModalPortal";
 import SignInForm from "../SignIn/SignInForm";
-import { useCookies } from "react-cookie";
 import { logout } from "../../util/logout";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentPost } from "../../slice/userSlice";
 function MainHead() {
-  const [cookies, _, __] = useCookies(["jwtToken"]);
   const { userInfo, isLogin } = useSelector((state) => {
     return state.user;
   });

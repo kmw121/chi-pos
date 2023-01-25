@@ -16,12 +16,16 @@ import {
   SignUpInputImg,
   SignUpImgPreview,
 } from "../components";
-import AlertModal from "../AlertModal/AlertModal";
-import ModalPortal from "../../Portal/ModalPortal";
 import Select from "react-select";
 import { stacks } from "../../util/stack";
-import axios from "axios";
-import { API_URL } from "../../util/API_URL";
+import postSubmit from "../../util/postSubmit";
+import { toast, ToastContainer } from "react-toastify";
+import { injectStyle } from "react-toastify/dist/inject-style";
+import postDupCheckNick from "../../util/postDupCheckNick";
+import postDupCheckEmail from "../../util/postDupCheckEmail";
+if (typeof window !== "undefined") {
+  injectStyle();
+}
 function SignUpForm() {
   let stackNumber = 1;
   const stackArray = stacks
@@ -38,9 +42,9 @@ function SignUpForm() {
     password: false,
     passwordAgain: false,
     nickName: false,
+    dupCheckUsername: false,
+    dupCheckNickName: false,
   });
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalText, setModalText] = useState("");
   const [imgPreview, setImgPreview] = useState("");
   const [files, setFiles] = useState([]);
   const [form, setForm] = useState({
@@ -50,77 +54,37 @@ function SignUpForm() {
     nickName: "",
     stack: [],
   });
-  const [dupCheck, setDupCheck] = useState({
-    username: false,
-    nickName: false,
-  });
-  const onClickModal = () => {
-    setModalOpen(!modalOpen);
-  };
-  const reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
+  const reg_username = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
   const reg_password = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{5,15}$/;
   const reg_nickName = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$/;
   const navigate = useNavigate();
   const onGoBack = () => {
     navigate(-1);
   };
-  const onChangeUsername = (e) => {
-    setForm((prev) => {
-      return { ...prev, username: e.target.value };
-    });
-    setFormReg((prev) => {
-      return { ...prev, username: reg_email.test(e.target.value) };
-    });
-  };
   const onSelectedStack = (value) => {
     setForm((prev) => {
       return { ...prev, stack: value.map((a) => a.number) };
     });
   };
-  const onChangePassword = (e) => {
-    setForm((prev) => {
-      return { ...prev, password: e.target.value };
-    });
-    setFormReg((prev) => {
-      return { ...prev, password: reg_password.test(e.target.value) };
-    });
-  };
-  const onChangePasswordAgain = (e) => {
-    setForm((prev) => {
-      return { ...prev, passwordAgain: e.target.value };
-    });
-    setFormReg((prev) => {
-      return {
-        ...prev,
-        passwordAgain: prev.password === prev.passwordAgain,
-      };
-    });
-  };
-  const onChangeNickName = (e) => {
-    setForm((prev) => {
-      return { ...prev, nickName: e.target.value };
-    });
-    setFormReg((prev) => {
-      return {
-        ...prev,
-        nickName: reg_nickName.test(e.target.value),
-      };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({
+      ...form,
+      [name]: value,
     });
   };
   const onSubmit = async () => {
-    // 이 함수 util이나 hook으로 만들어서 쓸까? -> 고민해볼것.
     if (
       formReg.username &&
       formReg.nickName &&
       formReg.passwordAgain &&
       formReg.password &&
-      dupCheck.nickName &&
-      dupCheck.username &&
+      formReg.dupCheckUsername &&
+      formReg.dupCheckNickName &&
       form.stack.length
     ) {
       try {
         const formdata = new FormData();
-        //이부분 리팩토링 필요.
         if (imgPreview.length) {
           formdata.append("file", files);
         }
@@ -129,19 +93,13 @@ function SignUpForm() {
         formdata.append("nickName", form.nickName);
         formdata.append("stack", form.stack);
 
-        const res = await axios({
-          method: "POST",
-          url: API_URL + "/signup",
-          mode: "cors",
-          headers: { "Content-Type": "multipart/form-data" },
-          data: formdata,
-        });
+        const res = await postSubmit(formdata);
         if (res.data.code === 1) {
-          setModalText(() => "회원가입이 완료되었습니다.");
+          toast.success("회원가입이 완료되었습니다.");
           navigate("/");
         } else {
           if (res.data.code === -1) {
-            alert("회원가입에 실패하였습니다.");
+            toast.error("회원가입에 실패하였습니다.");
             navigate("/");
           }
         }
@@ -149,78 +107,60 @@ function SignUpForm() {
         throw new Error(err);
       }
     } else {
-      alert("회원 정보를 확인해주세요 ! ");
+      toast.error("회원 정보를 확인해주세요 !.");
     }
   };
-
   const onDupCheckEmail = async () => {
     if (formReg.username) {
       try {
-        const res = await axios.post(API_URL + "/dupUsername", {
-          username: form.username,
-        });
-        if (res.data.code === -1) {
+        const dupCheck = await postDupCheckEmail(form);
+        console.log("dupCheck : ", dupCheck);
+        if (dupCheck.data.code === -1) {
           if (
             window.confirm(`사용할 수 있는 이메일입니다. 사용하시겠습니까?`)
           ) {
-            setDupCheck((prev) => {
-              return { ...prev, username: true };
+            setFormReg((prev) => {
+              return { ...prev, dupCheckUsername: true };
             });
-            setModalText(() => "이메일을 설정하셨습니다.");
-            setModalOpen(true);
+            toast.success("이메일을 설정하셨습니다.");
           } else {
-            alert("취소되었습니다.");
+            toast.error("취소되었습니다.");
           }
-        } else if (res.data.code === 1) {
-          alert("이미 존재하는 이메일입니다.");
+        } else if (dupCheck.data.code === 1) {
+          toast.error("이미 존재하는 이메일입니다.");
         }
       } catch (err) {
         throw new Error(err);
       }
     } else {
-      alert("이메일 형식을 확인해주세요!");
+      toast.error("이메일 형식을 확인해주세요!");
     }
   };
   const onDupCheckNickName = async () => {
     if (formReg.nickName) {
       try {
-        const res = await axios.post(API_URL + "/dupNickName", {
-          nickName: form.nickName,
-        });
-        if (res.data.code === -1) {
+        const dupCheck = await postDupCheckNick(form);
+        if (dupCheck.data.code === -1) {
           if (
             window.confirm(`사용할 수 있는 닉네임입니다. 사용하시겠습니까?`)
           ) {
-            setDupCheck((prev) => {
-              return { ...prev, nickName: true };
+            setFormReg((prev) => {
+              return { ...prev, dupCheckNickName: true };
             });
-            setModalText(() => "닉네임을 설정하셨습니다.");
-            setModalOpen(true);
+            toast.success("닉네임을 설정하셨습니다.");
           } else {
-            alert("취소되었습니다.");
+            toast.error("취소되었습니다.");
           }
-        } else if (res.data.code === 1) {
-          alert("이미 존재하는 닉네임입니다.");
+        } else if (dupCheck.data.code === 1) {
+          toast.error("이미 존재하는 닉네임입니다.");
         }
       } catch (err) {
         throw new Error(err);
       }
     } else {
-      setModalText(() => "닉네임은 2글자 이상 ~ 10글자 이하로 해주세요!");
-      setModalOpen(true);
+      toast.error("닉네임은 2글자 이상 ~ 10글자 이하로 해주세요!");
     }
   };
-  useEffect(() => {
-    if (
-      form.password !== "" &&
-      form.passwordAgain !== "" &&
-      form.password === form.passwordAgain
-    ) {
-      setFormReg((prev) => {
-        return { ...prev, passwordAgain: true };
-      });
-    }
-  }, [form.passwordAgain]);
   //이미지 미리보기 코드
   const encodeFileToBase64 = (fileBlob) => {
     const reader = new FileReader();
@@ -233,6 +173,20 @@ function SignUpForm() {
       };
     });
   };
+  useEffect(() => {
+    setFormReg((prev) => {
+      return {
+        ...prev,
+        username: reg_username.test(form.username),
+        password: reg_password.test(form.password),
+        passwordAgain:
+          form.password !== "" &&
+          form.passwordAgain !== "" &&
+          form.password === form.passwordAgain,
+        nickName: reg_nickName.test(form.nickName),
+      };
+    });
+  }, [form.username, form.nickName, form.password, form.passwordAgain]);
   return (
     <>
       <RegisterContainerDiv>
@@ -257,9 +211,10 @@ function SignUpForm() {
             </SignUpFormLabel>
             <SignUpInput
               value={form.username}
-              onChange={onChangeUsername}
+              onChange={handleChange}
               placeholder="ex ) ABCD1234@naver.com"
-              disabled={dupCheck.username}
+              disabled={form.dupCheckUsername}
+              name="username"
             />
           </SignUpFormLi>
           <SignUpFormLi>
@@ -270,10 +225,11 @@ function SignUpForm() {
               </button>
             </SignUpFormLabel>
             <SignUpInput
-              onChange={onChangeNickName}
+              onChange={handleChange}
               value={form.nickName}
               placeholder=""
-              disabled={dupCheck.nickName}
+              disabled={form.dupCheckNickName}
+              name="nickName"
             />
           </SignUpFormLi>
         </SignUpFormUl>
@@ -281,21 +237,23 @@ function SignUpForm() {
           <SignUpFormLi>
             <SignUpFormLabel>비밀번호</SignUpFormLabel>
             <SignUpInput
-              onChange={onChangePassword}
+              onChange={handleChange}
               value={form.password}
               maxLength="15"
               type="password"
               placeholder=""
+              name="password"
             />
           </SignUpFormLi>
           <SignUpFormLi>
             <SignUpFormLabel>비밀번호 확인</SignUpFormLabel>
             <SignUpInput
-              onChange={onChangePasswordAgain}
+              onChange={handleChange}
               value={form.passwordAgain}
               maxLength="15"
               type="password"
               placeholder=""
+              name="passwordAgain"
             />
           </SignUpFormLi>
         </SignUpFormUl>
@@ -334,15 +292,7 @@ function SignUpForm() {
           <RegisterBottomOkBtn onClick={onSubmit}>회원가입</RegisterBottomOkBtn>
         </RegisterBottomSection>
       </RegisterContainerDiv>
-      {modalOpen && (
-        <ModalPortal>
-          <AlertModal
-            handleButton={onClickModal}
-            onToggle={onClickModal}
-            text={modalText}
-          ></AlertModal>
-        </ModalPortal>
-      )}
+      <ToastContainer />
     </>
   );
 }
