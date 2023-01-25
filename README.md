@@ -1,5 +1,5 @@
 # :heart:  chi-pos
-개발자 취업 준비생들을 위한 스터디 및 프로젝트 구인 사이트
+개발자 취업 준비생들을 위한 스터디 및 프로젝트 구인 사이트  
 주소 : http://chi-pos.com/
 
 # 제작기간
@@ -26,8 +26,14 @@
 
 - **회원가입**
 
-![회원가입](https://user-images.githubusercontent.com/115692844/214416642-e6cbb9cf-7966-4e48-873d-4dc4290f33c0.gif)
-
+  - 닉네임 중복 및 아이디 중복 확인 기능 구현.  
+  - 서버단에서도 AOP를 통해 유효성검사 처리.  
+  - 비밀번호를 받아 서버쪽에서 BCryptPasswordEncoder를 통해 암호화 후 저장.  
+  - 프로팔 사진을 이미지 파일로 받아 서버에 이름이 중복되지 않도록 UUID+파일이름으로 저장.  
+   &nbsp;  
+  ![회원가입](https://user-images.githubusercontent.com/115692844/214416642-e6cbb9cf-7966-4e48-873d-4dc4290f33c0.gif)
+   &nbsp;  
+   &nbsp;  
 - **로그인**
 
 ![로그인](https://user-images.githubusercontent.com/115692844/214432870-192feb50-229e-4889-8a4d-a266c74215aa.gif)
