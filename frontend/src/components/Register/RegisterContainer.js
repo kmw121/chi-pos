@@ -8,15 +8,16 @@ import authCheck from "../../util/authCheck";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import toStringByFormatting from "../../util/toStringByFormatting";
-import axios from "axios";
-import { API_URL } from "../../util/API_URL";
-import { getCookie, deleteCookie, setCookie } from "../../util/cookie";
-import {
-  setUserInfo,
-  setUser,
-  setCurrentPost,
-  setIsLogin,
-} from "../../slice/userSlice";
+import { getCookie, setCookie } from "../../util/cookie";
+import { setUserInfo, setCurrentPost } from "../../slice/userSlice";
+import getUserInfo from "../../util/getUserInfo";
+import postFormSubmit from "../../util/postFormSubmit";
+import wrongRequest from "../../util/wrongRequest";
+import { toast, ToastContainer } from "react-toastify";
+import { injectStyle } from "react-toastify/dist/inject-style";
+if (typeof window !== "undefined") {
+  injectStyle();
+}
 function RegisterContainer() {
   const { currentPost } = useSelector((state) => {
     return state.user;
@@ -72,83 +73,59 @@ function RegisterContainer() {
   }, []);
   const onSubmit = async () => {
     try {
-      const res = await axios.get(API_URL + `/user/${user.id}`, {
-        headers: {
-          Authorization: `${getCookie("jwtToken")}`,
-        },
-      });
-      if (res.data.code === -1) {
-        deleteCookie(["jwtToken"]);
-        deleteCookie(["refreshToken"]);
-        dispatch(setCurrentPost({}));
-        dispatch(setUserInfo([]));
-        dispatch(setUser([]));
-        dispatch(setIsLogin(false));
-        alert("잘못된 요청입니다. 다시 로그인 하시길 바랍니다.");
-        navigate("/");
-      } else if (res.data.code === 2) {
-        const nextRes = await axios.get(API_URL + `/user/${user.id}`, {
-          headers: { Authorization: `${getCookie("refreshToken")}` },
-        });
-        if (nextRes.data.data === 2 || nextRes.data.data === -1) {
-          deleteCookie(["jwtToken"]);
-          deleteCookie(["refreshToken"]);
-          dispatch(setCurrentPost({}));
-          dispatch(setUserInfo([]));
-          dispatch(setUser([]));
-          alert("잘못된 접근입니다.");
-          dispatch(setIsLogin(false));
-          navigate("/");
-        } else if (nextRes.data.data !== -1) {
-          deleteCookie("jwtToken");
-          setCookie("jwtToken", nextRes.data.data);
-          try {
-            const response = await axios.post(API_URL + "/post", submitForm, {
-              headers: { Authorization: `${getCookie("jwtToken")}` },
-            });
-            if (response.data.code === 1) {
-              dispatch(setCurrentPost({}));
-              alert("등록이 완료되었습니다.");
-              navigate("/");
-            } else if (response.data.code === -1) {
-              dispatch(setCurrentPost({}));
-              alert("알 수 없는 오류로 등록에 실패하였습니다.");
-              navigate("/");
-            }
-          } catch (err) {
-            throw new Error(err);
-          }
-        }
-      } else if (res.data.code === 1) {
-        try {
-          const response = await axios.post(API_URL + "/post", submitForm, {
-            headers: { Authorization: `${getCookie("jwtToken")}` },
-          });
+      const userInfo = await getUserInfo(user, getCookie("jwtToken"));
+      if (userInfo.data.code === -1) {
+        wrongRequest(dispatch, navigate);
+      } else if (userInfo.data.code === 2) {
+        const nextUserInfo = await getUserInfo(user, getCookie("refreshToken"));
+        if (nextUserInfo.data.data === 2 || nextUserInfo.data.data === -1) {
+          wrongRequest(dispatch, navigate);
+        } else if (nextUserInfo.data.data === 1) {
+          setCookie("jwtToken", nextUserInfo.data.data);
+          const response = await postFormSubmit(
+            submitForm,
+            getCookie("jwtToken")
+          );
           if (response.data.code === 1) {
             dispatch(setCurrentPost({}));
-            alert("등록이 완료되었습니다.");
+            toast.success("등록이 완료되었습니다.");
             navigate("/");
           } else if (response.data.code === -1) {
             dispatch(setCurrentPost({}));
-            alert("알 수 없는 오류로 등록에 실패하였습니다.");
+            toast.error("알 수 없는 오류로 등록에 실패하였습니다.");
             navigate("/");
           }
-        } catch (err) {
-          throw new Error(err);
+        }
+      } else if (userInfo.data.code === 1) {
+        const response = await postFormSubmit(
+          submitForm,
+          getCookie("jwtToken")
+        );
+        if (response.data.code === 1) {
+          dispatch(setCurrentPost({}));
+          toast.success("등록이 완료되었습니다.");
+          navigate("/");
+        } else if (response.data.code === -1) {
+          dispatch(setCurrentPost({}));
+          toast.error("알 수 없는 오류로 등록에 실패하였습니다.");
+          navigate("/");
         }
       }
-      dispatch(setUserInfo(res.data));
+      dispatch(setUserInfo(userInfo.data));
     } catch (err) {
       throw new Error(err);
     }
   };
   return (
-    <RegisterContainerDiv>
-      <RegisterNumber1 dataForm={dataForm} setDataForm={steDataForm} />
-      <RegisterNumber2 titleText={titleText} setTitleText={setTitleText} />
-      <Editor editorValue={editorValue} setEditorValue={setEditorValue} />
-      <RegisterBottomBtn onSubmit={onSubmit} />
-    </RegisterContainerDiv>
+    <>
+      <RegisterContainerDiv>
+        <RegisterNumber1 dataForm={dataForm} setDataForm={steDataForm} />
+        <RegisterNumber2 titleText={titleText} setTitleText={setTitleText} />
+        <Editor editorValue={editorValue} setEditorValue={setEditorValue} />
+        <RegisterBottomBtn onSubmit={onSubmit} />
+      </RegisterContainerDiv>
+      <ToastContainer />
+    </>
   );
 }
 

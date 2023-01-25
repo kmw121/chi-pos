@@ -21,11 +21,16 @@ import MainHead from "../Main/MainHead";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import withdrawal from "../../util/withdrawal";
-import axios from "axios";
-import { API_URL } from "../../util/API_URL";
 import { getCookie } from "../../util/cookie";
 import { setUserInfo, setUser, setIsLogin } from "../../slice/userSlice";
 import { deleteCookie, setCookie } from "../../util/cookie";
+import { toast, ToastContainer } from "react-toastify";
+import { injectStyle } from "react-toastify/dist/inject-style";
+import postSocialSignUpAndDetail from "../../util/postSocialSignUpAndDetail";
+if (typeof window !== "undefined") {
+  injectStyle();
+}
+
 function SettingDetail() {
   const { userInfo } = useSelector((state) => {
     return state.user;
@@ -139,58 +144,46 @@ function SettingDetail() {
         formdata.append("password", newPassword);
         formdata.append("stack", afterNumberStack);
         formdata.append("prePassword", notSocial ? prePassword : null);
-        const res = await axios({
-          method: "POST",
-          url: API_URL + "/changeInfo",
-          mode: "cors",
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `${getCookie("jwtToken")}`,
-          },
-          data: formdata,
-        });
-        if (res.data.code === 1) {
-          dispatch(setUserInfo(res.data));
-          alert("정보가 변경되었습니다.");
+        const changeInfoResponse = await postSocialSignUpAndDetail(
+          formdata,
+          "/changeInfo",
+          getCookie("jwtToken")
+        );
+        if (changeInfoResponse.data.code === 1) {
+          dispatch(setUserInfo(changeInfoResponse.data));
           navigate("/");
-        } else if (res.data.code === -1) {
-          alert(res.data.message);
-        } else if (res.data.code === 2) {
-          const nextRes = await axios({
-            method: "POST",
-            url: API_URL + "/changeInfo",
-            mode: "cors",
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `${getCookie("refreshToken")}`,
-            },
-            data: formdata,
-          });
-          if (nextRes.data.code === 2 || nextRes.data.code === -1) {
+          toast.success("정보가 변경되었습니다.");
+        } else if (changeInfoResponse.data.code === -1) {
+          toast.error(changeInfoResponse.data.message);
+        } else if (changeInfoResponse.data.code === 2) {
+          const changeNextResponse = await postSocialSignUpAndDetail(
+            formdata,
+            "/changeInfo",
+
+            getCookie("refreshToken")
+          );
+          if (
+            changeNextResponse.data.code === 2 ||
+            changeNextResponse.data.code === -1
+          ) {
             deleteCookie(["jwtToken"]);
             deleteCookie(["refreshToken"]);
             dispatch(setUserInfo([]));
             dispatch(setUser([]));
             dispatch(setIsLogin(false));
-            alert("잘못된 접근입니다.");
             navigate("/");
-          } else if (nextRes.data.code === 1) {
-            deleteCookie("jwtToken");
-            setCookie("jwtToken", nextRes.data.data);
-            const response = await axios({
-              method: "POST",
-              url: API_URL + "/changeInfo",
-              mode: "cors",
-              headers: {
-                "Content-Type": "multipart/form-data",
-                Authorization: nextRes.data.data,
-              },
-              data: formdata,
-            });
+            toast.error("잘못된 접근입니다.");
+          } else if (changeNextResponse.data.code === 1) {
+            setCookie("jwtToken", changeNextResponse.data.data);
+            const response = await postSocialSignUpAndDetail(
+              formdata,
+              "/changeInfo",
+              changeNextResponse.data.data
+            );
             if (response.data.code === 1) {
               dispatch(setUserInfo(response.data));
-              alert("정보가 변경되었습니다.");
               navigate("/");
+              toast.success("정보가 변경되었습니다.");
             } else {
               throw new Error();
             }
@@ -200,7 +193,7 @@ function SettingDetail() {
         throw new Error(e);
       }
     } else {
-      alert("비밀번호 창을 비워주세요? 아니면 뭐 확인해주세요? ");
+      toast.error("비밀번호 창을 비워주세요? 아니면 뭐 확인해주세요? ");
     }
   };
   return (
@@ -313,6 +306,7 @@ function SettingDetail() {
           회원탈퇴
         </SettingWithdrawalBtn>
       </SettingContainer>
+      <ToastContainer />
     </>
   );
 }

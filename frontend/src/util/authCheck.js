@@ -1,60 +1,28 @@
-import axios from "axios";
-import { API_URL } from "./API_URL";
-import { deleteCookie, getCookie, setCookie } from "./cookie";
-import {
-  setUser,
-  setUserInfo,
-  setCurrentPost,
-  setIsLogin,
-} from "../slice/userSlice";
+import { getCookie, setCookie } from "./cookie";
+import { setUserInfo } from "../slice/userSlice";
+import getUserInfo from "./getUserInfo";
+import wrongRequest from "./wrongRequest";
 export default async function authCheck(dispatch, navigate, user) {
   if (!user.id) {
-    alert("로그인이 필요한 페이지 입니다.");
-    navigate("/");
-    deleteCookie(["jwtToken"]);
-    deleteCookie(["refreshToken"]);
-    dispatch(setUserInfo([]));
-    dispatch(setUser([]));
-    dispatch(setIsLogin(false));
+    wrongRequest(dispatch, navigate);
   } else {
     try {
-      const res = await axios.get(API_URL + `/user/${user.id}`, {
-        headers: {
-          Authorization: `${getCookie("jwtToken")}`,
-        },
-      });
-      if (res.data.code === -1) {
-        deleteCookie(["jwtToken"]);
-        deleteCookie(["refreshToken"]);
-        dispatch(setUserInfo([]));
-        dispatch(setUser([]));
-        dispatch(setCurrentPost({}));
-        dispatch(setIsLogin(false));
-        alert("로그인이 필요한 페이지 입니다.");
-        navigate("/");
-      } else if (res.data.code === 2) {
-        const nextRes = await axios.get(API_URL + `/user/${user.id}`, {
-          headers: { Authorization: `${getCookie("refreshToken")}` },
-        });
-        if (nextRes.data.code === 2 || nextRes.data.code === -1) {
-          deleteCookie(["jwtToken"]);
-          deleteCookie(["refreshToken"]);
-          dispatch(setUserInfo([]));
-          dispatch(setUser([]));
-          dispatch(setCurrentPost({}));
-          dispatch(setIsLogin(false));
-          alert("잘못된 접근입니다.");
-        } else if (nextRes.data.code === 1) {
-          setCookie("jwtToken", nextRes.data.data);
-          const response = await axios.get(API_URL + `/user/${user.id}`, {
-            headers: { Authorization: `${getCookie("jwtToken")}` },
-          });
+      const getUser = await getUserInfo(user, getCookie("jwtToken"));
+      if (getUser.data.code === -1) {
+        wrongRequest(dispatch, navigate);
+      } else if (getUser.data.code === 2) {
+        const nextGetUser = await getUserInfo(user, getCookie("refreshToken"));
+        if (nextGetUser.data.code === 2 || nextGetUser.data.code === -1) {
+          wrongRequest(dispatch, navigate);
+        } else if (nextGetUser.data.code === 1) {
+          setCookie("jwtToken", nextGetUser.data.data);
+          const response = await getUserInfo(user, getCookie("jwtToken"));
           if (response.data.code === 1) {
             dispatch(setUserInfo(response.data));
           }
         }
-      } else if (res.data.code === 1) {
-        dispatch(setUserInfo(res.data));
+      } else if (getUser.data.code === 1) {
+        dispatch(setUserInfo(getUser.data));
       }
     } catch (err) {
       throw new Error(err);
