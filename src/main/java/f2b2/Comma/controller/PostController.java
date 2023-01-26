@@ -175,7 +175,7 @@ public class PostController {
         Post post = postService.find(postId);
         Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey.getBytes()).parseClaimsJws(headers.get("Authorization").get(0));
         if(post.getUser().getId() != Long.parseLong(claims.getBody().get("id").toString())){
-            return new ResponseEntity<>(new CMRespDto<>(-1, "로그인 정보와 게시글 작성자가 일치하지 않습니다.", null), HttpStatus.OK);
+            throw new CustomException("마감을 할 권한이 없습니다.");
         };
         post.setEnd("true");
         return new ResponseEntity<>(new CMRespDto<>(1, "마감 적용 성공", post), HttpStatus.OK);
@@ -188,7 +188,7 @@ public class PostController {
 
         Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey.getBytes()).parseClaimsJws(headers.get("Authorization").get(0));
         if(post.getUser().getId() != Long.parseLong(claims.getBody().get("id").toString())){
-            return new ResponseEntity<>(new CMRespDto<>(-1, "로그인 정보와 게시글 작성자가 일치하지 않습니다.", null), HttpStatus.OK);
+            throw new CustomException("게시글을 지울 권한이 없습니다.");
         };
 
         postService.delete(postId,post);

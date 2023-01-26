@@ -7,7 +7,6 @@ import f2b2.Comma.domain.user.UserService;
 import f2b2.Comma.dto.CMRespDto;
 import f2b2.Comma.dto.jwt.JwtDto;
 import f2b2.Comma.handler.exception.CustomAuthException;
-import f2b2.Comma.handler.exception.CustomException;
 import f2b2.Comma.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,7 +32,10 @@ public class OAuthController {
             throw new CustomAuthException("카카오 회원가입이 안된 회원",userId);
         });
 
-        return new ResponseEntity<>(new CMRespDto<>(1,"로그인 성공", new JwtDto(jwtTokenProvider.createAccessToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()), jwtTokenProvider.createRefreshToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()))),HttpStatus.OK);
+        return new ResponseEntity<>(new CMRespDto<>(1,"로그인 성공",
+                new JwtDto(jwtTokenProvider.createAccessToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()),
+                           jwtTokenProvider.createRefreshToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()))),HttpStatus.OK);
+
     }
 
     @ResponseBody
@@ -44,7 +46,9 @@ public class OAuthController {
             throw new CustomAuthException("구글 회원가입이 안된 회원",userId);
         });
 
-        return new ResponseEntity<>(new CMRespDto<>(1,"로그인 성공", new JwtDto(jwtTokenProvider.createAccessToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()), jwtTokenProvider.createRefreshToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()))),HttpStatus.OK);
+        return new ResponseEntity<>(new CMRespDto<>(1,"로그인 성공",
+                new JwtDto(jwtTokenProvider.createAccessToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()),
+                           jwtTokenProvider.createRefreshToken(loginUser.getUsername(), loginUser.getRoles(), loginUser.getId()))),HttpStatus.OK);
     }
 
 }

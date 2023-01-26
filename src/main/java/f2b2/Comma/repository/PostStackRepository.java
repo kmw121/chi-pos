@@ -1,6 +1,6 @@
 package f2b2.Comma.repository;
 
-import f2b2.Comma.domain.post.PostStack;
+import f2b2.Comma.domain.stack.PostStack;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

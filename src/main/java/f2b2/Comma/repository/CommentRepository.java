@@ -1,6 +1,6 @@
 package f2b2.Comma.repository;
 
-import f2b2.Comma.domain.post.Comment;
+import f2b2.Comma.domain.Commnet.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

@@ -1,6 +1,6 @@
 package f2b2.Comma.dto.post;
 
-import f2b2.Comma.domain.post.Comment;
+import f2b2.Comma.domain.Commnet.Comment;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;

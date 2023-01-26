@@ -1,13 +1,12 @@
 package f2b2.Comma.domain.user;
 
-import f2b2.Comma.domain.post.CommentService;
+import f2b2.Comma.domain.Commnet.CommentService;
 import f2b2.Comma.domain.post.Post;
 import f2b2.Comma.domain.post.PostService;
 import f2b2.Comma.domain.stack.UserStackService;
 import f2b2.Comma.handler.exception.CustomException;
 import f2b2.Comma.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

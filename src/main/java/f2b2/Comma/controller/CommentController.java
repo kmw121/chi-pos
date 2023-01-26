@@ -1,7 +1,7 @@
 package f2b2.Comma.controller;
 
-import f2b2.Comma.domain.post.Comment;
-import f2b2.Comma.domain.post.CommentService;
+import f2b2.Comma.domain.Commnet.Comment;
+import f2b2.Comma.domain.Commnet.CommentService;
 import f2b2.Comma.domain.post.Post;
 import f2b2.Comma.domain.post.PostService;
 import f2b2.Comma.domain.user.UserService;

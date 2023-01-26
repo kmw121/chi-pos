@@ -2,6 +2,8 @@ package f2b2.Comma.domain.post;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import f2b2.Comma.domain.BaseTimeEntity;
+import f2b2.Comma.domain.Commnet.Comment;
+import f2b2.Comma.domain.stack.PostStack;
 import f2b2.Comma.domain.user.User;
 import lombok.Data;
 
