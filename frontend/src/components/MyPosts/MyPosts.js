@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import authCheck from "../../util/authCheck";
 import useGetMyPost from "../../hooks/useGetMyPost";
+
 function MyPosts() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -61,7 +62,6 @@ function MyPosts() {
                       ))}
                     </div>
                   </MyPostsContentsTopBox>
-
                   <MyPostsContentsBottomBox>
                     <MainContentsAppStudyInfoRightDetail>
                       <AiOutlineEye className="myPostIcon" />

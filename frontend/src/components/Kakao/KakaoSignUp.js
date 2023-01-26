@@ -21,15 +21,11 @@ import Select from "react-select";
 import { getCookie, deleteCookie, setCookie } from "../../util/cookie";
 import { useDispatch } from "react-redux";
 import jwt_decode from "jwt-decode";
-import { setUser, setUserInfo } from "../../slice/userSlice";
+import { fetchUser } from "../../slice/userSlice";
 import postSocialSignUpAndDetail from "../../util/postSocialSignUpAndDetail";
 import { toast, ToastContainer } from "react-toastify";
-import getUserInfo from "../../util/getUserInfo";
 import postDupCheckNick from "../../util/postDupCheckNick";
-import { injectStyle } from "react-toastify/dist/inject-style";
-if (typeof window !== "undefined") {
-  injectStyle();
-}
+
 function KakaoSignUp() {
   let stackNumber = 1;
   const stackArray = stacks
@@ -46,19 +42,16 @@ function KakaoSignUp() {
     password: false,
     passwordAgain: false,
     nickName: false,
+    dupCheckNickName: false,
   });
-  const [imgPreview, setImgPreview] = useState("");
-  const [files, setFiles] = useState([]);
   const [form, setForm] = useState({
     username: getCookie("Kakao"),
     password: "",
     passwordAgain: "",
     nickName: "",
     stack: [],
-  });
-  const [dupCheck, setDupCheck] = useState({
-    username: true,
-    nickName: false,
+    imgPreview: "",
+    files: [],
   });
   const reg_nickName = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$/;
   const navigate = useNavigate();
@@ -85,19 +78,17 @@ function KakaoSignUp() {
     });
   };
   const onSubmit = async () => {
-    // 이 함수 util이나 hook으로 만들어서 쓸까? -> 고민해볼것.
     if (
       formReg.username &&
       formReg.nickName &&
-      dupCheck.nickName &&
-      dupCheck.username &&
+      formReg.dupCheckNickName &&
       form.stack.length
     ) {
       try {
         const formdata = new FormData();
         //이부분 리팩토링 필요.
-        if (imgPreview.length) {
-          formdata.append("file", files);
+        if (form.imgPreview.length) {
+          formdata.append("file", form.files);
         }
         formdata.append("username", form.username);
         formdata.append("nickName", form.nickName);
@@ -108,14 +99,6 @@ function KakaoSignUp() {
         );
         if (kakaoSignUpResponse.data.code === 1) {
           const { accessToken, refreshToken } = kakaoSignUpResponse.data.data;
-          const decoded = jwt_decode(accessToken);
-          dispatch(setUser(decoded));
-          const getUser = await getUserInfo(decoded, accessToken);
-          dispatch(setUserInfo(getUser.data));
-          navigate("/");
-          toast.success("카카오 회원가입이 완료되었습니다.");
-          deleteCookie("jwtToken");
-          deleteCookie("refreshToken");
           setCookie("jwtToken", accessToken, {
             path: "/",
             domain: "chi-pos.com",
@@ -124,6 +107,10 @@ function KakaoSignUp() {
             path: "/",
             domain: "chi-pos.com",
           });
+          const decoded = jwt_decode(accessToken);
+          dispatch(fetchUser(decoded));
+          navigate("/");
+          toast.success("카카오 회원가입이 완료되었습니다.");
         } else {
           if (kakaoSignUpResponse.data.code === -1) {
             toast.error("kakao 회원가입 실패 ");
@@ -145,8 +132,8 @@ function KakaoSignUp() {
           if (
             window.confirm(`사용할 수 있는 닉네임입니다. 사용하시겠습니까?`)
           ) {
-            setDupCheck((prev) => {
-              return { ...prev, nickName: true };
+            setFormReg((prev) => {
+              return { ...prev, dupCheckNickName: true };
             });
             toast.success("닉네임을 설정하셨습니다.");
           } else {
@@ -164,11 +151,15 @@ function KakaoSignUp() {
   };
   const encodeFileToBase64 = (fileBlob) => {
     const reader = new FileReader();
-    setFiles(fileBlob);
+    setForm((prev) => {
+      return { ...prev, files: fileBlob };
+    });
     reader.readAsDataURL(fileBlob);
     return new Promise((resolve) => {
       reader.onload = () => {
-        setImgPreview(reader.result);
+        setForm((prev) => {
+          return { ...prev, imgPreview: reader.result };
+        });
         resolve();
       };
     });
@@ -197,7 +188,7 @@ function KakaoSignUp() {
               onChange={onChangeNickName}
               value={form.nickName}
               placeholder=""
-              disabled={dupCheck.nickName}
+              disabled={formReg.dupCheckNickName}
             />
           </SignUpFormLi>
         </SignUpFormUl>
@@ -221,8 +212,8 @@ function KakaoSignUp() {
                 accept="img/*"
               />
               <div className="img_box">
-                {imgPreview && (
-                  <ImgPreview src={imgPreview} alt="preview-img" />
+                {form.imgPreview && (
+                  <ImgPreview src={form.imgPreview} alt="preview-img" />
                 )}
               </div>
             </SignUpInputContainer>

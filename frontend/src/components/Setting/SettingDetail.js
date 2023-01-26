@@ -22,16 +22,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import withdrawal from "../../util/withdrawal";
 import { getCookie } from "../../util/cookie";
-import { setUserInfo, setUser, setIsLogin } from "../../slice/userSlice";
-import { deleteCookie, setCookie } from "../../util/cookie";
+import { fetchUser } from "../../slice/userSlice";
+import { setCookie } from "../../util/cookie";
 import { toast, ToastContainer } from "react-toastify";
-import { injectStyle } from "react-toastify/dist/inject-style";
 import postSocialSignUpAndDetail from "../../util/postSocialSignUpAndDetail";
-if (typeof window !== "undefined") {
-  injectStyle();
-}
+import jwt_decode from "jwt-decode";
 
 function SettingDetail() {
+  // 여기 onsubmit <<< 로직 완전 더 고민해야됨. 지금꺼 미완성임.더해야됨.
   const { userInfo } = useSelector((state) => {
     return state.user;
   });
@@ -150,7 +148,8 @@ function SettingDetail() {
           getCookie("jwtToken")
         );
         if (changeInfoResponse.data.code === 1) {
-          dispatch(setUserInfo(changeInfoResponse.data));
+          const decoded = jwt_decode(changeInfoResponse.data.data);
+          dispatch(fetchUser(decoded));
           navigate("/");
           toast.success("정보가 변경되었습니다.");
         } else if (changeInfoResponse.data.code === -1) {
@@ -166,12 +165,7 @@ function SettingDetail() {
             changeNextResponse.data.code === 2 ||
             changeNextResponse.data.code === -1
           ) {
-            deleteCookie(["jwtToken"]);
-            deleteCookie(["refreshToken"]);
-            dispatch(setUserInfo([]));
-            dispatch(setUser([]));
-            dispatch(setIsLogin(false));
-            navigate("/");
+            withdrawal(dispatch, navigate);
             toast.error("잘못된 접근입니다.");
           } else if (changeNextResponse.data.code === 1) {
             setCookie("jwtToken", changeNextResponse.data.data);
@@ -181,7 +175,7 @@ function SettingDetail() {
               changeNextResponse.data.data
             );
             if (response.data.code === 1) {
-              dispatch(setUserInfo(response.data));
+              //       dispatch(setUserInfo(response.data));
               navigate("/");
               toast.success("정보가 변경되었습니다.");
             } else {

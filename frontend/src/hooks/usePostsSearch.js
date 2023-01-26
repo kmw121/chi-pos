@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { API_URL } from "../util/API_URL";
+
 export default function usePostsSearch() {
   const [list, setList] = useState([]);
   const [loadingStatus, setLoadingStatus] = useState(false);
@@ -16,7 +17,11 @@ export default function usePostsSearch() {
     async function fetchData() {
       try {
         setLoadingStatus(true);
-        const res = await axios.post(API_URL + "/posts", searchConfig);
+        const res = await axios.get(
+          API_URL + "/posts",
+          JSON.stringify(searchConfig)
+        );
+        console.log(res);
         if (res.data.code === 1) {
           setList(() => list.concat(res.data.data));
           setLoadingStatus(false);

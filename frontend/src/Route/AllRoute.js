@@ -9,6 +9,7 @@ import StudyPage from "../components/Study/StudyPage";
 import KakaoSocial from "../components/Kakao/KakaoSocial";
 import KakaoSignUp from "../components/Kakao/KakaoSignUp";
 import GoogleSignUp from "../components/Google/GoogleSignUp";
+
 function AllRoute() {
   return (
     <BrowserRouter>

@@ -44,11 +44,8 @@ import { useSelector } from "react-redux";
 import { useIntersect } from "../../hooks/useIntersect";
 import { getCookie } from "../../util/cookie";
 import { ToastContainer, toast } from "react-toastify";
-import { injectStyle } from "react-toastify/dist/inject-style";
 import getIncreaseView from "../../util/getIncreaseView";
-if (typeof window !== "undefined") {
-  injectStyle();
-}
+
 function MainContents({
   setSearchConfig,
   list,
@@ -56,7 +53,7 @@ function MainContents({
   setList,
   isEnd,
 }) {
-  const { userInfo, user } = useSelector((state) => {
+  const { user } = useSelector((state) => {
     return state.user;
   });
   const [isChecked, setIsChecked] = useState(false);
@@ -93,32 +90,29 @@ function MainContents({
   };
   const onIncreaseView = async (id) => {
     try {
-      await getIncreaseView();
+      await getIncreaseView(id);
     } catch (err) {
       throw new Error(err);
     }
   };
   const handleIsEnd = () => {
     if (isChecked) {
-      const isEndFilter = (prev) => {
+      setList([]);
+      setSearchConfig((prev) => {
         return { ...prev, isEnd: true, page: 1 };
-      };
-      setList([]);
-      setSearchConfig(isEndFilter);
+      });
     } else if (!isChecked) {
-      const isEndFilter = (prev) => {
-        return { ...prev, isEnd: false, page: 1 };
-      };
       setList([]);
-
-      setSearchConfig(isEndFilter);
+      setSearchConfig((prev) => {
+        return { ...prev, isEnd: false, page: 1 };
+      });
     }
   };
   const handleOnlyFavorited = () => {
     if (!getCookie("jwtToken")) {
       toast.error("로그인 후 이용하실 수 있는 기능입니다.");
-    } else if (user && user.sub.length) {
-      const myFavoriteStack = userInfo.data.userStack.map((a) => a.stack.id);
+    } else if (user && user.data.code === 1) {
+      const myFavoriteStack = user.data.data.userStack.map((a) => a.stack.id);
       setList([]);
       setSearchConfig((prev) => {
         return {
@@ -129,6 +123,7 @@ function MainContents({
       });
     }
   };
+  console.log(user.data.data);
   const ref = useIntersect(async (entry, observer) => {
     observer.unobserve(entry.target);
     if (!isEnd && !loadingStatus) {

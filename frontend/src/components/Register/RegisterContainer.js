@@ -9,15 +9,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import toStringByFormatting from "../../util/toStringByFormatting";
 import { getCookie, setCookie } from "../../util/cookie";
-import { setUserInfo, setCurrentPost } from "../../slice/userSlice";
+import { setCurrentPost } from "../../slice/userSlice";
 import getUserInfo from "../../util/getUserInfo";
 import postFormSubmit from "../../util/postFormSubmit";
 import wrongRequest from "../../util/wrongRequest";
 import { toast, ToastContainer } from "react-toastify";
-import { injectStyle } from "react-toastify/dist/inject-style";
-if (typeof window !== "undefined") {
-  injectStyle();
-}
+
 function RegisterContainer() {
   const { currentPost } = useSelector((state) => {
     return state.user;
@@ -71,32 +68,19 @@ function RegisterContainer() {
   useEffect(() => {
     authCheck(dispatch, navigate, user);
   }, []);
+  // 이거 수정하고 authCheck도 수정 T_T
   const onSubmit = async () => {
-    try {
-      const userInfo = await getUserInfo(user, getCookie("jwtToken"));
-      if (userInfo.data.code === -1) {
+    if (user.data.code === 1) {
+    }
+    const userInfo = await getUserInfo(user, getCookie("jwtToken"));
+    if (userInfo.data.code === -1) {
+      wrongRequest(dispatch, navigate);
+    } else if (userInfo.data.code === 2) {
+      const nextUserInfo = await getUserInfo(user, getCookie("refreshToken"));
+      if (nextUserInfo.data.data === 2 || nextUserInfo.data.data === -1) {
         wrongRequest(dispatch, navigate);
-      } else if (userInfo.data.code === 2) {
-        const nextUserInfo = await getUserInfo(user, getCookie("refreshToken"));
-        if (nextUserInfo.data.data === 2 || nextUserInfo.data.data === -1) {
-          wrongRequest(dispatch, navigate);
-        } else if (nextUserInfo.data.data === 1) {
-          setCookie("jwtToken", nextUserInfo.data.data);
-          const response = await postFormSubmit(
-            submitForm,
-            getCookie("jwtToken")
-          );
-          if (response.data.code === 1) {
-            dispatch(setCurrentPost({}));
-            toast.success("등록이 완료되었습니다.");
-            navigate("/");
-          } else if (response.data.code === -1) {
-            dispatch(setCurrentPost({}));
-            toast.error("알 수 없는 오류로 등록에 실패하였습니다.");
-            navigate("/");
-          }
-        }
-      } else if (userInfo.data.code === 1) {
+      } else if (nextUserInfo.data.data === 1) {
+        setCookie("jwtToken", nextUserInfo.data.data);
         const response = await postFormSubmit(
           submitForm,
           getCookie("jwtToken")
@@ -111,10 +95,19 @@ function RegisterContainer() {
           navigate("/");
         }
       }
-      dispatch(setUserInfo(userInfo.data));
-    } catch (err) {
-      throw new Error(err);
+    } else if (userInfo.data.code === 1) {
+      const response = await postFormSubmit(submitForm, getCookie("jwtToken"));
+      if (response.data.code === 1) {
+        dispatch(setCurrentPost({}));
+        toast.success("등록이 완료되었습니다.");
+        navigate("/");
+      } else if (response.data.code === -1) {
+        dispatch(setCurrentPost({}));
+        toast.error("알 수 없는 오류로 등록에 실패하였습니다.");
+        navigate("/");
+      }
     }
+    //   dispatch(setUserInfo(userInfo.data));
   };
   return (
     <>

@@ -64,30 +64,11 @@ function RegisterNumber1({ dataForm, setDataForm }) {
       };
     });
   const optionStack = stackArray;
-  const onChangeCategory = (value) => {
-    setDataForm((prev) => {
-      return { ...prev, category: value.value };
-    });
+  const handleChangeForm = (value, e) => {
+    setDataForm({ ...dataForm, [e.name]: value.value });
   };
-  const onChangeHowto = (value) => {
-    setDataForm((prev) => {
-      return { ...prev, howto: value.value };
-    });
-  };
-  const onChangeDuration = (value) => {
-    setDataForm((prev) => {
-      return { ...prev, duration: value.value };
-    });
-  };
-  const onChangePeople = (value) => {
-    setDataForm((prev) => {
-      return { ...prev, people: value.value };
-    });
-  };
-  const onSelectedStack = (value) => {
-    setDataForm((prev) => {
-      return { ...prev, selectedStack: value };
-    });
+  const handleChangeFormStack = (value, e) => {
+    setDataForm({ ...dataForm, [e.name]: value });
   };
   const onChangeDatePickerValue = (date) => {
     setDataForm((prev) => {
@@ -132,7 +113,9 @@ function RegisterNumber1({ dataForm, setDataForm }) {
         <RegisterNumber1Li>
           <RegisterNumber1Label>모집 구분</RegisterNumber1Label>
           <Select
-            onChange={onChangeCategory}
+            //    onChange={onChangeCategory}
+            onChange={handleChangeForm}
+            name="category"
             placeholder="스터디/프로젝트"
             options={optionCategory}
             defaultValue={
@@ -146,8 +129,9 @@ function RegisterNumber1({ dataForm, setDataForm }) {
         <RegisterNumber1Li>
           <RegisterNumber1Label>모집 인원</RegisterNumber1Label>
           <Select
-            onChange={onChangePeople}
+            onChange={handleChangeForm}
             placeholder="인원 미정~10명 이상"
+            name="people"
             options={optionPeople}
             defaultValue={
               dataForm.people && {
@@ -162,8 +146,9 @@ function RegisterNumber1({ dataForm, setDataForm }) {
         <RegisterNumber1Li>
           <RegisterNumber1Label>진행 방식</RegisterNumber1Label>
           <Select
-            onChange={onChangeHowto}
+            onChange={handleChangeForm}
             placeholder="온라인/오프라인"
+            name="howto"
             options={optionHowTo}
             defaultValue={
               dataForm.howto && {
@@ -176,9 +161,10 @@ function RegisterNumber1({ dataForm, setDataForm }) {
         <RegisterNumber1Li>
           <RegisterNumber1Label>진행 기간</RegisterNumber1Label>
           <Select
-            onChange={onChangeDuration}
+            onChange={handleChangeForm}
             placeholder="기간 미정~6개월 이상"
             options={optionDuration}
+            name="duration"
             defaultValue={
               dataForm.duration && {
                 name: dataForm.duration,
@@ -192,9 +178,10 @@ function RegisterNumber1({ dataForm, setDataForm }) {
         <RegisterNumber1Li>
           <RegisterNumber1Label>기술 스택</RegisterNumber1Label>
           <Select
-            onChange={onSelectedStack}
+            onChange={handleChangeFormStack}
             isMulti
             placeholder="프로젝트 사용 스택"
+            name="selectedStack"
             options={optionStack}
             defaultValue={dataForm.selectedStack}
           />
@@ -205,6 +192,7 @@ function RegisterNumber1({ dataForm, setDataForm }) {
             <DatePicker
               selected={dataForm.datePickerValue}
               onChange={onChangeDatePickerValue}
+              name="datePickerValue"
               showPopperArrow={false}
               fixedHeight
               locale={ko}
@@ -270,6 +258,7 @@ function RegisterNumber1({ dataForm, setDataForm }) {
               value: "카카오톡 오픈채팅",
               label: "카카오톡 오픈채팅",
             }}
+            name="contactOption"
             placeholder="연락 방법"
             options={optionContact}
             value={optionContact.find((op) => {
@@ -286,6 +275,7 @@ function RegisterNumber1({ dataForm, setDataForm }) {
                 : dataForm.contactPlaceholder
             } 주소를 입력해 주세요.`}
             value={dataForm.contactAddress || ""}
+            name="contact???"
             onChange={onChangeContactAddress}
           />
         </RegisterNumber1Li>

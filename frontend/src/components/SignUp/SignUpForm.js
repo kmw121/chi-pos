@@ -20,12 +20,9 @@ import Select from "react-select";
 import { stacks } from "../../util/stack";
 import postSubmit from "../../util/postSubmit";
 import { toast, ToastContainer } from "react-toastify";
-import { injectStyle } from "react-toastify/dist/inject-style";
 import postDupCheckNick from "../../util/postDupCheckNick";
 import postDupCheckEmail from "../../util/postDupCheckEmail";
-if (typeof window !== "undefined") {
-  injectStyle();
-}
+
 function SignUpForm() {
   let stackNumber = 1;
   const stackArray = stacks
@@ -161,7 +158,6 @@ function SignUpForm() {
       toast.error("닉네임은 2글자 이상 ~ 10글자 이하로 해주세요!");
     }
   };
-  //이미지 미리보기 코드
   const encodeFileToBase64 = (fileBlob) => {
     const reader = new FileReader();
     setFiles(fileBlob);

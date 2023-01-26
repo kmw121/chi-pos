@@ -3,6 +3,7 @@ import { Banner } from "../components";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+
 function MainBanner() {
   const settings = {
     dots: true,

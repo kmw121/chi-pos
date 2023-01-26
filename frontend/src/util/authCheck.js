@@ -1,9 +1,11 @@
 import { getCookie, setCookie } from "./cookie";
-import { setUserInfo } from "../slice/userSlice";
+import { fetchUser } from "../slice/userSlice";
 import getUserInfo from "./getUserInfo";
 import wrongRequest from "./wrongRequest";
+import jwt_decode from "jwt-decode";
+
 export default async function authCheck(dispatch, navigate, user) {
-  if (!user.id) {
+  if (user.data.code === -1) {
     wrongRequest(dispatch, navigate);
   } else {
     try {
@@ -16,14 +18,11 @@ export default async function authCheck(dispatch, navigate, user) {
           wrongRequest(dispatch, navigate);
         } else if (nextGetUser.data.code === 1) {
           setCookie("jwtToken", nextGetUser.data.data);
-          const response = await getUserInfo(user, getCookie("jwtToken"));
-          if (response.data.code === 1) {
-            dispatch(setUserInfo(response.data));
-          }
+          const decoded = jwt_decode(nextGetUser.data.data);
+          fetchUser(decoded);
         }
-      } else if (getUser.data.code === 1) {
-        dispatch(setUserInfo(getUser.data));
       }
+      // getUser.data.code === 1 이면 그냥 아무일도 없어야됨...
     } catch (err) {
       throw new Error(err);
     }
