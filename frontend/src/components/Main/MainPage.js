@@ -5,6 +5,7 @@ import MainContents from "./MainContents";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import "../../App.css";
 import usePostsSearch from "../../hooks/usePostsSearch";
+
 function MainPage() {
   const handleTop = () => {
     window.scrollTo({

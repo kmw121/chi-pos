@@ -46,16 +46,14 @@ import {
   StudyHeadUserBoxImg,
 } from "../components";
 import { logout } from "../../util/logout";
-import { setCurrentPost, setIsLogin } from "../../slice/userSlice";
+import { setCurrentPost } from "../../slice/userSlice";
 import postDeadline from "../../util/postDeadline";
 import { toast, ToastContainer } from "react-toastify";
-import { injectStyle } from "react-toastify/dist/inject-style";
 import postDelete from "../../util/postDelete";
 import postComment from "../../util/postComment";
 import postDeleteComment from "../../util/postDeleteComment";
-if (typeof window !== "undefined") {
-  injectStyle();
-}
+import wrongRequest from "../../util/wrongRequest";
+
 function Study() {
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -103,9 +101,7 @@ function Study() {
             nextDeleteRes.data.code === -1 ||
             nextDeleteRes.data.code === 2
           ) {
-            deleteCookie(["jwtToken"]);
-            deleteCookie(["refreshToken"]);
-            dispatch(setIsLogin(false));
+            wrongRequest(dispatch, navigate);
             toast.error("잘못된 접근입니다. 다시 로그인해주세요.");
             navigate("/");
           }
@@ -155,11 +151,8 @@ function Study() {
             commentNextRes.data.code === 2 ||
             commentNextRes.data.code === -1
           ) {
-            deleteCookie(["jwtToken"]);
-            deleteCookie(["refreshToken"]);
-            dispatch(setIsLogin(false));
+            wrongRequest(dispatch, navigate);
             toast.error("잘못된 접근입니다. 다시 로그인해주세요.");
-            navigate("/");
           }
         } else if (commentRes.data.code === -1) {
           toast.error("로그인 후 시도해주세요.");
@@ -188,11 +181,8 @@ function Study() {
             deleteCommentNextRes.data.code === 2 ||
             deleteCommentNextRes.data.code === -1
           ) {
-            deleteCookie(["jwtToken"]);
-            deleteCookie(["refreshToken"]);
-            dispatch(setIsLogin(false));
+            wrongRequest(dispatch, navigate);
             toast.error("잘못된 접근입니다. 다시 로그인해주세요.");
-            navigate("/");
           } else if (deleteCommentNextRes.data.code === 1) {
             setCookie("jwtToken", deleteCommentNextRes.data.data);
             toast.error("댓글이 삭제되었습니다.");

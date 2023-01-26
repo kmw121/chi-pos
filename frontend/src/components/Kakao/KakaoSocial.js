@@ -2,12 +2,13 @@ import React, { useEffect } from "react";
 import ClimbingBoxLoader from "react-spinners/ClimbingBoxLoader";
 import { setCookie } from "../../util/cookie";
 import jwt_decode from "jwt-decode";
-import { setUser, setUserInfo } from "../../slice/userSlice";
+import { fetchUser } from "../../slice/userSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { KakaoSocialBox } from "../components";
 import getKakaoAuth from "../../util/getKakaoAuth";
 import getUserInfo from "../../util/getUserInfo";
+
 const KakaoSocial = () => {
   let code = new URL(window.location.href).searchParams.get("code");
   const dispatch = useDispatch();
@@ -21,11 +22,6 @@ const KakaoSocial = () => {
           navigate("/kakaoSignup");
         } else if (kakaoAuth.data.code === 1) {
           const { accessToken, refreshToken } = kakaoAuth.data.data;
-          const decoded = jwt_decode(accessToken);
-          dispatch(setUser(decoded));
-          const getUser = getUserInfo(decoded, accessToken);
-          dispatch(setUserInfo(getUser.data));
-          navigate("/");
           setCookie("jwtToken", accessToken, {
             path: "/",
             domain: "chi-pos.com",
@@ -34,6 +30,9 @@ const KakaoSocial = () => {
             path: "/",
             domain: "chi-pos.com",
           });
+          const decoded = jwt_decode(accessToken);
+          dispatch(fetchUser(decoded));
+          navigate("/");
         }
       } catch (err) {
         throw new Error(err);

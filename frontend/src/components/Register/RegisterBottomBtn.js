@@ -6,6 +6,7 @@ import {
   RegisterBottomCancelBtn,
   RegisterBottomOkBtn,
 } from "../components";
+
 function RegisterBottomBtn({ onSubmit }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();

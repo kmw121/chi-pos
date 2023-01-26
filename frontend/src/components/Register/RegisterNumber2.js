@@ -6,11 +6,11 @@ import {
   RegisterNumber2TitleCircle,
   RegisterNumber2NameLabel,
 } from "../components";
+
 function RegisterNumber2({ titleText, setTitleText }) {
   const onChangeInputV = (e) => {
     setTitleText(e.target.value);
   };
-
   return (
     <section>
       <RegisterNumber2Title>

@@ -16,6 +16,7 @@ import {
   SelectedStackImgStyle,
   StackBtnSpan,
 } from "../components";
+
 function MainSection({ setSearchConfig, setList }) {
   const [sectionTextList, setSectionTextList] = useState([
     {

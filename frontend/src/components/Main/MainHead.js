@@ -15,8 +15,10 @@ import SignInForm from "../SignIn/SignInForm";
 import { logout } from "../../util/logout";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentPost } from "../../slice/userSlice";
+import { ToastContainer } from "react-toastify";
+
 function MainHead() {
-  const { userInfo, isLogin } = useSelector((state) => {
+  const { user } = useSelector((state) => {
     return state.user;
   });
   const navigate = useNavigate();
@@ -42,7 +44,6 @@ function MainHead() {
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
-
   return (
     <>
       <MainHeadNav>
@@ -51,14 +52,14 @@ function MainHead() {
         </a>
         <MainHeadNavRight>
           <MainHeadNavBtn onClick={onGoToRegister}>새 글 쓰기</MainHeadNavBtn>
-          {isLogin ? (
+          {user && user.data.code === 1 ? (
             <MainHeadNavBtn onClick={toggleDropdown}>
               <MainHeadRightImg
                 alt="profile"
                 src={
-                  userInfo && userInfo.data.imageUrl === "nonUrl"
+                  user && user.data.data.imageUrl === "nonUrl"
                     ? "/c-pos/ms-icon-310x310.png"
-                    : userInfo && userInfo.data.imageUrl
+                    : user && user.data.data.imageUrl
                 }
               />
               {dropdownOpen && (
@@ -92,6 +93,7 @@ function MainHead() {
           <SignInForm onToggle={toggleModal} />
         </ModalPortal>
       )}
+      <ToastContainer />
     </>
   );
 }

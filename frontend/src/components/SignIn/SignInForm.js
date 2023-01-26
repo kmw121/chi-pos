@@ -20,25 +20,24 @@ import {
   ModalBtnKakaoIcon,
 } from "../components";
 import jwt_decode from "jwt-decode";
-import { setIsLogin, setUser, setUserInfo } from "../../slice/userSlice";
-import { useDispatch } from "react-redux";
-import { getCookie, setCookie } from "../../util/cookie";
+import { fetchUser } from "../../slice/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setCookie } from "../../util/cookie";
 import { KAKAO_AUTH_URL } from "../../util/kakaoAuth";
 import { gapi } from "gapi-script";
 import GoogleSocialLoginButton from "../Google/GoogleSocialLoginButton";
 import postLogin from "../../util/postLogin";
-import getUserInfo from "../../util/getUserInfo";
 import { toast, ToastContainer } from "react-toastify";
-import { injectStyle } from "react-toastify/dist/inject-style";
-if (typeof window !== "undefined") {
-  injectStyle();
-}
+
 function SignInForm({ onToggle }) {
   const dispatch = useDispatch();
   useGetPreventScrolling();
   const [loginForm, setLoginForm] = useState({
     username: "",
     password: "",
+  });
+  const { user } = useSelector((state) => {
+    return state.user;
   });
   const onEmailValue = (e) => {
     setLoginForm((prev) => {
@@ -59,19 +58,14 @@ function SignInForm({ onToggle }) {
     try {
       const loginResponse = await postLogin(loginForm);
       if (loginResponse.data.code === 1) {
+        console.log("loginResponse : ", loginResponse);
         const { accessToken, refreshToken } = loginResponse.data.data;
-        const decoded = jwt_decode(accessToken);
-        dispatch(setUser(decoded));
         setCookie("jwtToken", accessToken);
         setCookie("refreshToken", refreshToken);
-        const getUser = await getUserInfo(decoded, accessToken);
-        dispatch(setUserInfo(getUser.data));
-        setLoginForm((prev) => {
-          return { ...prev, username: "", password: "" };
-        });
+        const decoded = jwt_decode(accessToken);
+        dispatch(fetchUser(decoded));
         onToggle();
         toast.success(`${loginForm.username}님 반갑습니다!`);
-        dispatch(setIsLogin(true));
       } else if (loginResponse.data.code === -1) {
         toast.error("id/pw를 확인해주세요.");
       }

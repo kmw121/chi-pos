@@ -1,8 +1,9 @@
 import axios from "axios";
 import { API_URL } from "../util/API_URL";
 import { getCookie, deleteCookie, setCookie } from "../util/cookie";
-import { setUser, setUserInfo } from "../slice/userSlice";
 import { useEffect, useState } from "react";
+import { fetchUser } from "../slice/userSlice";
+
 export default function useGetMyPost(dispatch, navigate) {
   const [post, setPost] = useState([]);
   useEffect(() => {
@@ -22,8 +23,7 @@ export default function useGetMyPost(dispatch, navigate) {
           if (nextRes.data.code === 2 || nextRes.data.code === -1) {
             deleteCookie(["jwtToken"]);
             deleteCookie(["refreshToken"]);
-            dispatch(setUserInfo([]));
-            dispatch(setUser([]));
+            dispatch(fetchUser(""));
             alert("잘못된 접근입니다. 다시 로그인 해주세요.");
             navigate("/");
           } else if (nextRes.data.code === 1) {
@@ -37,8 +37,7 @@ export default function useGetMyPost(dispatch, navigate) {
             if (response.data.code !== 1) {
               deleteCookie(["jwtToken"]);
               deleteCookie(["refreshToken"]);
-              dispatch(setUserInfo([]));
-              dispatch(setUser([]));
+              dispatch(fetchUser(""));
               alert("잘못된 접근입니다. 다시 로그인 해주세요.");
               navigate("/");
             }
