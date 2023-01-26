@@ -88,7 +88,7 @@ public class PostController {
         return new ResponseEntity<>(new CMRespDto<>(1, "글조회 성공", postService.findAll()), HttpStatus.OK);
     }
 
-    @PostMapping("/posts")
+    @GetMapping("/posts")
     public ResponseEntity<?> findPosts(@RequestBody PostsDto postsDto){
         String query = " where ";
         boolean flag = true;
