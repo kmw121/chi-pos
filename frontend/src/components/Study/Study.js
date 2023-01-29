@@ -7,7 +7,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import useGetPostsById from "../../hooks/useGetPostsById";
-import { getCookie, deleteCookie, setCookie } from "../../util/cookie";
+import { getCookie, setCookie } from "../../util/cookie";
 import {
   StudyContainer,
   StudyHeadSection,
@@ -44,11 +44,11 @@ import {
   StudyCommentMainText,
   StudyInfoGridA,
   StudyHeadUserBoxImg,
-} from "../components";
+} from "./studyComponents";
 import { logout } from "../../util/logout";
 import { setCurrentPost } from "../../slice/userSlice";
 import postDeadline from "../../util/postDeadline";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import postDelete from "../../util/postDelete";
 import postComment from "../../util/postComment";
 import postDeleteComment from "../../util/postDeleteComment";
@@ -114,7 +114,6 @@ function Study() {
       }
     }
   };
-  console.log(currentPost);
   const onPostComment = async () => {
     if (window.confirm("댓글을 등록하시겠습니까?")) {
       try {
@@ -123,8 +122,6 @@ function Study() {
           comment,
           getCookie("jwtToken")
         );
-        toast.success("zzzzzzzzzz");
-        console.log("commentRes : ", commentRes);
         if (commentRes.data.code === 1) {
           toast.success("댓글이 등록되었습니다!");
           setComment("");
@@ -162,6 +159,8 @@ function Study() {
       }
     }
   };
+  //problem : window.location.reload() 없으면
+  // 댓글 등록,삭제가 반영되지 않음.(새로고침해야 반영됨)
   const onDeleteComment = async (id) => {
     if (window.confirm("댓글을 삭제하시겠습니까?")) {
       try {
@@ -171,7 +170,6 @@ function Study() {
         );
         if (deleteCommentRes.data.code === 1) {
           toast.success("댓글이 삭제되었습니다.");
-          window.location.reload();
         } else if (deleteCommentRes.data.code === 2) {
           const deleteCommentNextRes = await postDeleteComment(
             id,
@@ -186,7 +184,6 @@ function Study() {
           } else if (deleteCommentNextRes.data.code === 1) {
             setCookie("jwtToken", deleteCommentNextRes.data.data);
             toast.error("댓글이 삭제되었습니다.");
-            window.location.reload();
           }
         }
       } catch (err) {
@@ -199,145 +196,136 @@ function Study() {
     navigate("/register");
   };
   return (
-    <>
-      <StudyContainer>
-        <StudyHeadSection>
-          <AiOutlineArrowLeft className="studyLeftBtn" onClick={onGoBack} />
-          <StudyHeadTitle>{post && post.title}</StudyHeadTitle>
-          <StudyHeadUserAndDate>
-            <StudyHeadUserBox>
-              <StudyHeadUserBoxImg
-                src={
-                  post && post.user.imageUrl === "nonUrl"
-                    ? "/c-pos/ms-icon-310x310.png"
-                    : post && post.user.imageUrl
-                }
-                alt="pic"
-              />
-              <StudyHeadUserName>
-                {post && post.user.nickName}
-              </StudyHeadUserName>
-            </StudyHeadUserBox>
-            <StudyHeadRegisterDate>
-              {post && post.createdDate.slice(0, 10).replace(/-/gi, " . ")}
-            </StudyHeadRegisterDate>
-          </StudyHeadUserAndDate>
-          {post && post.user.id === user.id && (
-            <StudyAuthBtnSection>
-              <StudyAuthBtn onClick={onDeadline}>마감</StudyAuthBtn>
-              <StudyAuthBtn onClick={handleEditPost}>수정</StudyAuthBtn>
-              <StudyAuthBtn onClick={onPostDelete}>삭제</StudyAuthBtn>
-            </StudyAuthBtnSection>
-          )}
-          <StudyInfoGridUl>
-            <StudyInfoGridLi>
-              <StudyInfoGridTitle>모집 구분</StudyInfoGridTitle>
-              <StudyInfoGridContent>
-                {post && post.categoryType}
-              </StudyInfoGridContent>
-            </StudyInfoGridLi>
-            <StudyInfoGridLi>
-              <StudyInfoGridTitle>진행 방식</StudyInfoGridTitle>
-              <StudyInfoGridContent>{post && post.howto}</StudyInfoGridContent>
-            </StudyInfoGridLi>
-            <StudyInfoGridLi>
-              <StudyInfoGridTitle>모집 인원</StudyInfoGridTitle>
-              <StudyInfoGridContent>{post && post.people}</StudyInfoGridContent>
-            </StudyInfoGridLi>
-            <StudyInfoGridLi>
-              <StudyInfoGridTitle>시작 예정</StudyInfoGridTitle>
-              <StudyInfoGridContent>
-                {post && post.startDate.slice(0, 10).replace(/-/gi, ".")}
-              </StudyInfoGridContent>
-            </StudyInfoGridLi>
-            <StudyInfoGridLi>
-              <StudyInfoGridTitle>연락 방법</StudyInfoGridTitle>
-              <StudyInfoGridA href={post && `https://${post.contactAddress}`}>
-                {post && post.contact}
-                <AiOutlineLink className="studyLink" />
-              </StudyInfoGridA>
-            </StudyInfoGridLi>
-            <StudyInfoGridLi>
-              <StudyInfoGridTitle>예상 기간</StudyInfoGridTitle>
-              <StudyInfoGridContent>
-                {post && post.duration}
-              </StudyInfoGridContent>
-            </StudyInfoGridLi>
-            <StudyInfoGridLi>
-              <StudyInfoGridTitle>사용 언어</StudyInfoGridTitle>
-              <StudyInfoGridContent>
-                {post && post.postStack.length !== 0
-                  ? post.postStack[0].stack.name
-                  : null}
-              </StudyInfoGridContent>
-            </StudyInfoGridLi>
-          </StudyInfoGridUl>
-        </StudyHeadSection>
-        <StudyProjectBox>
-          <StudyProjectInfo>프로젝트 소개</StudyProjectInfo>
-          <StudyProjectDetail
-            dangerouslySetInnerHTML={{ __html: post && post.detail }}
-          />
-        </StudyProjectBox>
-        <StudyCommentBox>
-          <StudyCommentInnerBox>
-            <StudyCommentInputBox>
-              <StudyCommentInputCount>
-                {post && post.comments.length}개의 댓글이 있습니다.
-              </StudyCommentInputCount>
-              <StudyCommentInputText
-                value={comment}
-                onChange={handleCommentValue}
-                disabled={post && user.id === undefined ? true : false}
-                placeholder="댓글을 입력하세요."
-              ></StudyCommentInputText>
-            </StudyCommentInputBox>
-          </StudyCommentInnerBox>
-          <StudyButtonBox>
-            <StudyButton onClick={onPostComment}>댓글 등록</StudyButton>
-          </StudyButtonBox>
-          <StudyCommentUl>
-            {post &&
-              post.comments.map((content) => (
-                <StudyCommentLi key={content.createdDate + content.id}>
-                  <StudyCommentHead>
-                    <StudyCommentHeadBox>
-                      <StudyCommentHeadImg
-                        src={
-                          content.user.imageUrl === "nonUrl"
-                            ? "/c-pos/ms-icon-310x310.png"
-                            : content.user.imageUrl
-                        }
-                        alt="zz"
-                      />
-                      <StudyCommentHeadNameDateBox>
-                        <StudyCommentHeadName>
-                          {content.user.nickName}
-                        </StudyCommentHeadName>
-                        <StudyCommentHeadDate>
-                          {content.createdDate.slice(0, 10).replace(/-/gi, ".")}
-                        </StudyCommentHeadDate>
-                      </StudyCommentHeadNameDateBox>
-                    </StudyCommentHeadBox>
-                    {post && user.id === content.user.id && (
-                      <AiOutlineCloseCircle
-                        className="studyCommentDelete"
-                        onClick={() => onDeleteComment(content.id)}
-                      />
-                    )}
-                  </StudyCommentHead>
-                  <StudyCommentMain>
-                    <StudyCommentMainText>
-                      {content.detail}
-                    </StudyCommentMainText>
-                  </StudyCommentMain>
-                </StudyCommentLi>
-              ))}
-          </StudyCommentUl>
-        </StudyCommentBox>
-      </StudyContainer>
-      <ToastContainer />
-    </>
+    <StudyContainer>
+      <StudyHeadSection>
+        <AiOutlineArrowLeft className="studyLeftBtn" onClick={onGoBack} />
+        <StudyHeadTitle>{post && post.title}</StudyHeadTitle>
+        <StudyHeadUserAndDate>
+          <StudyHeadUserBox>
+            <StudyHeadUserBoxImg
+              src={
+                post && post.user.imageUrl === "nonUrl"
+                  ? "/c-pos/ms-icon-310x310.png"
+                  : post && post.user.imageUrl
+              }
+              alt="pic"
+            />
+            <StudyHeadUserName>{post && post.user.nickName}</StudyHeadUserName>
+          </StudyHeadUserBox>
+          <StudyHeadRegisterDate>
+            {post && post.createdDate.slice(0, 10).replace(/-/gi, " . ")}
+          </StudyHeadRegisterDate>
+        </StudyHeadUserAndDate>
+        {post && post.user.id === user.data.id && (
+          <StudyAuthBtnSection>
+            <StudyAuthBtn onClick={onDeadline}>마감</StudyAuthBtn>
+            <StudyAuthBtn onClick={handleEditPost}>수정</StudyAuthBtn>
+            <StudyAuthBtn onClick={onPostDelete}>삭제</StudyAuthBtn>
+          </StudyAuthBtnSection>
+        )}
+        <StudyInfoGridUl>
+          <StudyInfoGridLi>
+            <StudyInfoGridTitle>모집 구분</StudyInfoGridTitle>
+            <StudyInfoGridContent>
+              {post && post.categoryType}
+            </StudyInfoGridContent>
+          </StudyInfoGridLi>
+          <StudyInfoGridLi>
+            <StudyInfoGridTitle>진행 방식</StudyInfoGridTitle>
+            <StudyInfoGridContent>{post && post.howto}</StudyInfoGridContent>
+          </StudyInfoGridLi>
+          <StudyInfoGridLi>
+            <StudyInfoGridTitle>모집 인원</StudyInfoGridTitle>
+            <StudyInfoGridContent>{post && post.people}</StudyInfoGridContent>
+          </StudyInfoGridLi>
+          <StudyInfoGridLi>
+            <StudyInfoGridTitle>시작 예정</StudyInfoGridTitle>
+            <StudyInfoGridContent>
+              {post && post.startDate.slice(0, 10).replace(/-/gi, ".")}
+            </StudyInfoGridContent>
+          </StudyInfoGridLi>
+          <StudyInfoGridLi>
+            <StudyInfoGridTitle>연락 방법</StudyInfoGridTitle>
+            <StudyInfoGridA href={post && `https://${post.contactAddress}`}>
+              {post && post.contact}
+              <AiOutlineLink className="studyLink" />
+            </StudyInfoGridA>
+          </StudyInfoGridLi>
+          <StudyInfoGridLi>
+            <StudyInfoGridTitle>예상 기간</StudyInfoGridTitle>
+            <StudyInfoGridContent>{post && post.duration}</StudyInfoGridContent>
+          </StudyInfoGridLi>
+          <StudyInfoGridLi>
+            <StudyInfoGridTitle>사용 언어</StudyInfoGridTitle>
+            <StudyInfoGridContent>
+              {post && post.postStack.length !== 0
+                ? post.postStack[0].stack.name
+                : null}
+            </StudyInfoGridContent>
+          </StudyInfoGridLi>
+        </StudyInfoGridUl>
+      </StudyHeadSection>
+      <StudyProjectBox>
+        <StudyProjectInfo>프로젝트 소개</StudyProjectInfo>
+        <StudyProjectDetail
+          dangerouslySetInnerHTML={{ __html: post && post.detail }}
+        />
+      </StudyProjectBox>
+      <StudyCommentBox>
+        <StudyCommentInnerBox>
+          <StudyCommentInputBox>
+            <StudyCommentInputCount>
+              {post && post.comments.length}개의 댓글이 있습니다.
+            </StudyCommentInputCount>
+            <StudyCommentInputText
+              value={comment}
+              onChange={handleCommentValue}
+              disabled={post && user.data.id === undefined ? true : false}
+              placeholder="댓글을 입력하세요."
+            ></StudyCommentInputText>
+          </StudyCommentInputBox>
+        </StudyCommentInnerBox>
+        <StudyButtonBox>
+          <StudyButton onClick={onPostComment}>댓글 등록</StudyButton>
+        </StudyButtonBox>
+        <StudyCommentUl>
+          {post &&
+            post.comments.map((content) => (
+              <StudyCommentLi key={content.createdDate + content.id}>
+                <StudyCommentHead>
+                  <StudyCommentHeadBox>
+                    <StudyCommentHeadImg
+                      src={
+                        content.user.imageUrl === "nonUrl"
+                          ? "/c-pos/ms-icon-310x310.png"
+                          : content.user.imageUrl
+                      }
+                      alt="zz"
+                    />
+                    <StudyCommentHeadNameDateBox>
+                      <StudyCommentHeadName>
+                        {content.user.nickName}
+                      </StudyCommentHeadName>
+                      <StudyCommentHeadDate>
+                        {content.createdDate.slice(0, 10).replace(/-/gi, ".")}
+                      </StudyCommentHeadDate>
+                    </StudyCommentHeadNameDateBox>
+                  </StudyCommentHeadBox>
+                  {post && user.data.id === content.user.id && (
+                    <AiOutlineCloseCircle
+                      className="studyCommentDelete"
+                      onClick={() => onDeleteComment(content.id)}
+                    />
+                  )}
+                </StudyCommentHead>
+                <StudyCommentMain>
+                  <StudyCommentMainText>{content.detail}</StudyCommentMainText>
+                </StudyCommentMain>
+              </StudyCommentLi>
+            ))}
+        </StudyCommentUl>
+      </StudyCommentBox>
+    </StudyContainer>
   );
 }
 

@@ -7,7 +7,8 @@ import jwt_decode from "jwt-decode";
 import { useDispatch } from "react-redux";
 import { fetchUser } from "../../slice/userSlice";
 import handleGoogleAuth from "../../util/handleGoogleAuth";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import settingMultipleCookie from "../../util/settingMultipleCookie";
 
 export default function GoogleSocialLoginButton() {
   const clientId =
@@ -26,27 +27,22 @@ export default function GoogleSocialLoginButton() {
         dispatch(fetchUser(decoded));
         navigate("/");
         toast.success("구글로 로그인 되었습니다.");
-        setCookie("jwtToken", accessToken, { path: "/" });
-        setCookie("refreshToken", refreshToken, { path: "/" });
+        settingMultipleCookie(accessToken, refreshToken, { path: "/" });
       }
     } catch (err) {
       throw new Error(err);
     }
   };
-
   const onFailure = (e) => {
     throw new Error(e);
   };
   return (
-    <>
-      <GoogleLogin
-        clientId={clientId}
-        onSuccess={onSuccess}
-        onFailure={onFailure}
-        cookiePolicy={"single_host_origin"}
-        render={({ onClick }) => <GoogleButtonStyle onClick={onClick} />}
-      />
-      <ToastContainer />
-    </>
+    <GoogleLogin
+      clientId={clientId}
+      onSuccess={onSuccess}
+      onFailure={onFailure}
+      cookiePolicy={"single_host_origin"}
+      render={({ onClick }) => <GoogleButtonStyle onClick={onClick} />}
+    />
   );
 }

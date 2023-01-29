@@ -3,7 +3,7 @@ import {
   GoogleBtnText,
   GoogleIconWrapper,
   GoogleIconImg,
-} from "../components";
+} from "./socialButton";
 
 export default function GoogleButtonStyle({ onClick }) {
   return (

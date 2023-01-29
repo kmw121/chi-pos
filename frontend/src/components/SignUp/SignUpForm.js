@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  RegisterContainerDiv,
-  RegisterNumber2TitleCircle,
-  RegisterNumber2TitleText,
-  RegisterBottomSection,
-  RegisterBottomCancelBtn,
-  RegisterBottomOkBtn,
   SignUpFormTitle,
   SignUpFormLabel,
   SignUpFormLi,
@@ -15,11 +9,19 @@ import {
   SignUpInputContainer,
   SignUpInputImg,
   SignUpImgPreview,
-} from "../components";
+} from "./signUpComponents";
+import {
+  RegisterContainerDiv,
+  RegisterNumber2TitleCircle,
+  RegisterNumber2TitleText,
+  RegisterBottomSection,
+  RegisterBottomCancelBtn,
+  RegisterBottomOkBtn,
+} from "../Register/registerComponents";
 import Select from "react-select";
 import { stacks } from "../../util/stack";
 import postSubmit from "../../util/postSubmit";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import postDupCheckNick from "../../util/postDupCheckNick";
 import postDupCheckEmail from "../../util/postDupCheckEmail";
 
@@ -42,14 +44,14 @@ function SignUpForm() {
     dupCheckUsername: false,
     dupCheckNickName: false,
   });
-  const [imgPreview, setImgPreview] = useState("");
-  const [files, setFiles] = useState([]);
   const [form, setForm] = useState({
     username: "",
     password: "",
     passwordAgain: "",
     nickName: "",
     stack: [],
+    files: [],
+    imgPreview: "",
   });
   const reg_username = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
   const reg_password = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{5,15}$/;
@@ -82,14 +84,13 @@ function SignUpForm() {
     ) {
       try {
         const formdata = new FormData();
-        if (imgPreview.length) {
-          formdata.append("file", files);
+        if (form.imgPreview.length) {
+          formdata.append("file", form.files);
         }
         formdata.append("username", form.username);
         formdata.append("password", form.password);
         formdata.append("nickName", form.nickName);
         formdata.append("stack", form.stack);
-
         const res = await postSubmit(formdata);
         if (res.data.code === 1) {
           toast.success("회원가입이 완료되었습니다.");
@@ -111,7 +112,6 @@ function SignUpForm() {
     if (formReg.username) {
       try {
         const dupCheck = await postDupCheckEmail(form);
-        console.log("dupCheck : ", dupCheck);
         if (dupCheck.data.code === -1) {
           if (
             window.confirm(`사용할 수 있는 이메일입니다. 사용하시겠습니까?`)
@@ -160,11 +160,11 @@ function SignUpForm() {
   };
   const encodeFileToBase64 = (fileBlob) => {
     const reader = new FileReader();
-    setFiles(fileBlob);
+    setForm({ ...form, files: fileBlob });
     reader.readAsDataURL(fileBlob);
     return new Promise((resolve) => {
       reader.onload = () => {
-        setImgPreview(reader.result);
+        setForm({ ...form, imgPreview: reader.result });
         resolve();
       };
     });
@@ -184,112 +184,109 @@ function SignUpForm() {
     });
   }, [form.username, form.nickName, form.password, form.passwordAgain]);
   return (
-    <>
-      <RegisterContainerDiv>
-        <SignUpFormTitle>
-          <RegisterNumber2TitleCircle>✩</RegisterNumber2TitleCircle>
-          <RegisterNumber2TitleText>
-            &nbsp; 회원 정보를 입력해주세요.
-          </RegisterNumber2TitleText>
-        </SignUpFormTitle>
-        <SignUpFormUl>
-          <SignUpFormLi>
-            <SignUpFormLabel>
-              <span>이메일</span>
-              <button
-                className="signUpBtn"
-                onClick={() => {
-                  onDupCheckEmail();
-                }}
-              >
-                중복확인
-              </button>
-            </SignUpFormLabel>
-            <SignUpInput
-              value={form.username}
-              onChange={handleChange}
-              placeholder="ex ) ABCD1234@naver.com"
-              disabled={form.dupCheckUsername}
-              name="username"
+    <RegisterContainerDiv>
+      <SignUpFormTitle>
+        <RegisterNumber2TitleCircle>✩</RegisterNumber2TitleCircle>
+        <RegisterNumber2TitleText>
+          &nbsp; 회원 정보를 입력해주세요.
+        </RegisterNumber2TitleText>
+      </SignUpFormTitle>
+      <SignUpFormUl>
+        <SignUpFormLi>
+          <SignUpFormLabel>
+            <span>이메일</span>
+            <button
+              className="signUpBtn"
+              onClick={() => {
+                onDupCheckEmail();
+              }}
+            >
+              중복확인
+            </button>
+          </SignUpFormLabel>
+          <SignUpInput
+            value={form.username}
+            onChange={handleChange}
+            placeholder="ex ) ABCD1234@naver.com"
+            disabled={form.dupCheckUsername}
+            name="username"
+          />
+        </SignUpFormLi>
+        <SignUpFormLi>
+          <SignUpFormLabel>
+            <span>닉네임</span>
+            <button onClick={onDupCheckNickName} className="signUpBtn">
+              중복확인
+            </button>
+          </SignUpFormLabel>
+          <SignUpInput
+            onChange={handleChange}
+            value={form.nickName}
+            placeholder=""
+            disabled={form.dupCheckNickName}
+            name="nickName"
+          />
+        </SignUpFormLi>
+      </SignUpFormUl>
+      <SignUpFormUl>
+        <SignUpFormLi>
+          <SignUpFormLabel>비밀번호</SignUpFormLabel>
+          <SignUpInput
+            onChange={handleChange}
+            value={form.password}
+            maxLength="15"
+            type="password"
+            placeholder=""
+            name="password"
+          />
+        </SignUpFormLi>
+        <SignUpFormLi>
+          <SignUpFormLabel>비밀번호 확인</SignUpFormLabel>
+          <SignUpInput
+            onChange={handleChange}
+            value={form.passwordAgain}
+            maxLength="15"
+            type="password"
+            placeholder=""
+            name="passwordAgain"
+          />
+        </SignUpFormLi>
+      </SignUpFormUl>
+      <SignUpFormUl>
+        <SignUpFormLi>
+          <Select
+            className="react-select-signup"
+            onChange={onSelectedStack}
+            isMulti
+            placeholder="프로젝트 사용 스택"
+            options={stackArray}
+          />
+        </SignUpFormLi>
+        <SignUpFormLi>
+          <SignUpFormLabel>프로필 사진</SignUpFormLabel>
+          <SignUpInputContainer>
+            <SignUpInputImg
+              onChange={(e) => {
+                encodeFileToBase64(e.target.files[0]);
+              }}
+              type="file"
+              accept="img/*"
             />
-          </SignUpFormLi>
-          <SignUpFormLi>
-            <SignUpFormLabel>
-              <span>닉네임</span>
-              <button onClick={onDupCheckNickName} className="signUpBtn">
-                중복확인
-              </button>
-            </SignUpFormLabel>
-            <SignUpInput
-              onChange={handleChange}
-              value={form.nickName}
-              placeholder=""
-              disabled={form.dupCheckNickName}
-              name="nickName"
-            />
-          </SignUpFormLi>
-        </SignUpFormUl>
-        <SignUpFormUl>
-          <SignUpFormLi>
-            <SignUpFormLabel>비밀번호</SignUpFormLabel>
-            <SignUpInput
-              onChange={handleChange}
-              value={form.password}
-              maxLength="15"
-              type="password"
-              placeholder=""
-              name="password"
-            />
-          </SignUpFormLi>
-          <SignUpFormLi>
-            <SignUpFormLabel>비밀번호 확인</SignUpFormLabel>
-            <SignUpInput
-              onChange={handleChange}
-              value={form.passwordAgain}
-              maxLength="15"
-              type="password"
-              placeholder=""
-              name="passwordAgain"
-            />
-          </SignUpFormLi>
-        </SignUpFormUl>
-        <SignUpFormUl>
-          <SignUpFormLi>
-            <Select
-              className="react-select-signup"
-              onChange={onSelectedStack}
-              isMulti
-              placeholder="프로젝트 사용 스택"
-              options={stackArray}
-            />
-          </SignUpFormLi>
-          <SignUpFormLi>
-            <SignUpFormLabel>프로필 사진</SignUpFormLabel>
-            <SignUpInputContainer>
-              <SignUpInputImg
-                onChange={(e) => {
-                  encodeFileToBase64(e.target.files[0]);
-                }}
-                type="file"
-                accept="img/*"
-              />
-              <div className="img_box">
-                {imgPreview && (
-                  <SignUpImgPreview src={imgPreview} alt="preview-img" />
-                )}
-              </div>
-            </SignUpInputContainer>
-          </SignUpFormLi>
-        </SignUpFormUl>
-        <RegisterBottomSection>
-          <RegisterBottomCancelBtn onClick={onGoBack}>
-            취소
-          </RegisterBottomCancelBtn>
-          <RegisterBottomOkBtn onClick={onSubmit}>회원가입</RegisterBottomOkBtn>
-        </RegisterBottomSection>
-      </RegisterContainerDiv>
-      <ToastContainer />
-    </>
+            <div className="img_box">
+              {form.imgPreview && (
+                <SignUpImgPreview src={form.imgPreview} alt="preview-img" />
+              )}
+            </div>
+          </SignUpInputContainer>
+        </SignUpFormLi>
+      </SignUpFormUl>
+      <RegisterBottomSection>
+        <RegisterBottomCancelBtn onClick={onGoBack}>
+          취소
+        </RegisterBottomCancelBtn>
+        <RegisterBottomOkBtn onClick={onSubmit}>회원가입</RegisterBottomOkBtn>
+      </RegisterBottomSection>
+    </RegisterContainerDiv>
   );
 }
 

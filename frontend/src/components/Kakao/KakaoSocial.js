@@ -5,11 +5,11 @@ import jwt_decode from "jwt-decode";
 import { fetchUser } from "../../slice/userSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { KakaoSocialBox } from "../components";
+import { KakaoSocialBox } from "../Google/socialButton";
 import getKakaoAuth from "../../util/getKakaoAuth";
-import getUserInfo from "../../util/getUserInfo";
+import settingMultipleCookie from "../../util/settingMultipleCookie";
 
-const KakaoSocial = () => {
+function KakaoSocial() {
   let code = new URL(window.location.href).searchParams.get("code");
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -22,11 +22,7 @@ const KakaoSocial = () => {
           navigate("/kakaoSignup");
         } else if (kakaoAuth.data.code === 1) {
           const { accessToken, refreshToken } = kakaoAuth.data.data;
-          setCookie("jwtToken", accessToken, {
-            path: "/",
-            domain: "chi-pos.com",
-          });
-          setCookie("refreshToken", refreshToken, {
+          settingMultipleCookie(accessToken, refreshToken, {
             path: "/",
             domain: "chi-pos.com",
           });
@@ -46,5 +42,5 @@ const KakaoSocial = () => {
       <h1>잠시만 기다려 주세요</h1>
     </KakaoSocialBox>
   );
-};
+}
 export default KakaoSocial;

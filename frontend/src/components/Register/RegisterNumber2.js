@@ -5,7 +5,7 @@ import {
   RegisterNumber2TitleText,
   RegisterNumber2TitleCircle,
   RegisterNumber2NameLabel,
-} from "../components";
+} from "./registerComponents";
 
 function RegisterNumber2({ titleText, setTitleText }) {
   const onChangeInputV = (e) => {
@@ -22,7 +22,7 @@ function RegisterNumber2({ titleText, setTitleText }) {
       <RegisterNumber2NameLabel>제목</RegisterNumber2NameLabel>
       <RegisterNumber2NameInput
         onChange={onChangeInputV}
-        value={titleText}
+        value={titleText || undefined}
         placeholder="글 제목을 입력해주세요!"
       />
     </section>

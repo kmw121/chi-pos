@@ -3,7 +3,7 @@ import Editor from "./Editor";
 import RegisterNumber1 from "./RegisterNumber1";
 import RegisterNumber2 from "./RegisterNumber2";
 import RegisterBottomBtn from "./RegisterBottomBtn";
-import { RegisterContainerDiv } from "../components";
+import { RegisterContainerDiv } from "./registerComponents";
 import authCheck from "../../util/authCheck";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +13,7 @@ import { setCurrentPost } from "../../slice/userSlice";
 import getUserInfo from "../../util/getUserInfo";
 import postFormSubmit from "../../util/postFormSubmit";
 import wrongRequest from "../../util/wrongRequest";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 function RegisterContainer() {
   const { currentPost } = useSelector((state) => {
@@ -68,18 +68,20 @@ function RegisterContainer() {
   useEffect(() => {
     authCheck(dispatch, navigate, user);
   }, []);
-  // 이거 수정하고 authCheck도 수정 T_T
   const onSubmit = async () => {
-    if (user.data.code === 1) {
+    if (user.code === 1) {
     }
-    const userInfo = await getUserInfo(user, getCookie("jwtToken"));
+    const userInfo = await getUserInfo(user.data, getCookie("jwtToken"));
     if (userInfo.data.code === -1) {
       wrongRequest(dispatch, navigate);
     } else if (userInfo.data.code === 2) {
-      const nextUserInfo = await getUserInfo(user, getCookie("refreshToken"));
-      if (nextUserInfo.data.data === 2 || nextUserInfo.data.data === -1) {
+      const nextUserInfo = await getUserInfo(
+        user.data,
+        getCookie("refreshToken")
+      );
+      if (nextUserInfo.data.code === 2 || nextUserInfo.data.code === -1) {
         wrongRequest(dispatch, navigate);
-      } else if (nextUserInfo.data.data === 1) {
+      } else if (nextUserInfo.data.code === 1) {
         setCookie("jwtToken", nextUserInfo.data.data);
         const response = await postFormSubmit(
           submitForm,
@@ -107,18 +109,14 @@ function RegisterContainer() {
         navigate("/");
       }
     }
-    //   dispatch(setUserInfo(userInfo.data));
   };
   return (
-    <>
-      <RegisterContainerDiv>
-        <RegisterNumber1 dataForm={dataForm} setDataForm={steDataForm} />
-        <RegisterNumber2 titleText={titleText} setTitleText={setTitleText} />
-        <Editor editorValue={editorValue} setEditorValue={setEditorValue} />
-        <RegisterBottomBtn onSubmit={onSubmit} />
-      </RegisterContainerDiv>
-      <ToastContainer />
-    </>
+    <RegisterContainerDiv>
+      <RegisterNumber1 dataForm={dataForm} setDataForm={steDataForm} />
+      <RegisterNumber2 titleText={titleText} setTitleText={setTitleText} />
+      <Editor editorValue={editorValue} setEditorValue={setEditorValue} />
+      <RegisterBottomBtn onSubmit={onSubmit} />
+    </RegisterContainerDiv>
   );
 }
 
