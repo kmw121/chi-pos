@@ -1,12 +1,11 @@
-import { setCurrentPost, fetchUser } from "../slice/userSlice";
-import { deleteCookie } from "./cookie";
+import { setCurrentPost, setUser } from "../slice/userSlice";
 import { toast } from "react-toastify";
+import deleteMultipleCookies from "./deleteMultipleCookies";
 
 export default function wrongRequest(dispatch, navigate) {
-  deleteCookie("jwtToken");
-  deleteCookie("refreshToken");
+  deleteMultipleCookies();
+  dispatch(setUser([]));
   dispatch(setCurrentPost({}));
-  dispatch(fetchUser(""));
   toast.error("잘못된 요청입니다.");
   navigate("/");
 }

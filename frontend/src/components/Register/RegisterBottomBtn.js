@@ -5,7 +5,7 @@ import {
   RegisterBottomSection,
   RegisterBottomCancelBtn,
   RegisterBottomOkBtn,
-} from "../components";
+} from "./registerComponents";
 
 function RegisterBottomBtn({ onSubmit }) {
   const navigate = useNavigate();

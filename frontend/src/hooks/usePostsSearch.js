@@ -17,11 +17,17 @@ export default function usePostsSearch() {
     async function fetchData() {
       try {
         setLoadingStatus(true);
-        const res = await axios.get(
-          API_URL + "/posts",
-          JSON.stringify(searchConfig)
-        );
-        console.log(res);
+        const res = await axios.get(API_URL + "/posts", {
+          params: {
+            page: searchConfig.page,
+            size: searchConfig.size,
+            isEnd: searchConfig.isEnd,
+            categoryType: searchConfig.categoryType,
+            stack: !searchConfig.stack.length
+              ? ""
+              : `${searchConfig.stack.reduce((acc, cur) => `${acc},${cur}`)}`,
+          },
+        });
         if (res.data.code === 1) {
           setList(() => list.concat(res.data.data));
           setLoadingStatus(false);

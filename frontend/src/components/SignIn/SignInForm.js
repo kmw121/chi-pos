@@ -18,16 +18,16 @@ import {
   ModalBottomCancelBtn,
   ModalBottomOkBtn,
   ModalBtnKakaoIcon,
-} from "../components";
+} from "./signInComponents";
 import jwt_decode from "jwt-decode";
 import { fetchUser } from "../../slice/userSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { setCookie } from "../../util/cookie";
+import { useDispatch } from "react-redux";
 import { KAKAO_AUTH_URL } from "../../util/kakaoAuth";
 import { gapi } from "gapi-script";
 import GoogleSocialLoginButton from "../Google/GoogleSocialLoginButton";
 import postLogin from "../../util/postLogin";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import settingMultipleCookie from "../../util/settingMultipleCookie";
 
 function SignInForm({ onToggle }) {
   const dispatch = useDispatch();
@@ -35,9 +35,6 @@ function SignInForm({ onToggle }) {
   const [loginForm, setLoginForm] = useState({
     username: "",
     password: "",
-  });
-  const { user } = useSelector((state) => {
-    return state.user;
   });
   const onEmailValue = (e) => {
     setLoginForm((prev) => {
@@ -58,10 +55,8 @@ function SignInForm({ onToggle }) {
     try {
       const loginResponse = await postLogin(loginForm);
       if (loginResponse.data.code === 1) {
-        console.log("loginResponse : ", loginResponse);
         const { accessToken, refreshToken } = loginResponse.data.data;
-        setCookie("jwtToken", accessToken);
-        setCookie("refreshToken", refreshToken);
+        settingMultipleCookie(accessToken, refreshToken);
         const decoded = jwt_decode(accessToken);
         dispatch(fetchUser(decoded));
         onToggle();
@@ -124,7 +119,6 @@ function SignInForm({ onToggle }) {
             </ModalBtnBox>
           </ModalBtnContainer>
         </ModalMain>
-        <ToastContainer />
       </ModalContainer>
     </>
   );

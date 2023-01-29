@@ -15,7 +15,7 @@ import {
   StackImgStyle,
   SelectedStackImgStyle,
   StackBtnSpan,
-} from "../components";
+} from "./mainComponents";
 
 function MainSection({ setSearchConfig, setList }) {
   const [sectionTextList, setSectionTextList] = useState([
@@ -81,21 +81,17 @@ function MainSection({ setSearchConfig, setList }) {
   const onClickStackSelected = (stack) => {
     const isIncluded = selectedStack.includes(stack);
     if (!isIncluded) {
-      // 생각해볼것....
-      //   if (searchConfig.stack.length >= 1) {
       const clickStack = selectedStack.concat(stack);
       const stackNumber = stacks.filter((a) => a.name === stack)[0].number;
-      const addStackNumber = (prev) => {
+      setList([]);
+      setSearchConfig((prev) => {
         return {
           ...prev,
           stack: [...prev.stack, stackNumber],
           page: 1,
         };
-      };
-      setList([]);
-      setSearchConfig(addStackNumber);
+      });
       setSelectedStack(clickStack);
-      //  }
     } else {
       const stackNumber = stacks.filter((a) => a.name === stack)[0].number;
       setSearchConfig((prev) => {

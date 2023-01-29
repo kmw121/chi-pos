@@ -38,12 +38,11 @@ import {
   MainContentsAppStudyStackImg,
   MainContentsAppStudyInfoUserImg,
   MainLoadingBox,
-} from "../components";
+} from "./mainComponents";
 import getGenerateRandomKey from "../../util/getGenerateRandomKey";
 import { useSelector } from "react-redux";
 import { useIntersect } from "../../hooks/useIntersect";
-import { getCookie } from "../../util/cookie";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import getIncreaseView from "../../util/getIncreaseView";
 
 function MainContents({
@@ -109,8 +108,8 @@ function MainContents({
     }
   };
   const handleOnlyFavorited = () => {
-    if (!getCookie("jwtToken")) {
-      toast.error("로그인 후 이용하실 수 있는 기능입니다.");
+    if (user.code === undefined || user.code !== 1) {
+      toast.error("로그인 후 이용할 수 있는 기능입니다.");
     } else if (user && user.data.code === 1) {
       const myFavoriteStack = user.data.data.userStack.map((a) => a.stack.id);
       setList([]);
@@ -123,7 +122,6 @@ function MainContents({
       });
     }
   };
-  console.log(user.data.data);
   const ref = useIntersect(async (entry, observer) => {
     observer.unobserve(entry.target);
     if (!isEnd && !loadingStatus) {
@@ -133,154 +131,150 @@ function MainContents({
     }
   });
   return (
-    <>
-      <MainContentsMain>
-        <MainContentsCategoryContainer>
-          <MainContentsCategoryInnerContainer>
-            {categorySelected.map((content) => (
-              <MainContentsCategoryItem
-                onClick={() => {
-                  onClickCategorySelected(content.text);
-                  onClickFilterCategory(content.category);
-                }}
-                key={content.text}
-                isSelected={content.isSelected}
-              >
-                {content.text === "전체" ? (
-                  <AiOutlineCloud />
-                ) : content.text === "스터디" ? (
-                  <AiOutlineEdit />
-                ) : content.text === "프로젝트" ? (
-                  <AiOutlineInstagram />
-                ) : null}
-                {content.text}
-              </MainContentsCategoryItem>
-            ))}
-          </MainContentsCategoryInnerContainer>
-          <MainContentsToggle>
+    <MainContentsMain>
+      <MainContentsCategoryContainer>
+        <MainContentsCategoryInnerContainer>
+          {categorySelected.map((content) => (
             <MainContentsCategoryItem
-              className="mainCategoryText"
-              onClick={handleOnlyFavorited}
+              onClick={() => {
+                onClickCategorySelected(content.text);
+                onClickFilterCategory(content.category);
+              }}
+              key={content.text}
+              isSelected={content.isSelected}
             >
-              <AiOutlineFullscreenExit />
-              관심 기술만 보기
+              {content.text === "전체" ? (
+                <AiOutlineCloud />
+              ) : content.text === "스터디" ? (
+                <AiOutlineEdit />
+              ) : content.text === "프로젝트" ? (
+                <AiOutlineInstagram />
+              ) : null}
+              {content.text}
             </MainContentsCategoryItem>
-            <MainContentsToggleText>모집 중만 보기</MainContentsToggleText>
-            <MainContentsToggleInput
-              onChange={handleInputCheck}
-              onClick={handleIsEnd}
-              checked={isChecked}
-              id="checkbox"
-              type="checkbox"
-            />
-            <MainContentsToggleLabel htmlFor="checkbox" />
-          </MainContentsToggle>
-        </MainContentsCategoryContainer>
-        <MainContentsAppContainer>
-          <MainContentsAppStudyUl>
-            {/* ////////////////////////////////////////////////////////// */}
-            {list &&
-              list.map((content, index) => (
-                <MainContentsAppStudyA
-                  key={content.id + index + getGenerateRandomKey()}
-                  href={`/study/${content.id}`}
-                  onClick={() => onIncreaseView(content.id)}
-                >
-                  <MainContentsAppStudyLi>
-                    <MainContentsAppSchedule>
-                      <p>시작 예정일 |</p>
-                      <p>
-                        {content.startDate.slice(0, 10).replace(/-/gi, " . ")}
-                      </p>
-                    </MainContentsAppSchedule>
-                    <MainContentsAppStudyTitle>
-                      {content.title}
-                    </MainContentsAppStudyTitle>
+          ))}
+        </MainContentsCategoryInnerContainer>
+        <MainContentsToggle>
+          <MainContentsCategoryItem
+            className="mainCategoryText"
+            onClick={handleOnlyFavorited}
+          >
+            <AiOutlineFullscreenExit />
+            관심 기술만 보기
+          </MainContentsCategoryItem>
+          <MainContentsToggleText>모집 중만 보기</MainContentsToggleText>
+          <MainContentsToggleInput
+            onChange={handleInputCheck}
+            onClick={handleIsEnd}
+            checked={isChecked}
+            id="checkbox"
+            type="checkbox"
+          />
+          <MainContentsToggleLabel htmlFor="checkbox" />
+        </MainContentsToggle>
+      </MainContentsCategoryContainer>
+      <MainContentsAppContainer>
+        <MainContentsAppStudyUl>
+          {/* ////////////////////////////////////////////////////////// */}
+          {list &&
+            list.map((content, index) => (
+              <MainContentsAppStudyA
+                key={content.id + index + getGenerateRandomKey()}
+                href={`/study/${content.id}`}
+                onClick={() => onIncreaseView(content.id)}
+              >
+                <MainContentsAppStudyLi>
+                  <MainContentsAppSchedule>
+                    <p>시작 예정일 |</p>
+                    <p>
+                      {content.startDate.slice(0, 10).replace(/-/gi, " . ")}
+                    </p>
+                  </MainContentsAppSchedule>
+                  <MainContentsAppStudyTitle>
+                    {content.title}
+                  </MainContentsAppStudyTitle>
 
-                    <MainContentsAppStudyTag>
-                      <MainContentsAppStudyTagLi>
-                        #{content.categoryType}
-                      </MainContentsAppStudyTagLi>
-                      <MainContentsAppStudyTagLi>
-                        {content.howto !== null && `#${content.howto}`}
-                      </MainContentsAppStudyTagLi>
-                      <MainContentsAppStudyTagLi>
-                        #{content.people}
-                      </MainContentsAppStudyTagLi>
-                      <MainContentsAppStudyTagLi>
-                        #{content.duration}
-                      </MainContentsAppStudyTagLi>
-                    </MainContentsAppStudyTag>
+                  <MainContentsAppStudyTag>
+                    <MainContentsAppStudyTagLi>
+                      #{content.categoryType}
+                    </MainContentsAppStudyTagLi>
+                    <MainContentsAppStudyTagLi>
+                      {content.howto !== null && `#${content.howto}`}
+                    </MainContentsAppStudyTagLi>
+                    <MainContentsAppStudyTagLi>
+                      #{content.people}
+                    </MainContentsAppStudyTagLi>
+                    <MainContentsAppStudyTagLi>
+                      #{content.duration}
+                    </MainContentsAppStudyTagLi>
+                  </MainContentsAppStudyTag>
 
-                    <MainContentsAppStudyImgUl>
-                      {content.postStack.map((stack) => (
-                        <MainContentsAppStudyImgLi key={stack.stack.id}>
-                          <MainContentsAppStudyStackImg
-                            src={`./logo/${stack.stack.name}.png`}
-                            alt={stack.stack.name}
-                          />
-                        </MainContentsAppStudyImgLi>
-                      ))}
-                    </MainContentsAppStudyImgUl>
-                  </MainContentsAppStudyLi>
-                  <MainContentsAppStudyInfo>
-                    <MainContentsAppStudyInfoUserBox>
-                      <MainContentsAppStudyInfoUserImg
-                        src={
-                          content.user.imageUrl === "nonUrl"
-                            ? "/c-pos/ms-icon-310x310.png"
-                            : content.user.imageUrl
-                        }
-                        alt="hello world"
-                      />
-                      <MainContentsAppStudyInfoUserName>
-                        {content.user.nickName}
-                      </MainContentsAppStudyInfoUserName>
-                    </MainContentsAppStudyInfoUserBox>
-                    <MainContentsAppStudyInfoRightBox>
-                      <MainContentsAppStudyInfoRightDetail>
-                        <AiOutlineEye className="mainContenIcon" />
-                        <p>{content.view}</p>
-                      </MainContentsAppStudyInfoRightDetail>
-                      <MainContentsAppStudyInfoRightDetail>
-                        <AiOutlineMessage className="mainContenIcon" />
-                        <p>{content.comments.length}</p>
-                      </MainContentsAppStudyInfoRightDetail>
-                    </MainContentsAppStudyInfoRightBox>
-                  </MainContentsAppStudyInfo>
-                </MainContentsAppStudyA>
-              ))}
-            {loadingStatus && (
-              <>
-                <MainContentsAppStudyEmptyBox>
-                  <MainContentsAppStudyEmtpyBoxInner></MainContentsAppStudyEmtpyBoxInner>
-                </MainContentsAppStudyEmptyBox>
-                <MainContentsAppStudyEmptyBox>
-                  <MainContentsAppStudyEmtpyBoxInner></MainContentsAppStudyEmtpyBoxInner>
-                </MainContentsAppStudyEmptyBox>
-                <MainContentsAppStudyEmptyBox>
-                  <MainContentsAppStudyEmtpyBoxInner></MainContentsAppStudyEmtpyBoxInner>
-                </MainContentsAppStudyEmptyBox>
-              </>
-            )}
-          </MainContentsAppStudyUl>
+                  <MainContentsAppStudyImgUl>
+                    {content.postStack.map((stack) => (
+                      <MainContentsAppStudyImgLi key={stack.stack.id}>
+                        <MainContentsAppStudyStackImg
+                          src={`./logo/${stack.stack.name}.png`}
+                          alt={stack.stack.name}
+                        />
+                      </MainContentsAppStudyImgLi>
+                    ))}
+                  </MainContentsAppStudyImgUl>
+                </MainContentsAppStudyLi>
+                <MainContentsAppStudyInfo>
+                  <MainContentsAppStudyInfoUserBox>
+                    <MainContentsAppStudyInfoUserImg
+                      src={
+                        content.user.imageUrl === "nonUrl"
+                          ? "/c-pos/ms-icon-310x310.png"
+                          : content.user.imageUrl
+                      }
+                      alt="hello world"
+                    />
+                    <MainContentsAppStudyInfoUserName>
+                      {content.user.nickName}
+                    </MainContentsAppStudyInfoUserName>
+                  </MainContentsAppStudyInfoUserBox>
+                  <MainContentsAppStudyInfoRightBox>
+                    <MainContentsAppStudyInfoRightDetail>
+                      <AiOutlineEye className="mainContenIcon" />
+                      <p>{content.view}</p>
+                    </MainContentsAppStudyInfoRightDetail>
+                    <MainContentsAppStudyInfoRightDetail>
+                      <AiOutlineMessage className="mainContenIcon" />
+                      <p>{content.comments.length}</p>
+                    </MainContentsAppStudyInfoRightDetail>
+                  </MainContentsAppStudyInfoRightBox>
+                </MainContentsAppStudyInfo>
+              </MainContentsAppStudyA>
+            ))}
           {loadingStatus && (
-            <MainLoadingBox>
-              <FadeLoader
-                color="#aaa"
-                height={15}
-                width={5}
-                radius={2}
-                margin={2}
-              />
-            </MainLoadingBox>
+            <>
+              <MainContentsAppStudyEmptyBox>
+                <MainContentsAppStudyEmtpyBoxInner></MainContentsAppStudyEmtpyBoxInner>
+              </MainContentsAppStudyEmptyBox>
+              <MainContentsAppStudyEmptyBox>
+                <MainContentsAppStudyEmtpyBoxInner></MainContentsAppStudyEmtpyBoxInner>
+              </MainContentsAppStudyEmptyBox>
+              <MainContentsAppStudyEmptyBox>
+                <MainContentsAppStudyEmtpyBoxInner></MainContentsAppStudyEmtpyBoxInner>
+              </MainContentsAppStudyEmptyBox>
+            </>
           )}
-        </MainContentsAppContainer>
-        <div ref={ref} style={{ height: "1px" }} />
-        {/* {resCode === 1 && <div ref={setTarget} style={targetStyle} />} */}
-      </MainContentsMain>
-      <ToastContainer />
-    </>
+        </MainContentsAppStudyUl>
+        {loadingStatus && (
+          <MainLoadingBox>
+            <FadeLoader
+              color="#aaa"
+              height={15}
+              width={5}
+              radius={2}
+              margin={2}
+            />
+          </MainLoadingBox>
+        )}
+      </MainContentsAppContainer>
+      <div ref={ref} style={{ height: "1px" }} />
+    </MainContentsMain>
   );
 }
 

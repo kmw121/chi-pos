@@ -5,12 +5,12 @@ import {
   MyPostsTitle,
   MyPostsTitleCategory,
   MyPostsTitleCategoryItem,
-  MainContentsAppStudyInfoRightDetail,
+  MyPostsContentsAppStudyInfoRightDetail,
   MyPostsTitleTextDiv,
   MyPostsContentsContainer,
   MyPostsContentsTopBox,
   MyPostsContentsBottomBox,
-} from "../components";
+} from "./myPostsComponent";
 import { AiOutlineEye, AiOutlineMessage } from "react-icons/ai";
 import { BsFillJournalBookmarkFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
@@ -63,16 +63,16 @@ function MyPosts() {
                     </div>
                   </MyPostsContentsTopBox>
                   <MyPostsContentsBottomBox>
-                    <MainContentsAppStudyInfoRightDetail>
+                    <MyPostsContentsAppStudyInfoRightDetail>
                       <AiOutlineEye className="myPostIcon" />
                       <span className="myPostSpan">{content.view}</span>
-                    </MainContentsAppStudyInfoRightDetail>
-                    <MainContentsAppStudyInfoRightDetail>
+                    </MyPostsContentsAppStudyInfoRightDetail>
+                    <MyPostsContentsAppStudyInfoRightDetail>
                       <AiOutlineMessage className="myPostIcon" />
                       <span className="myPostSpan">
                         {content.comments.length}
                       </span>
-                    </MainContentsAppStudyInfoRightDetail>
+                    </MyPostsContentsAppStudyInfoRightDetail>
                   </MyPostsContentsBottomBox>
                 </MyPostsContentsContainer>
               ))}

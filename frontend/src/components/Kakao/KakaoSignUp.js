@@ -1,11 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
-  RegisterContainerDiv,
-  RegisterNumber2TitleCircle,
-  RegisterNumber2TitleText,
-  RegisterBottomSection,
-  RegisterBottomCancelBtn,
-  RegisterBottomOkBtn,
   SignUpFormTitle,
   SignUpFormLabel,
   SignUpFormLi,
@@ -13,18 +7,27 @@ import {
   SignUpInput,
   SignUpInputContainer,
   SignUpInputImg,
-  ImgPreview,
-} from "../components";
+} from "../SignUp/signUpComponents";
+import {
+  RegisterContainerDiv,
+  RegisterNumber2TitleCircle,
+  RegisterNumber2TitleText,
+  RegisterBottomSection,
+  RegisterBottomCancelBtn,
+  RegisterBottomOkBtn,
+} from "../Register/registerComponents";
+import { ImgPreview } from "../Google/socialButton";
 import { stacks } from "../../util/stack";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
-import { getCookie, deleteCookie, setCookie } from "../../util/cookie";
+import { getCookie, deleteCookie } from "../../util/cookie";
 import { useDispatch } from "react-redux";
 import jwt_decode from "jwt-decode";
 import { fetchUser } from "../../slice/userSlice";
 import postSocialSignUpAndDetail from "../../util/postSocialSignUpAndDetail";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import postDupCheckNick from "../../util/postDupCheckNick";
+import settingMultipleCookie from "../../util/settingMultipleCookie";
 
 function KakaoSignUp() {
   let stackNumber = 1;
@@ -86,7 +89,6 @@ function KakaoSignUp() {
     ) {
       try {
         const formdata = new FormData();
-        //이부분 리팩토링 필요.
         if (form.imgPreview.length) {
           formdata.append("file", form.files);
         }
@@ -99,11 +101,7 @@ function KakaoSignUp() {
         );
         if (kakaoSignUpResponse.data.code === 1) {
           const { accessToken, refreshToken } = kakaoSignUpResponse.data.data;
-          setCookie("jwtToken", accessToken, {
-            path: "/",
-            domain: "chi-pos.com",
-          });
-          setCookie("refreshToken", refreshToken, {
+          settingMultipleCookie(accessToken, refreshToken, {
             path: "/",
             domain: "chi-pos.com",
           });
@@ -123,7 +121,6 @@ function KakaoSignUp() {
       toast.error("회원 정보를 확인해주세요 ! ");
     }
   };
-
   const onDupCheckNickName = async () => {
     if (formReg.nickName) {
       try {
@@ -165,69 +162,66 @@ function KakaoSignUp() {
     });
   };
   return (
-    <>
-      <RegisterContainerDiv>
-        <SignUpFormTitle>
-          <RegisterNumber2TitleCircle>✩</RegisterNumber2TitleCircle>
-          <RegisterNumber2TitleText>
-            &nbsp; 회원 정보를 입력해주세요.
-          </RegisterNumber2TitleText>
-        </SignUpFormTitle>
-        <SignUpFormUl>
-          <SignUpFormLi>
-            <SignUpFormLabel>
-              <span>닉네임</span>
-              <button
-                onClick={onDupCheckNickName}
-                style={{ marginRight: "4.55rem" }}
-              >
-                중복확인
-              </button>
-            </SignUpFormLabel>
-            <SignUpInput
-              onChange={onChangeNickName}
-              value={form.nickName}
-              placeholder=""
-              disabled={formReg.dupCheckNickName}
+    <RegisterContainerDiv>
+      <SignUpFormTitle>
+        <RegisterNumber2TitleCircle>✩</RegisterNumber2TitleCircle>
+        <RegisterNumber2TitleText>
+          &nbsp; 회원 정보를 입력해주세요.
+        </RegisterNumber2TitleText>
+      </SignUpFormTitle>
+      <SignUpFormUl>
+        <SignUpFormLi>
+          <SignUpFormLabel>
+            <span>닉네임</span>
+            <button
+              onClick={onDupCheckNickName}
+              style={{ marginRight: "4.55rem" }}
+            >
+              중복확인
+            </button>
+          </SignUpFormLabel>
+          <SignUpInput
+            onChange={onChangeNickName}
+            value={form.nickName}
+            placeholder=""
+            disabled={formReg.dupCheckNickName}
+          />
+        </SignUpFormLi>
+      </SignUpFormUl>
+      <SignUpFormUl>
+        <SignUpFormLi>
+          <Select
+            onChange={onSelectedStack}
+            isMulti
+            placeholder="프로젝트 사용 스택"
+            options={stackArray}
+          />
+        </SignUpFormLi>
+        <SignUpFormLi>
+          <SignUpFormLabel>프로필 사진</SignUpFormLabel>
+          <SignUpInputContainer>
+            <SignUpInputImg
+              onChange={(e) => {
+                encodeFileToBase64(e.target.files[0]);
+              }}
+              type="file"
+              accept="img/*"
             />
-          </SignUpFormLi>
-        </SignUpFormUl>
-        <SignUpFormUl>
-          <SignUpFormLi>
-            <Select
-              onChange={onSelectedStack}
-              isMulti
-              placeholder="프로젝트 사용 스택"
-              options={stackArray}
-            />
-          </SignUpFormLi>
-          <SignUpFormLi>
-            <SignUpFormLabel>프로필 사진</SignUpFormLabel>
-            <SignUpInputContainer>
-              <SignUpInputImg
-                onChange={(e) => {
-                  encodeFileToBase64(e.target.files[0]);
-                }}
-                type="file"
-                accept="img/*"
-              />
-              <div className="img_box">
-                {form.imgPreview && (
-                  <ImgPreview src={form.imgPreview} alt="preview-img" />
-                )}
-              </div>
-            </SignUpInputContainer>
-          </SignUpFormLi>
-        </SignUpFormUl>
-        <RegisterBottomSection>
-          <RegisterBottomCancelBtn onClick={onGoBack}>
-            취소
-          </RegisterBottomCancelBtn>
-          <RegisterBottomOkBtn onClick={onSubmit}>회원가입</RegisterBottomOkBtn>
-        </RegisterBottomSection>
-      </RegisterContainerDiv>
-      <ToastContainer />
-    </>
+            <div className="img_box">
+              {form.imgPreview && (
+                <ImgPreview src={form.imgPreview} alt="preview-img" />
+              )}
+            </div>
+          </SignUpInputContainer>
+        </SignUpFormLi>
+      </SignUpFormUl>
+      <RegisterBottomSection>
+        <RegisterBottomCancelBtn onClick={onGoBack}>
+          취소
+        </RegisterBottomCancelBtn>
+        <RegisterBottomOkBtn onClick={onSubmit}>회원가입</RegisterBottomOkBtn>
+      </RegisterBottomSection>
+    </RegisterContainerDiv>
   );
 }
 

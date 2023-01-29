@@ -5,15 +5,18 @@ import wrongRequest from "./wrongRequest";
 import jwt_decode from "jwt-decode";
 
 export default async function authCheck(dispatch, navigate, user) {
-  if (user.data.code === -1) {
+  if (user.code === undefined || user.code !== 1) {
     wrongRequest(dispatch, navigate);
   } else {
     try {
-      const getUser = await getUserInfo(user, getCookie("jwtToken"));
+      const getUser = await getUserInfo(user.data, getCookie("jwtToken"));
       if (getUser.data.code === -1) {
         wrongRequest(dispatch, navigate);
       } else if (getUser.data.code === 2) {
-        const nextGetUser = await getUserInfo(user, getCookie("refreshToken"));
+        const nextGetUser = await getUserInfo(
+          user.data,
+          getCookie("refreshToken")
+        );
         if (nextGetUser.data.code === 2 || nextGetUser.data.code === -1) {
           wrongRequest(dispatch, navigate);
         } else if (nextGetUser.data.code === 1) {
@@ -21,8 +24,9 @@ export default async function authCheck(dispatch, navigate, user) {
           const decoded = jwt_decode(nextGetUser.data.data);
           fetchUser(decoded);
         }
+      } else if (getUser.data.code === 1) {
+        console.log("정보 VALID 합니다. auth Check 통과 ! ");
       }
-      // getUser.data.code === 1 이면 그냥 아무일도 없어야됨...
     } catch (err) {
       throw new Error(err);
     }

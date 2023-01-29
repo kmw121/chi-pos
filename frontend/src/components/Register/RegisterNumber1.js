@@ -11,48 +11,13 @@ import {
   RegisterNumber1Title,
   RegisterNumber1TitleText,
   RegisterNumber1Label,
-} from "../components";
+} from "./registerComponents";
 import { getYear, getMonth } from "date-fns";
 import DatePicker from "react-datepicker";
 import "./customDatePickerWidth.css";
+import { registerOption } from "../../util/registerOption";
 
 function RegisterNumber1({ dataForm, setDataForm }) {
-  const optionCategory = [
-    { value: "스터디", label: "스터디" },
-    { value: "프로젝트", label: "프로젝트" },
-  ];
-  const optionPeople = [
-    { value: "인원 미정", label: "인원 미정" },
-    { value: "1명", label: "1명" },
-    { value: "2명", label: "2명" },
-    { value: "3명", label: "3명" },
-    { value: "4명", label: "4명" },
-    { value: "5명", label: "5명" },
-    { value: "6명", label: "6명" },
-    { value: "7명", label: "7명" },
-    { value: "8명", label: "8명" },
-    { value: "9명", label: "9명" },
-    { value: "10명", label: "10명" },
-  ];
-  const optionHowTo = [
-    { value: "온라인", label: "온라인" },
-    { value: "오프라인", label: "오프라인" },
-  ];
-  const optionContact = [
-    { value: "카카오톡 오픈채팅", label: "카카오톡 오픈채팅" },
-    { value: "이메일", label: "이메일" },
-    { value: "구글폼", label: "구글폼" },
-  ];
-  const optionDuration = [
-    { value: "기간 미정", label: "기간 미정" },
-    { value: "1개월", label: "1개월" },
-    { value: "2개월", label: "2개월" },
-    { value: "3개월", label: "3개월" },
-    { value: "4개월", label: "4개월" },
-    { value: "5개월", label: "5개월" },
-    { value: "6개월", label: "6개월" },
-    { value: "장기", label: "장기" },
-  ];
   let stackNumber = 1;
   const stackArray = stacks
     .map((stack) => stack.name)
@@ -113,11 +78,10 @@ function RegisterNumber1({ dataForm, setDataForm }) {
         <RegisterNumber1Li>
           <RegisterNumber1Label>모집 구분</RegisterNumber1Label>
           <Select
-            //    onChange={onChangeCategory}
             onChange={handleChangeForm}
             name="category"
             placeholder="스터디/프로젝트"
-            options={optionCategory}
+            options={registerOption.category}
             defaultValue={
               dataForm.category && {
                 name: dataForm.category,
@@ -132,7 +96,7 @@ function RegisterNumber1({ dataForm, setDataForm }) {
             onChange={handleChangeForm}
             placeholder="인원 미정~10명 이상"
             name="people"
-            options={optionPeople}
+            options={registerOption.people}
             defaultValue={
               dataForm.people && {
                 name: dataForm.people,
@@ -149,7 +113,7 @@ function RegisterNumber1({ dataForm, setDataForm }) {
             onChange={handleChangeForm}
             placeholder="온라인/오프라인"
             name="howto"
-            options={optionHowTo}
+            options={registerOption.howTo}
             defaultValue={
               dataForm.howto && {
                 name: dataForm.howto,
@@ -163,7 +127,7 @@ function RegisterNumber1({ dataForm, setDataForm }) {
           <Select
             onChange={handleChangeForm}
             placeholder="기간 미정~6개월 이상"
-            options={optionDuration}
+            options={registerOption.duration}
             name="duration"
             defaultValue={
               dataForm.duration && {
@@ -260,8 +224,8 @@ function RegisterNumber1({ dataForm, setDataForm }) {
             }}
             name="contactOption"
             placeholder="연락 방법"
-            options={optionContact}
-            value={optionContact.find((op) => {
+            options={registerOption.contact}
+            value={registerOption.contact.find((op) => {
               return op.value === dataForm.contactOption;
             })}
             onChange={(value) => {

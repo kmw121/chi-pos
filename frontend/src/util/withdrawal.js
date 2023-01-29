@@ -1,17 +1,17 @@
-import { getCookie, deleteCookie } from "./cookie";
-import { fetchUser, setCurrentPost } from "../slice/userSlice";
+import { getCookie } from "./cookie";
+import { setCurrentPost, setUser } from "../slice/userSlice";
 import { toast } from "react-toastify";
 import getWithdrawal from "./getWithdrawal";
+import deleteMultipleCookies from "./deleteMultipleCookies";
 
 export default async function withdrawal(dispatch, navigate) {
   if (window.confirm("회원 탈퇴를 하시겠습니까?")) {
     try {
       const widthdrawalRes = await getWithdrawal(getCookie("jwtToken"));
       if (widthdrawalRes.data.code === 1) {
-        deleteCookie(["jwtToken"]);
-        deleteCookie(["refreshToken"]);
         dispatch(setCurrentPost({}));
-        dispatch(fetchUser(""));
+        deleteMultipleCookies();
+        dispatch(setUser([]));
         toast.success("회원 탈퇴가 완료되었습니다. 이용해 주셔서 감사합니다.");
         navigate("/");
       } else if (widthdrawalRes.data.code === 2) {
@@ -22,17 +22,15 @@ export default async function withdrawal(dispatch, navigate) {
           nextWithdrawalRes.data.code === 2 ||
           nextWithdrawalRes.data.code === -1
         ) {
-          deleteCookie(["jwtToken"]);
-          deleteCookie(["refreshToken"]);
-          dispatch(fetchUser(""));
+          deleteMultipleCookies();
+          dispatch(setUser([]));
           dispatch(setCurrentPost({}));
           toast.error("잘못된 접근입니다.");
-          window.location.reload();
+          navigate("/");
         } else if (nextWithdrawalRes.data.code === 1) {
-          deleteCookie(["jwtToken"]);
-          deleteCookie(["refreshToken"]);
+          deleteMultipleCookies();
+          dispatch(setUser([]));
           dispatch(setCurrentPost({}));
-          dispatch(fetchUser(""));
           toast.success(
             "회원 탈퇴가 완료되었습니다. 이용해 주셔서 감사합니다."
           );
