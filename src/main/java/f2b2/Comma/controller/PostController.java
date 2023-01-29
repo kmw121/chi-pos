@@ -89,18 +89,22 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<?> findPosts(@RequestBody PostsDto postsDto){
+    public ResponseEntity<?> findPosts(@RequestParam("stack") String[] stack,
+                                       @RequestParam("page") Integer page,
+                                       @RequestParam("size") Integer size,
+                                       @RequestParam("isEnd") String isEnd,
+                                       @RequestParam("categoryType") String categoryType){
         String query = " where ";
         boolean flag = true;
 
-        Integer page = postsDto.getPage()!=null ? postsDto.getPage() : 1;
-        Integer size = postsDto.getSize()!=null ? postsDto.getSize() : 6;
+        page = page!=null ? page : 1;
+        size = size!=null ? size : 6;
         int start = (page-1) * size;
 
-        if(postsDto.getStack()!=null&&postsDto.getStack().length!=0){
+        if(stack!=null&&stack.length!=0){
 
 
-            for(String s : postsDto.getStack()){
+            for(String s : stack){
                 if(flag) {
                     query = "INNER JOIN post_stack ps ON ps.post.id = p.id" + query + "( ps.stack = " + s;
                     flag = false;
@@ -112,7 +116,7 @@ public class PostController {
             query = query + " ) ";
         }
 
-        if(postsDto.getIsEnd()!=null&&postsDto.getIsEnd().equals("false")) {
+        if(isEnd!=null&&isEnd.equals("false")) {
             if(flag) {
                 query = query + " p.end = 'false' ";
                 flag = false;
@@ -123,8 +127,8 @@ public class PostController {
 
         }
 
-        if(postsDto.getCategoryType()!=null){
-            if(postsDto.getCategoryType().equals("스터디")){
+        if(categoryType!=null){
+            if(categoryType.equals("스터디")){
                 if(flag) {
                     query = query + " p.categoryType = '스터디' ";
                     flag = false;
@@ -133,7 +137,7 @@ public class PostController {
                     query = query + " AND p.categoryType = '스터디' ";
                 }
             }
-            else if(postsDto.getCategoryType().equals("프로젝트")){
+            else if(categoryType.equals("프로젝트")){
                 if(flag) {
                     query = query + " p.categoryType = '프로젝트' ";
                     flag = false;
