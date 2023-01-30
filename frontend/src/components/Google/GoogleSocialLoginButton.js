@@ -8,33 +8,39 @@ import { useDispatch } from "react-redux";
 import { fetchUser } from "../../slice/userSlice";
 import handleGoogleAuth from "../../util/handleGoogleAuth";
 import { toast } from "react-toastify";
-import settingMultipleCookie from "../../util/settingMultipleCookie";
+import settingAuthCookies from "../../util/settingAuthCookies";
+
+const clientId =
+  "410536498654-65qpckepv8mo646k8dap7ufhscovs0h3.apps.googleusercontent.com";
 
 export default function GoogleSocialLoginButton() {
-  const clientId =
-    "410536498654-65qpckepv8mo646k8dap7ufhscovs0h3.apps.googleusercontent.com";
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const onSuccess = async (response) => {
     try {
       const googleResponse = await handleGoogleAuth(response);
-      if (googleResponse.data.code === 2) {
+      const isGoogleResponseSuccess = googleResponse.data.code === 2;
+      const isAlreadySignedUp = googleResponse.data.code === 1;
+      if (isGoogleResponseSuccess) {
         setCookie("Google", googleResponse.data.data);
         navigate("/googleSignup");
-      } else if (googleResponse.data.code === 1) {
+        return;
+      }
+      if (isAlreadySignedUp) {
         const { accessToken, refreshToken } = googleResponse.data.data;
         const decoded = jwt_decode(accessToken);
         dispatch(fetchUser(decoded));
         navigate("/");
         toast.success("구글로 로그인 되었습니다.");
-        settingMultipleCookie(accessToken, refreshToken, { path: "/" });
+        settingAuthCookies(accessToken, refreshToken, { path: "/" });
+        return;
       }
     } catch (err) {
-      throw new Error(err);
+      toast.error(err);
     }
   };
   const onFailure = (e) => {
-    throw new Error(e);
+    toast.error(e);
   };
   return (
     <GoogleLogin

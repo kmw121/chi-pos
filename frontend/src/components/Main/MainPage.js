@@ -6,13 +6,13 @@ import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import "../../App.css";
 import usePostsSearch from "../../hooks/usePostsSearch";
 
+const handleTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+};
 function MainPage() {
-  const handleTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
   const {
     list,
     loadingStatus,

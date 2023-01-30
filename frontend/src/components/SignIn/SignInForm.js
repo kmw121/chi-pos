@@ -19,15 +19,15 @@ import {
   ModalBottomOkBtn,
   ModalBtnKakaoIcon,
 } from "./signInComponents";
-import jwt_decode from "jwt-decode";
-import { fetchUser } from "../../slice/userSlice";
 import { useDispatch } from "react-redux";
 import { KAKAO_AUTH_URL } from "../../util/kakaoAuth";
 import { gapi } from "gapi-script";
 import GoogleSocialLoginButton from "../Google/GoogleSocialLoginButton";
 import postLogin from "../../util/postLogin";
 import { toast } from "react-toastify";
-import settingMultipleCookie from "../../util/settingMultipleCookie";
+
+const clientId =
+  "410536498654-65qpckepv8mo646k8dap7ufhscovs0h3.apps.googleusercontent.com";
 
 function SignInForm({ onToggle }) {
   const dispatch = useDispatch();
@@ -53,23 +53,11 @@ function SignInForm({ onToggle }) {
   };
   const onLogin = async () => {
     try {
-      const loginResponse = await postLogin(loginForm);
-      if (loginResponse.data.code === 1) {
-        const { accessToken, refreshToken } = loginResponse.data.data;
-        settingMultipleCookie(accessToken, refreshToken);
-        const decoded = jwt_decode(accessToken);
-        dispatch(fetchUser(decoded));
-        onToggle();
-        toast.success(`${loginForm.username}님 반갑습니다!`);
-      } else if (loginResponse.data.code === -1) {
-        toast.error("id/pw를 확인해주세요.");
-      }
-    } catch (err) {
-      throw new Error(err);
+      await postLogin(loginForm, dispatch, onToggle);
+    } catch {
+      toast.error("로그인에 실패하였습니다.");
     }
   };
-  const clientId =
-    "410536498654-65qpckepv8mo646k8dap7ufhscovs0h3.apps.googleusercontent.com";
   useEffect(() => {
     function start() {
       gapi.client.init({

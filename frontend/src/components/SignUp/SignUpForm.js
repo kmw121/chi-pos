@@ -9,6 +9,7 @@ import {
   SignUpInputContainer,
   SignUpInputImg,
   SignUpImgPreview,
+  SignUpFormRegWarning,
 } from "./signUpComponents";
 import {
   RegisterContainerDiv,
@@ -19,23 +20,17 @@ import {
   RegisterBottomOkBtn,
 } from "../Register/registerComponents";
 import Select from "react-select";
-import { stacks } from "../../util/stack";
+import { stackArrayWithNumber } from "../../util/stack";
 import postSubmit from "../../util/postSubmit";
 import { toast } from "react-toastify";
 import postDupCheckNick from "../../util/postDupCheckNick";
 import postDupCheckEmail from "../../util/postDupCheckEmail";
 
+const reg_username = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
+const reg_password = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{5,15}$/;
+const reg_nickName = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$/;
+
 function SignUpForm() {
-  let stackNumber = 1;
-  const stackArray = stacks
-    .map((stack) => stack.name)
-    .map((a) => {
-      return {
-        value: a,
-        label: a,
-        number: stackNumber++,
-      };
-    });
   const [formReg, setFormReg] = useState({
     username: false,
     password: false,
@@ -53,9 +48,6 @@ function SignUpForm() {
     files: [],
     imgPreview: "",
   });
-  const reg_username = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
-  const reg_password = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{5,15}$/;
-  const reg_nickName = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$/;
   const navigate = useNavigate();
   const onGoBack = () => {
     navigate(-1);
@@ -91,68 +83,31 @@ function SignUpForm() {
         formdata.append("password", form.password);
         formdata.append("nickName", form.nickName);
         formdata.append("stack", form.stack);
-        const res = await postSubmit(formdata);
-        if (res.data.code === 1) {
-          toast.success("회원가입이 완료되었습니다.");
-          navigate("/");
-        } else {
-          if (res.data.code === -1) {
-            toast.error("회원가입에 실패하였습니다.");
-            navigate("/");
-          }
-        }
-      } catch (err) {
-        throw new Error(err);
+        await postSubmit(formdata, navigate);
+      } catch {
+        toast.error(`알 수 없는 오류로 회원가입에 실패하였습니다.`);
       }
     } else {
-      toast.error("회원 정보를 확인해주세요 !.");
+      toast.error("회원 정보를 확인해주세요 !");
     }
   };
   const onDupCheckEmail = async () => {
     if (formReg.username) {
       try {
-        const dupCheck = await postDupCheckEmail(form);
-        if (dupCheck.data.code === -1) {
-          if (
-            window.confirm(`사용할 수 있는 이메일입니다. 사용하시겠습니까?`)
-          ) {
-            setFormReg((prev) => {
-              return { ...prev, dupCheckUsername: true };
-            });
-            toast.success("이메일을 설정하셨습니다.");
-          } else {
-            toast.error("취소되었습니다.");
-          }
-        } else if (dupCheck.data.code === 1) {
-          toast.error("이미 존재하는 이메일입니다.");
-        }
-      } catch (err) {
-        throw new Error(err);
+        await postDupCheckEmail(form, setFormReg);
+      } catch {
+        toast.error("알 수 없는 오류로 이메일 중복확인에 실패하였습니다.");
       }
     } else {
-      toast.error("이메일 형식을 확인해주세요!");
+      toast.error("이메일 칸이 공백이거나 이메일 형식이 올바르지 않습니다.");
     }
   };
   const onDupCheckNickName = async () => {
     if (formReg.nickName) {
       try {
-        const dupCheck = await postDupCheckNick(form);
-        if (dupCheck.data.code === -1) {
-          if (
-            window.confirm(`사용할 수 있는 닉네임입니다. 사용하시겠습니까?`)
-          ) {
-            setFormReg((prev) => {
-              return { ...prev, dupCheckNickName: true };
-            });
-            toast.success("닉네임을 설정하셨습니다.");
-          } else {
-            toast.error("취소되었습니다.");
-          }
-        } else if (dupCheck.data.code === 1) {
-          toast.error("이미 존재하는 닉네임입니다.");
-        }
-      } catch (err) {
-        throw new Error(err);
+        await postDupCheckNick(form, setFormReg);
+      } catch {
+        toast.error("알 수 없는 오류로 닉네임 중복확인에 실패하였습니다.");
       }
     } else {
       toast.error("닉네임은 2글자 이상 ~ 10글자 이하로 해주세요!");
@@ -211,6 +166,11 @@ function SignUpForm() {
             disabled={form.dupCheckUsername}
             name="username"
           />
+          {form.username && !formReg.username && (
+            <SignUpFormRegWarning>
+              이메일 형식을 확인해주세요.
+            </SignUpFormRegWarning>
+          )}
         </SignUpFormLi>
         <SignUpFormLi>
           <SignUpFormLabel>
@@ -226,6 +186,11 @@ function SignUpForm() {
             disabled={form.dupCheckNickName}
             name="nickName"
           />
+          {form.nickName && !formReg.nickName && (
+            <SignUpFormRegWarning>
+              닉네임 형식을 확인해주세요.
+            </SignUpFormRegWarning>
+          )}
         </SignUpFormLi>
       </SignUpFormUl>
       <SignUpFormUl>
@@ -239,6 +204,11 @@ function SignUpForm() {
             placeholder=""
             name="password"
           />
+          {form.password && !formReg.password && (
+            <SignUpFormRegWarning>
+              비밀번호 형식을 확인해주세요.
+            </SignUpFormRegWarning>
+          )}
         </SignUpFormLi>
         <SignUpFormLi>
           <SignUpFormLabel>비밀번호 확인</SignUpFormLabel>
@@ -250,6 +220,11 @@ function SignUpForm() {
             placeholder=""
             name="passwordAgain"
           />
+          {form.passwordAgain && !formReg.passwordAgain && (
+            <SignUpFormRegWarning>
+              비밀번호가 일치하지 않습니다.
+            </SignUpFormRegWarning>
+          )}
         </SignUpFormLi>
       </SignUpFormUl>
       <SignUpFormUl>
@@ -259,7 +234,7 @@ function SignUpForm() {
             onChange={onSelectedStack}
             isMulti
             placeholder="프로젝트 사용 스택"
-            options={stackArray}
+            options={stackArrayWithNumber}
           />
         </SignUpFormLi>
         <SignUpFormLi>

@@ -13,8 +13,9 @@ import {
   SettingWithdrawalBtn,
   SettingImgBtnBoxSpan,
   SettingImgBtnBoxInput,
+  SettingWarningMessage,
 } from "./settingComponents";
-import { stacks } from "../../util/stack";
+import { stackSelectOption } from "../../util/stack";
 import Select from "react-select";
 import { useEffect, useState } from "react";
 import MainHead from "../Main/MainHead";
@@ -27,6 +28,12 @@ import { setCookie } from "../../util/cookie";
 import { toast } from "react-toastify";
 import postSocialSignUpAndDetail from "../../util/postSocialSignUpAndDetail";
 import wrongRequest from "../../util/wrongRequest";
+import {
+  accessTokenValidate,
+  refreshTokenValidate,
+} from "../../util/tokenValidation";
+
+const reg_password = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{5,15}$/;
 
 function Setting() {
   const { user } = useSelector((state) => {
@@ -34,7 +41,6 @@ function Setting() {
   });
   const { googleId, kakaoId } = user.data;
   const notSocial = !kakaoId && !googleId;
-  const reg_password = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{5,15}$/;
   const [stack, setStack] = useState(
     user &&
       user.data.userStack
@@ -61,14 +67,6 @@ function Setting() {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
-  const optionStack = stacks
-    .map((stack) => stack.name)
-    .map((a) => {
-      return {
-        value: a,
-        label: a,
-      };
-    });
   const onSelectedStack = (value) => {
     setStack(value);
   };
@@ -85,11 +83,9 @@ function Setting() {
       };
     });
   };
-  const handleDeleteImg = () => {
-    if (window.confirm("기본 이미지로 변경하시겠습니까?")) {
-      setForm({ ...form, basicImg: true });
-      toast.success("기본 이미지로 변경되었습니다.");
-    }
+  const handlBasicImg = () => {
+    setForm({ ...form, basicImg: true });
+    toast.success("기본 이미지로 변경되었습니다.");
   };
   const onSubmit = async () => {
     if (
@@ -97,7 +93,7 @@ function Setting() {
       (formReg.newPassword && formReg.newPasswordAgain)
     ) {
       try {
-        const arrArr = stacks.map((a) => {
+        const arrArr = stackSelectOption.map((a) => {
           return { number: a.number, name: a.name };
         });
         const beforeStack = [...new Set([...stack])].map((a) => a.value);
@@ -105,8 +101,6 @@ function Setting() {
           .flatMap((a) => arrArr.filter((b) => b.name === a))
           .map((a) => a.number);
         const formdata = new FormData();
-        //현재 확인된 오류?아니면...무언가 : form.files를 append 안 하고 제출했는데
-        //이미지가 기본 이미지(nonUrl)로 안바뀜 ㅜㅜ
         if (
           !form.basicImg &&
           form.imgPreview &&
@@ -115,6 +109,7 @@ function Setting() {
           formdata.append("file", form.files);
         }
         formdata.append("nickName", form.nick);
+        formdata.append("basicImage", form.basicImg);
         formdata.append("password", form.newPassword);
         formdata.append("stack", afterNumberStack);
         formdata.append("prePassword", notSocial ? form.prePassword : null);
@@ -123,41 +118,54 @@ function Setting() {
           "/changeInfo",
           getCookie("jwtToken")
         );
-        if (changeInfoResponse.data.code === 1) {
+        const {
+          accessValid,
+          accessExpired,
+          accessInvalid,
+        } = accessTokenValidate(changeInfoResponse);
+        if (accessValid) {
           dispatch(fetchUser(changeInfoResponse.data.data));
           navigate("/");
           toast.success("정보가 변경되었습니다.");
-        } else if (changeInfoResponse.data.code === -1) {
+          return;
+        }
+        if (accessInvalid) {
           toast.error(changeInfoResponse.data.message);
-        } else if (changeInfoResponse.data.code === 2) {
+          return;
+        }
+        if (accessExpired) {
           const changeNextResponse = await postSocialSignUpAndDetail(
             formdata,
             "/changeInfo",
             getCookie("refreshToken")
           );
-          if (
-            changeNextResponse.data.code === 2 ||
-            changeNextResponse.data.code === -1
-          ) {
+          const {
+            refreshValid,
+            refreshExpired,
+            refreshInvalid,
+          } = refreshTokenValidate(changeNextResponse);
+          if (refreshExpired || refreshInvalid) {
             wrongRequest(dispatch, navigate);
-          } else if (changeNextResponse.data.code === 1) {
+            return;
+          }
+          if (refreshValid) {
             setCookie("jwtToken", changeNextResponse.data.data);
             const response = await postSocialSignUpAndDetail(
               formdata,
               "/changeInfo",
               changeNextResponse.data.data
             );
-            if (response.data.code === 1) {
+            const isNewAccessTokenValid = response.data.code === 1;
+            if (isNewAccessTokenValid) {
               dispatch(fetchUser(response.data.data));
               navigate("/");
               toast.success("정보가 변경되었습니다.");
-            } else {
-              throw new Error();
+              return;
             }
           }
         }
       } catch (e) {
-        throw new Error(e);
+        toast.error(e);
       }
     } else {
       toast.error("비밀번호 창을 비워주세요? 아니면 뭐 확인해주세요? ");
@@ -213,7 +221,7 @@ function Setting() {
                 accept="img/*"
               />
             </SettingImgBtnBoxLabel>
-            <SettingImgBtnBoxBtn onClick={handleDeleteImg}>
+            <SettingImgBtnBoxBtn onClick={handlBasicImg}>
               기본 이미지
             </SettingImgBtnBoxBtn>
           </SettingImgBtnBox>
@@ -238,7 +246,7 @@ function Setting() {
               onChange={onSelectedStack}
               isMulti
               placeholder="관심 태그 선택"
-              options={optionStack}
+              options={stackSelectOption}
               defaultValue={stack}
             />
           </div>
@@ -274,6 +282,12 @@ function Setting() {
                 name="newPassword"
               />
             </SettingTitleBox>
+            {form.newPassword && !formReg.newPassword && (
+              <SettingWarningMessage>
+                비밀번호는 5글자 이상 15글자 이하입니다.
+              </SettingWarningMessage>
+            )}
+
             <SettingDescription>
               비밀번호를 변경하려면 변경할 비밀번호를 입력해 주세요.
             </SettingDescription>
@@ -288,6 +302,12 @@ function Setting() {
                 name="newPasswordAgain"
               />
             </SettingTitleBox>
+            {form.newPasswordAgain && !formReg.newPasswordAgain && (
+              <SettingWarningMessage>
+                비밀번호가 일치하지 않습니다.
+              </SettingWarningMessage>
+            )}
+
             <SettingDescription>
               비밀번호를 변경하려면 변경할 비밀번호를 다시 입력해 주세요.
             </SettingDescription>

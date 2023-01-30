@@ -26,7 +26,6 @@ function MyPosts() {
   });
   const { post } = useGetMyPost(dispatch, navigate);
   const onGoToPost = (id) => {
-    navigate("/");
     navigate(`study/${id}`);
   };
   useEffect(() => {

@@ -5,7 +5,7 @@ import wrongRequest from "./wrongRequest";
 import jwt_decode from "jwt-decode";
 
 export default async function authCheck(dispatch, navigate, user) {
-  if (user.code === undefined || user.code !== 1) {
+  if (!user.code || user.code !== 1) {
     wrongRequest(dispatch, navigate);
   } else {
     try {
