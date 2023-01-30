@@ -39,6 +39,10 @@ public class SignupDto {
     private MultipartFile file;
 
     private List<Long> stack;
+    private boolean basicImage;
+
+
+
 
 
 

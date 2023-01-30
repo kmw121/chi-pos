@@ -105,7 +105,12 @@ public class myPageController {
             }
         }
 
-        if(signupDto.getFile()!=null){
+
+        if(signupDto.isBasicImage()){
+            user.setImageUrl("nonUrl");
+        }
+
+        else if(signupDto.getFile()!=null){
             UUID uuid = UUID.randomUUID();
             String imageFileName = uuid +"_"+signupDto.getFile().getOriginalFilename();
             Path imageFilePath = Paths.get(uploadFolder+imageFileName);
