@@ -90,27 +90,22 @@ function MainContents({
   const onIncreaseView = async (id) => {
     try {
       await getIncreaseView(id);
-    } catch (err) {
-      throw new Error(err);
+    } catch {
+      console.log("오류로 인하여 조회수가 올라가지 않았습니다.");
     }
   };
   const handleIsEnd = () => {
-    if (isChecked) {
-      setList([]);
-      setSearchConfig((prev) => {
-        return { ...prev, isEnd: true, page: 1 };
-      });
-    } else if (!isChecked) {
-      setList([]);
-      setSearchConfig((prev) => {
-        return { ...prev, isEnd: false, page: 1 };
-      });
-    }
+    setList([]);
+    setSearchConfig((prev) => {
+      return { ...prev, page: 1, isEnd: isChecked };
+    });
   };
   const handleOnlyFavorited = () => {
-    if (user.code === undefined || user.code !== 1) {
+    if (!user.code || user.code !== 1) {
       toast.error("로그인 후 이용할 수 있는 기능입니다.");
-    } else if (user && user.data.code === 1) {
+      return;
+    }
+    if (user && user.data.code === 1) {
       const myFavoriteStack = user.data.data.userStack.map((a) => a.stack.id);
       setList([]);
       setSearchConfig((prev) => {
@@ -120,6 +115,7 @@ function MainContents({
           categoryType: "",
         };
       });
+      return;
     }
   };
   const ref = useIntersect(async (entry, observer) => {

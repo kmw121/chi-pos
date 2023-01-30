@@ -1,6 +1,6 @@
 import { deleteCookie } from "./cookie";
 
-export default function deleteMultipleCookies() {
+export default function deleteAuthCookies() {
   deleteCookie("jwtToken");
   deleteCookie("refreshToken");
 }

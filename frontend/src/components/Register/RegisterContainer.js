@@ -9,23 +9,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import toStringByFormatting from "../../util/toStringByFormatting";
 import { getCookie, setCookie } from "../../util/cookie";
-import { setCurrentPost } from "../../slice/userSlice";
+import { setEditingPost } from "../../slice/userSlice";
 import getUserInfo from "../../util/getUserInfo";
 import postFormSubmit from "../../util/postFormSubmit";
 import wrongRequest from "../../util/wrongRequest";
 import { toast } from "react-toastify";
 
 function RegisterContainer() {
-  const { currentPost } = useSelector((state) => {
+  const { editingPost, user } = useSelector((state) => {
     return state.user;
   });
   const [dataForm, steDataForm] = useState({
-    category: currentPost.categoryType,
-    people: currentPost.people,
-    howto: currentPost.howto,
-    duration: currentPost.duration,
-    selectedStack: currentPost.postStack
-      ? currentPost.postStack.map((a) => {
+    category: editingPost.categoryType,
+    people: editingPost.people,
+    howto: editingPost.howto,
+    duration: editingPost.duration,
+    selectedStack: editingPost.postStack
+      ? editingPost.postStack.map((a) => {
           return {
             value: a.stack.name,
             label: a.stack.name,
@@ -33,9 +33,9 @@ function RegisterContainer() {
           };
         })
       : [],
-    contactOption: currentPost.contact,
-    contactPlaceholder: currentPost.contact,
-    contactAddress: currentPost.contactAddress,
+    contactOption: editingPost.contact,
+    contactPlaceholder: editingPost.contact,
+    contactAddress: editingPost.contactAddress,
     // invalid date error 처리 필요함 ㅡㅡ
     datePickerValue:
       // !new Date(currentPost.startDate)
@@ -43,10 +43,10 @@ function RegisterContainer() {
       new Date(),
     //: new Date(currentPost.startDate),
   });
-  const [titleText, setTitleText] = useState(currentPost.title);
-  const [editorValue, setEditorValue] = useState(currentPost.detail);
+  const [titleText, setTitleText] = useState(editingPost.title);
+  const [editorValue, setEditorValue] = useState(editingPost.detail);
   const submitForm = {
-    id: !currentPost.id ? null : currentPost.id,
+    id: !editingPost.id ? null : editingPost.id,
     categoryType: dataForm.category,
     people: dataForm.people,
     howto: dataForm.howto,
@@ -62,51 +62,69 @@ function RegisterContainer() {
   };
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useSelector((state) => {
-    return state.user;
-  });
   useEffect(() => {
     authCheck(dispatch, navigate, user);
   }, []);
   const onSubmit = async () => {
     if (user.code === 1) {
-    }
-    const userInfo = await getUserInfo(user.data, getCookie("jwtToken"));
-    if (userInfo.data.code === -1) {
-      wrongRequest(dispatch, navigate);
-    } else if (userInfo.data.code === 2) {
-      const nextUserInfo = await getUserInfo(
-        user.data,
-        getCookie("refreshToken")
-      );
-      if (nextUserInfo.data.code === 2 || nextUserInfo.data.code === -1) {
+      const userInfo = await getUserInfo(user.data, getCookie("jwtToken"));
+      const isAccessTokenValid = userInfo.data.code === 1;
+      const isAccessTokenExpired = userInfo.data.code === 2;
+      const isAccessTokenInvalid = userInfo.data.code === -1;
+      if (isAccessTokenInvalid) {
         wrongRequest(dispatch, navigate);
-      } else if (nextUserInfo.data.code === 1) {
-        setCookie("jwtToken", nextUserInfo.data.data);
+        return;
+      }
+      if (isAccessTokenExpired) {
+        const nextUserInfo = await getUserInfo(
+          user.data,
+          getCookie("refreshToken")
+        );
+        const isRefreshTokenValid = nextUserInfo.data.code === 1;
+        const isRefreshTokenExpired = nextUserInfo.data.code === 2;
+        const isRefreshTokenInvalid = nextUserInfo.data.code === -1;
+        if (isRefreshTokenExpired || isRefreshTokenInvalid) {
+          wrongRequest(dispatch, navigate);
+          return;
+        }
+        if (isRefreshTokenValid) {
+          setCookie("jwtToken", nextUserInfo.data.data);
+          const response = await postFormSubmit(
+            submitForm,
+            getCookie("jwtToken")
+          );
+          const isNewAccessTokenValid = response.data.code === 1;
+          const isNewAccessTokenInvalid = response.data.code === -1;
+          if (isNewAccessTokenValid) {
+            dispatch(setEditingPost({}));
+            toast.success("등록이 완료되었습니다.");
+            navigate("/");
+          }
+          if (isNewAccessTokenInvalid) {
+            dispatch(setEditingPost({}));
+            toast.error("알 수 없는 오류로 등록에 실패하였습니다.");
+            navigate("/");
+          }
+        }
+        return;
+      }
+      if (isAccessTokenValid) {
         const response = await postFormSubmit(
           submitForm,
           getCookie("jwtToken")
         );
-        if (response.data.code === 1) {
-          dispatch(setCurrentPost({}));
+        const isRegisterSuccess = response.data.code === 1;
+        const isRegisterFail = response.data.code === -1;
+        if (isRegisterSuccess) {
+          dispatch(setEditingPost({}));
           toast.success("등록이 완료되었습니다.");
           navigate("/");
-        } else if (response.data.code === -1) {
-          dispatch(setCurrentPost({}));
+        } else if (isRegisterFail) {
+          dispatch(setEditingPost({}));
           toast.error("알 수 없는 오류로 등록에 실패하였습니다.");
           navigate("/");
         }
-      }
-    } else if (userInfo.data.code === 1) {
-      const response = await postFormSubmit(submitForm, getCookie("jwtToken"));
-      if (response.data.code === 1) {
-        dispatch(setCurrentPost({}));
-        toast.success("등록이 완료되었습니다.");
-        navigate("/");
-      } else if (response.data.code === -1) {
-        dispatch(setCurrentPost({}));
-        toast.error("알 수 없는 오류로 등록에 실패하였습니다.");
-        navigate("/");
+        return;
       }
     }
   };

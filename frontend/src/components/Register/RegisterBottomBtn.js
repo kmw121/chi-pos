@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setCurrentPost } from "../../slice/userSlice";
+import { setEditingPost } from "../../slice/userSlice";
 import {
   RegisterBottomSection,
   RegisterBottomCancelBtn,
@@ -11,10 +11,8 @@ function RegisterBottomBtn({ onSubmit }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const onGoToBack = () => {
-    if (window.confirm("글 등록을 취소하시겟습니까?")) {
-      dispatch(setCurrentPost({}));
-      navigate("/");
-    }
+    dispatch(setEditingPost({}));
+    navigate("/");
   };
   return (
     <RegisterBottomSection>

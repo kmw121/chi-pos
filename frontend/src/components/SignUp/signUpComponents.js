@@ -66,3 +66,7 @@ export const SignUpFormLi = styled.li`
   margin: 0;
   width: 50%;
 `;
+export const SignUpFormRegWarning = styled.span`
+  color : #ffa8a8
+  text-align : center;
+`;

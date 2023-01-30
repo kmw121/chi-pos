@@ -7,7 +7,8 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { KakaoSocialBox } from "../Google/socialButton";
 import getKakaoAuth from "../../util/getKakaoAuth";
-import settingMultipleCookie from "../../util/settingMultipleCookie";
+import settingAuthCookies from "../../util/settingAuthCookies";
+import { toast } from "react-toastify";
 
 function KakaoSocial() {
   let code = new URL(window.location.href).searchParams.get("code");
@@ -17,21 +18,26 @@ function KakaoSocial() {
     async function fetchData() {
       try {
         const kakaoAuth = await getKakaoAuth(code);
-        if (kakaoAuth.data.code === 2) {
+        const isAlreadySignedUp = kakaoAuth.data.code === 1;
+        const isKakaoAuthSuccess = kakaoAuth.data.code === 2;
+        if (isKakaoAuthSuccess) {
           setCookie("Kakao", kakaoAuth.data.data);
           navigate("/kakaoSignup");
-        } else if (kakaoAuth.data.code === 1) {
+          return;
+        }
+        if (isAlreadySignedUp) {
           const { accessToken, refreshToken } = kakaoAuth.data.data;
-          settingMultipleCookie(accessToken, refreshToken, {
+          settingAuthCookies(accessToken, refreshToken, {
             path: "/",
             domain: "chi-pos.com",
           });
           const decoded = jwt_decode(accessToken);
           dispatch(fetchUser(decoded));
           navigate("/");
+          return;
         }
       } catch (err) {
-        throw new Error(err);
+        toast.error(err);
       }
     }
     fetchData();

@@ -7,6 +7,7 @@ import {
   SignUpInput,
   SignUpInputContainer,
   SignUpInputImg,
+  SignUpFormRegWarning,
 } from "../SignUp/signUpComponents";
 import {
   RegisterContainerDiv,
@@ -17,7 +18,7 @@ import {
   RegisterBottomOkBtn,
 } from "../Register/registerComponents";
 import { ImgPreview } from "./socialButton";
-import { stacks } from "../../util/stack";
+import { stackArrayWithNumber } from "../../util/stack";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { getCookie, deleteCookie } from "../../util/cookie";
@@ -27,19 +28,11 @@ import { fetchUser } from "../../slice/userSlice";
 import { toast } from "react-toastify";
 import postSocialSignUpAndDetail from "../../util/postSocialSignUpAndDetail";
 import postDupCheckNick from "../../util/postDupCheckNick";
-import settingMultipleCookie from "../../util/settingMultipleCookie";
+import settingAuthCookies from "../../util/settingAuthCookies";
+
+const reg_nickName = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$/;
 
 function GoogleSignUp() {
-  let stackNumber = 1;
-  const stackArray = stacks
-    .map((stack) => stack.name)
-    .map((a) => {
-      return {
-        value: a,
-        label: a,
-        number: stackNumber++,
-      };
-    });
   const [formReg, setFormReg] = useState({
     username: true,
     password: false,
@@ -56,7 +49,6 @@ function GoogleSignUp() {
     imgPreview: "",
     files: [],
   });
-  const reg_nickName = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$/;
   const navigate = useNavigate();
   const onGoBack = () => {
     deleteCookie("Google");
@@ -99,24 +91,26 @@ function GoogleSignUp() {
           formdata,
           "/googleSignup"
         );
-        if (googleResponse.data.code === 1) {
+        const isSuccess = googleResponse.data.code === 1;
+        const isFail = googleResponse.data.code === -1;
+        if (isSuccess) {
           const { accessToken, refreshToken } = googleResponse.data.data;
-          settingMultipleCookie(accessToken, refreshToken, {
+          settingAuthCookies(accessToken, refreshToken, {
             path: "/",
             domain: "chi-pos.com",
           });
           const decoded = jwt_decode(accessToken);
           dispatch(fetchUser(decoded));
           navigate("/");
-          toast.success("구글 회원가입 완료~");
+          toast.success("구글 회원가입이 완료되었습니다.");
           deleteCookie("Google");
-        } else {
-          if (googleResponse.data.code === -1) {
-            toast.error("구글 회원가입 실패 ");
-          }
+          return;
+        }
+        if (isFail) {
+          toast.error("구글 회원가입에 실패하였습니다.");
         }
       } catch (err) {
-        throw new Error(err);
+        toast.error(err);
       }
     } else {
       toast.error("회원 정보를 확인해주세요 !");
@@ -126,25 +120,21 @@ function GoogleSignUp() {
     if (formReg.nickName) {
       try {
         const dupCheckNick = await postDupCheckNick(form);
-        if (dupCheckNick.data.code === -1) {
-          if (
-            window.confirm(`사용할 수 있는 닉네임입니다. 사용하시겠습니까?`)
-          ) {
-            setFormReg((prev) => {
-              return { ...prev, dupCheckNickName: true };
-            });
-            toast.success("닉네임을 설정하셨습니다.");
-          } else {
-            toast.error("취소되었습니다.");
-          }
-        } else if (dupCheckNick.data.code === 1) {
+        const isDupCheckSuccess = dupCheckNick.data.code === -1;
+        const isDupCheckFail = dupCheckNick.data.code === 1;
+        if (isDupCheckSuccess) {
+          setFormReg((prev) => {
+            return { ...prev, dupCheckNickName: true };
+          });
+          toast.success("닉네임을 설정하셨습니다.");
+        } else if (isDupCheckFail) {
           toast.error("이미 존재하는 닉네임입니다.");
         }
       } catch (err) {
-        throw new Error(err);
+        toast.error(err);
       }
     } else {
-      toast.error("닉네임은 2글자 이상 10글자 이하입니다.");
+      toast.error("닉네임은 2글자 이상 10글자 이하로 입력해 주세요.");
     }
   };
   const encodeFileToBase64 = (fileBlob) => {
@@ -187,6 +177,11 @@ function GoogleSignUp() {
             placeholder=""
             disabled={formReg.dupCheckNickName}
           />
+          {form.nickName && !formReg.nickName && (
+            <SignUpFormRegWarning>
+              닉네임은 2글자 이상 10글자 이하입니다.
+            </SignUpFormRegWarning>
+          )}
         </SignUpFormLi>
       </SignUpFormUl>
       <SignUpFormUl>
@@ -195,7 +190,7 @@ function GoogleSignUp() {
             onChange={onSelectedStack}
             isMulti
             placeholder="프로젝트 사용 스택"
-            options={stackArray}
+            options={stackArrayWithNumber}
           />
         </SignUpFormLi>
         <SignUpFormLi>

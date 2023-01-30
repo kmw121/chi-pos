@@ -7,6 +7,7 @@ import {
   SignUpInput,
   SignUpInputContainer,
   SignUpInputImg,
+  SignUpFormRegWarning,
 } from "../SignUp/signUpComponents";
 import {
   RegisterContainerDiv,
@@ -17,7 +18,7 @@ import {
   RegisterBottomOkBtn,
 } from "../Register/registerComponents";
 import { ImgPreview } from "../Google/socialButton";
-import { stacks } from "../../util/stack";
+import { stackArrayWithNumber } from "../../util/stack";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { getCookie, deleteCookie } from "../../util/cookie";
@@ -27,19 +28,11 @@ import { fetchUser } from "../../slice/userSlice";
 import postSocialSignUpAndDetail from "../../util/postSocialSignUpAndDetail";
 import { toast } from "react-toastify";
 import postDupCheckNick from "../../util/postDupCheckNick";
-import settingMultipleCookie from "../../util/settingMultipleCookie";
+import settingAuthCookies from "../../util/settingAuthCookies";
+
+const reg_nickName = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$/;
 
 function KakaoSignUp() {
-  let stackNumber = 1;
-  const stackArray = stacks
-    .map((stack) => stack.name)
-    .map((a) => {
-      return {
-        value: a,
-        label: a,
-        number: stackNumber++,
-      };
-    });
   const [formReg, setFormReg] = useState({
     username: true,
     password: false,
@@ -56,7 +49,6 @@ function KakaoSignUp() {
     imgPreview: "",
     files: [],
   });
-  const reg_nickName = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$/;
   const navigate = useNavigate();
   const onGoBack = () => {
     deleteCookie("Kakao");
@@ -101,7 +93,7 @@ function KakaoSignUp() {
         );
         if (kakaoSignUpResponse.data.code === 1) {
           const { accessToken, refreshToken } = kakaoSignUpResponse.data.data;
-          settingMultipleCookie(accessToken, refreshToken, {
+          settingAuthCookies(accessToken, refreshToken, {
             path: "/",
             domain: "chi-pos.com",
           });
@@ -186,6 +178,11 @@ function KakaoSignUp() {
             placeholder=""
             disabled={formReg.dupCheckNickName}
           />
+          {form.nickName && !formReg.nickName && (
+            <SignUpFormRegWarning>
+              닉네임은 2글자 이상 10글자 이하입니다.
+            </SignUpFormRegWarning>
+          )}
         </SignUpFormLi>
       </SignUpFormUl>
       <SignUpFormUl>
@@ -194,7 +191,7 @@ function KakaoSignUp() {
             onChange={onSelectedStack}
             isMulti
             placeholder="프로젝트 사용 스택"
-            options={stackArray}
+            options={stackArrayWithNumber}
           />
         </SignUpFormLi>
         <SignUpFormLi>

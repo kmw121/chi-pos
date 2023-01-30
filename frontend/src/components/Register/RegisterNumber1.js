@@ -1,6 +1,6 @@
 import React from "react";
 import Select from "react-select";
-import { stacks } from "../../util/stack";
+import { stackArrayWithNumber } from "../../util/stack";
 import "react-datepicker/dist/react-datepicker.css";
 import { ko } from "date-fns/locale";
 import {
@@ -17,18 +17,24 @@ import DatePicker from "react-datepicker";
 import "./customDatePickerWidth.css";
 import { registerOption } from "../../util/registerOption";
 
+const _ = require("lodash");
+const years = _.range(2022, getYear(new Date()) + 4, 1);
+const months = [
+  "1월",
+  "2월",
+  "3월",
+  "4월",
+  "5월",
+  "6월",
+  "7월",
+  "8월",
+  "9월",
+  "10월",
+  "11월",
+  "12월",
+];
+
 function RegisterNumber1({ dataForm, setDataForm }) {
-  let stackNumber = 1;
-  const stackArray = stacks
-    .map((stack) => stack.name)
-    .map((a) => {
-      return {
-        value: a,
-        label: a,
-        number: stackNumber++,
-      };
-    });
-  const optionStack = stackArray;
   const handleChangeForm = (value, e) => {
     setDataForm({ ...dataForm, [e.name]: value.value });
   };
@@ -50,22 +56,6 @@ function RegisterNumber1({ dataForm, setDataForm }) {
       return { ...prev, contactAddress: e.target.value };
     });
   };
-  const _ = require("lodash");
-  const years = _.range(2022, getYear(new Date()) + 4, 1);
-  const months = [
-    "1월",
-    "2월",
-    "3월",
-    "4월",
-    "5월",
-    "6월",
-    "7월",
-    "8월",
-    "9월",
-    "10월",
-    "11월",
-    "12월",
-  ];
   return (
     <section>
       <RegisterNumber1Title>
@@ -146,7 +136,7 @@ function RegisterNumber1({ dataForm, setDataForm }) {
             isMulti
             placeholder="프로젝트 사용 스택"
             name="selectedStack"
-            options={optionStack}
+            options={stackArrayWithNumber}
             defaultValue={dataForm.selectedStack}
           />
         </RegisterNumber1Li>
