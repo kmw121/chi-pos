@@ -83,8 +83,13 @@ public class PostController {
         }
     }
 
+    @GetMapping("/post/{postId}")
+    public ResponseEntity<?> findPost(@PathVariable Long postId){
+        Post post = postService.find(postId);
+        return new ResponseEntity<>(new CMRespDto<>(1, "글조회 성공", post), HttpStatus.OK);
+    }
     @GetMapping("/posts/all")
-    public ResponseEntity<?> findAll(){
+    public ResponseEntity<?> findAllPosts(){
         return new ResponseEntity<>(new CMRespDto<>(1, "글조회 성공", postService.findAll()), HttpStatus.OK);
     }
 
