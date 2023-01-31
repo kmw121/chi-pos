@@ -23,12 +23,9 @@ import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { getCookie, deleteCookie } from "../../util/cookie";
 import { useDispatch } from "react-redux";
-import jwt_decode from "jwt-decode";
-import { fetchUser } from "../../slice/userSlice";
 import { toast } from "react-toastify";
-import postSocialSignUpAndDetail from "../../util/postSocialSignUpAndDetail";
 import postDupCheckNick from "../../util/postDupCheckNick";
-import settingAuthCookies from "../../util/settingAuthCookies";
+import postSocialSignUp from "../../util/postSocialSignUp";
 
 const reg_nickName = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$/;
 
@@ -87,30 +84,9 @@ function GoogleSignUp() {
         formdata.append("username", form.username);
         formdata.append("nickName", form.nickName);
         formdata.append("stack", form.stack);
-        const googleResponse = await postSocialSignUpAndDetail(
-          formdata,
-          "/googleSignup"
-        );
-        const isSuccess = googleResponse.data.code === 1;
-        const isFail = googleResponse.data.code === -1;
-        if (isSuccess) {
-          const { accessToken, refreshToken } = googleResponse.data.data;
-          settingAuthCookies(accessToken, refreshToken, {
-            path: "/",
-            domain: "chi-pos.com",
-          });
-          const decoded = jwt_decode(accessToken);
-          dispatch(fetchUser(decoded));
-          navigate("/");
-          toast.success("구글 회원가입이 완료되었습니다.");
-          deleteCookie("Google");
-          return;
-        }
-        if (isFail) {
-          toast.error("구글 회원가입에 실패하였습니다.");
-        }
-      } catch (err) {
-        toast.error(err);
+        await postSocialSignUp(formdata, "/googleSignup", dispatch, navigate);
+      } catch {
+        toast.error("알 수 없는 오류로 회원가입이 취소되었습니다.");
       }
     } else {
       toast.error("회원 정보를 확인해주세요 !");
@@ -119,17 +95,7 @@ function GoogleSignUp() {
   const onDupCheckNickName = async () => {
     if (formReg.nickName) {
       try {
-        const dupCheckNick = await postDupCheckNick(form);
-        const isDupCheckSuccess = dupCheckNick.data.code === -1;
-        const isDupCheckFail = dupCheckNick.data.code === 1;
-        if (isDupCheckSuccess) {
-          setFormReg((prev) => {
-            return { ...prev, dupCheckNickName: true };
-          });
-          toast.success("닉네임을 설정하셨습니다.");
-        } else if (isDupCheckFail) {
-          toast.error("이미 존재하는 닉네임입니다.");
-        }
+        await postDupCheckNick(form, setFormReg);
       } catch (err) {
         toast.error(err);
       }
@@ -206,7 +172,7 @@ function GoogleSignUp() {
             <div className="img_box">
               {form.imgPreview && (
                 <ImgPreview src={form.imgPreview} alt="preview-img" />
-              )}{" "}
+              )}
             </div>
           </SignUpInputContainer>
         </SignUpFormLi>

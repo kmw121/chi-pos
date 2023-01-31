@@ -15,7 +15,7 @@ import {
   SettingImgBtnBoxInput,
   SettingWarningMessage,
 } from "./settingComponents";
-import { stackSelectOption } from "../../util/stack";
+import { stackArrayWithNumber, stackSelectOption } from "../../util/stack";
 import Select from "react-select";
 import { useEffect, useState } from "react";
 import MainHead from "../Main/MainHead";
@@ -23,15 +23,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import withdrawal from "../../util/withdrawal";
 import { getCookie } from "../../util/cookie";
-import { fetchUser } from "../../slice/userSlice";
-import { setCookie } from "../../util/cookie";
 import { toast } from "react-toastify";
-import postSocialSignUpAndDetail from "../../util/postSocialSignUpAndDetail";
-import wrongRequest from "../../util/wrongRequest";
-import {
-  accessTokenValidate,
-  refreshTokenValidate,
-} from "../../util/tokenValidation";
+import postSignUpAndSettingChange from "../../util/postSignUpAndSettingChange";
 
 const reg_password = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{5,15}$/;
 
@@ -93,8 +86,8 @@ function Setting() {
       (formReg.newPassword && formReg.newPasswordAgain)
     ) {
       try {
-        const arrArr = stackSelectOption.map((a) => {
-          return { number: a.number, name: a.name };
+        const arrArr = stackArrayWithNumber.map((a) => {
+          return { number: a.number, name: a.value };
         });
         const beforeStack = [...new Set([...stack])].map((a) => a.value);
         const afterNumberStack = beforeStack
@@ -113,62 +106,18 @@ function Setting() {
         formdata.append("password", form.newPassword);
         formdata.append("stack", afterNumberStack);
         formdata.append("prePassword", notSocial ? form.prePassword : null);
-        const changeInfoResponse = await postSocialSignUpAndDetail(
+        await postSignUpAndSettingChange(
           formdata,
           "/changeInfo",
-          getCookie("jwtToken")
+          getCookie("jwtToken"),
+          dispatch,
+          navigate
         );
-        const {
-          accessValid,
-          accessExpired,
-          accessInvalid,
-        } = accessTokenValidate(changeInfoResponse);
-        if (accessValid) {
-          dispatch(fetchUser(changeInfoResponse.data.data));
-          navigate("/");
-          toast.success("정보가 변경되었습니다.");
-          return;
-        }
-        if (accessInvalid) {
-          toast.error(changeInfoResponse.data.message);
-          return;
-        }
-        if (accessExpired) {
-          const changeNextResponse = await postSocialSignUpAndDetail(
-            formdata,
-            "/changeInfo",
-            getCookie("refreshToken")
-          );
-          const {
-            refreshValid,
-            refreshExpired,
-            refreshInvalid,
-          } = refreshTokenValidate(changeNextResponse);
-          if (refreshExpired || refreshInvalid) {
-            wrongRequest(dispatch, navigate);
-            return;
-          }
-          if (refreshValid) {
-            setCookie("jwtToken", changeNextResponse.data.data);
-            const response = await postSocialSignUpAndDetail(
-              formdata,
-              "/changeInfo",
-              changeNextResponse.data.data
-            );
-            const isNewAccessTokenValid = response.data.code === 1;
-            if (isNewAccessTokenValid) {
-              dispatch(fetchUser(response.data.data));
-              navigate("/");
-              toast.success("정보가 변경되었습니다.");
-              return;
-            }
-          }
-        }
-      } catch (e) {
-        toast.error(e);
+      } catch {
+        toast.error("알 수 없는 오류로 정보 변경에 실패하였습니다.");
       }
     } else {
-      toast.error("비밀번호 창을 비워주세요? 아니면 뭐 확인해주세요? ");
+      toast.error("정보를 정확히 입력해 주세요.");
     }
   };
   useEffect(() => {
@@ -187,7 +136,7 @@ function Setting() {
     }
   }, [form.newPassword, form.newPasswordAgain]);
   useEffect(() => {
-    if (user && user.data.nickName !== undefined) {
+    if (user && user.data.nickName) {
       setForm({ ...form, nick: user.data.nickName });
     }
   }, []);

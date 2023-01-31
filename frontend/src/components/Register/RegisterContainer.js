@@ -9,11 +9,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import toStringByFormatting from "../../util/toStringByFormatting";
 import { getCookie, setCookie } from "../../util/cookie";
-import { setEditingPost } from "../../slice/userSlice";
 import getUserInfo from "../../util/getUserInfo";
 import postFormSubmit from "../../util/postFormSubmit";
 import wrongRequest from "../../util/wrongRequest";
-import { toast } from "react-toastify";
+import {
+  accessTokenValidate,
+  refreshTokenValidate,
+} from "../../util/tokenValidation";
 
 function RegisterContainer() {
   const { editingPost, user } = useSelector((state) => {
@@ -68,63 +70,46 @@ function RegisterContainer() {
   const onSubmit = async () => {
     if (user.code === 1) {
       const userInfo = await getUserInfo(user.data, getCookie("jwtToken"));
-      const isAccessTokenValid = userInfo.data.code === 1;
-      const isAccessTokenExpired = userInfo.data.code === 2;
-      const isAccessTokenInvalid = userInfo.data.code === -1;
-      if (isAccessTokenInvalid) {
+      const { accessValid, accessExpired, accessInvalid } = accessTokenValidate(
+        userInfo
+      );
+      if (accessValid) {
+        await postFormSubmit(
+          submitForm,
+          getCookie("jwtToken"),
+          dispatch,
+          navigate
+        );
+        return;
+      }
+      if (accessInvalid) {
         wrongRequest(dispatch, navigate);
         return;
       }
-      if (isAccessTokenExpired) {
+      if (accessExpired) {
         const nextUserInfo = await getUserInfo(
           user.data,
           getCookie("refreshToken")
         );
-        const isRefreshTokenValid = nextUserInfo.data.code === 1;
-        const isRefreshTokenExpired = nextUserInfo.data.code === 2;
-        const isRefreshTokenInvalid = nextUserInfo.data.code === -1;
-        if (isRefreshTokenExpired || isRefreshTokenInvalid) {
+        const {
+          refreshValid,
+          refreshExpired,
+          refreshInvalid,
+        } = refreshTokenValidate(nextUserInfo);
+        if (refreshExpired || refreshInvalid) {
           wrongRequest(dispatch, navigate);
           return;
         }
-        if (isRefreshTokenValid) {
+        if (refreshValid) {
           setCookie("jwtToken", nextUserInfo.data.data);
-          const response = await postFormSubmit(
+          await postFormSubmit(
             submitForm,
-            getCookie("jwtToken")
+            nextUserInfo.data.data,
+            dispatch,
+            navigate
           );
-          const isNewAccessTokenValid = response.data.code === 1;
-          const isNewAccessTokenInvalid = response.data.code === -1;
-          if (isNewAccessTokenValid) {
-            dispatch(setEditingPost({}));
-            toast.success("등록이 완료되었습니다.");
-            navigate("/");
-          }
-          if (isNewAccessTokenInvalid) {
-            dispatch(setEditingPost({}));
-            toast.error("알 수 없는 오류로 등록에 실패하였습니다.");
-            navigate("/");
-          }
+          return;
         }
-        return;
-      }
-      if (isAccessTokenValid) {
-        const response = await postFormSubmit(
-          submitForm,
-          getCookie("jwtToken")
-        );
-        const isRegisterSuccess = response.data.code === 1;
-        const isRegisterFail = response.data.code === -1;
-        if (isRegisterSuccess) {
-          dispatch(setEditingPost({}));
-          toast.success("등록이 완료되었습니다.");
-          navigate("/");
-        } else if (isRegisterFail) {
-          dispatch(setEditingPost({}));
-          toast.error("알 수 없는 오류로 등록에 실패하였습니다.");
-          navigate("/");
-        }
-        return;
       }
     }
   };

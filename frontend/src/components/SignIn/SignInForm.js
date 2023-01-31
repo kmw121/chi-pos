@@ -98,7 +98,7 @@ function SignInForm({ onToggle }) {
           <ModalBtnContainer>
             <ModalBtnBox>
               <GoogleSocialLoginButton />
-              <ModalBtnKakao href={KAKAO_AUTH_URL}>
+              <ModalBtnKakao onToggle={onToggle} href={KAKAO_AUTH_URL}>
                 <ModalBtnKakaoIcon
                   src={"/logo/kakao_login_btn.png"}
                   alt="kakao"

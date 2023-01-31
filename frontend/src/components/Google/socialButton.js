@@ -51,7 +51,7 @@ export const ImgPreview = styled.img`
   height: 60px;
 `;
 export const KakaoSocialBox = styled.div`
-  position: "fixed";
+  position: fixed;
   top: "50%";
   left: "50%";
   transform: "translate(-50%, -50%)";

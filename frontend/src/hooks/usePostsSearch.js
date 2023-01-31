@@ -28,10 +28,12 @@ export default function usePostsSearch() {
               : `${searchConfig.stack.reduce((acc, cur) => `${acc},${cur}`)}`,
           },
         });
-        if (res.data.code === 1) {
+        const isSuccess = res.data.code === 1;
+        const isFail = res.data.code === -1;
+        if (isSuccess) {
           setList(() => list.concat(res.data.data));
           setLoadingStatus(false);
-        } else if (res.data.code === -1) {
+        } else if (isFail) {
           setLoadingStatus(false);
           setIsEnd(true);
         }
