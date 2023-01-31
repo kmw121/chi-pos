@@ -105,8 +105,8 @@ function MainContents({
       toast.error("로그인 후 이용할 수 있는 기능입니다.");
       return;
     }
-    if (user && user.data.code === 1) {
-      const myFavoriteStack = user.data.data.userStack.map((a) => a.stack.id);
+    if (user && user.code === 1) {
+      const myFavoriteStack = user.data.userStack.map((a) => a.stack.id);
       setList([]);
       setSearchConfig((prev) => {
         return {

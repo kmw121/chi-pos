@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   AiOutlineArrowLeft,
   AiOutlineCloseCircle,
@@ -7,7 +7,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import useGetPostsById from "../../hooks/useGetPostsById";
-import { getCookie, setCookie } from "../../util/cookie";
+import { getCookie } from "../../util/cookie";
 import {
   StudyContainer,
   StudyHeadSection,
@@ -45,20 +45,12 @@ import {
   StudyInfoGridA,
   StudyHeadUserBoxImg,
 } from "./studyComponents";
-import { logout } from "../../util/logout";
-import { setCurrentPost, setEditingPost } from "../../slice/userSlice";
+import { setEditingPost } from "../../slice/userSlice";
 import postDeadline from "../../util/postDeadline";
 import { toast } from "react-toastify";
 import postDelete from "../../util/postDelete";
 import postComment from "../../util/postComment";
 import postDeleteComment from "../../util/postDeleteComment";
-import wrongRequest from "../../util/wrongRequest";
-import getCurrentPost from "../../util/getCurrentPost";
-import {
-  accessTokenValidate,
-  newAccessTokenValidate,
-  refreshTokenValidate,
-} from "../../util/tokenValidation";
 
 function Study() {
   const dispatch = useDispatch();
@@ -78,166 +70,44 @@ function Study() {
   };
   const onDeadline = async () => {
     try {
-      await postDeadline(id, getCookie, dispatch, navigate);
-    } catch (err) {
-      toast.error(err);
+      await postDeadline(id, getCookie("jwtToken"), dispatch, navigate);
+    } catch {
+      toast.error("마감에 실패하였습니다.");
     }
   };
   const onPostDelete = async () => {
     try {
-      const deleteRes = await postDelete(id, getCookie("jwtToken"));
-      const { accessValid, accessExpired, accessInvalid } = accessTokenValidate(
-        deleteRes
-      );
-      if (accessValid) {
-        toast.success("삭제되었습니다.");
-        navigate("/");
-        dispatch(setCurrentPost(await getCurrentPost(id)));
-        return;
-      }
-      if (accessExpired) {
-        const nextDeleteRes = await postDelete(id, getCookie("refreshToken"));
-        const {
-          refreshValid,
-          refreshExpired,
-          refreshInvalid,
-        } = refreshTokenValidate(nextDeleteRes);
-        if (refreshValid) {
-          setCookie("jwtToken", nextDeleteRes.data.data);
-          const response = await postDelete(id, nextDeleteRes.data.data);
-          const {
-            newAccessValid,
-            newAccessExpired,
-            newAccessInvalid,
-          } = newAccessTokenValidate(response);
-          if (newAccessValid) {
-            toast.success("삭제되었습니다.");
-            navigate("/");
-            dispatch(setCurrentPost(await getCurrentPost(id)));
-            return;
-          }
-          if (newAccessExpired || newAccessInvalid) {
-            wrongRequest(dispatch, navigate);
-            toast.error("잘못된 접근입니다. 다시 로그인해주세요.");
-            navigate("/");
-            return;
-          }
-        }
-        if (refreshExpired || refreshInvalid) {
-          wrongRequest(dispatch, navigate);
-          toast.error("잘못된 접근입니다. 다시 로그인해주세요.");
-          navigate("/");
-          return;
-        }
-      }
-      if (accessInvalid) {
-        toast.error("잘못된 접근입니다. 다시 로그인해주세요.");
-        logout();
-        return;
-      }
-    } catch (err) {
-      toast.error(err);
+      await postDelete(id, getCookie("jwtToken"), dispatch, navigate);
+    } catch {
+      toast.error("게시글 삭제에 실패하였습니다.");
     }
   };
   const onPostComment = async () => {
     try {
-      const commentRes = await postComment(
+      await postComment(
         post,
         comment,
-        getCookie("jwtToken")
+        getCookie("jwtToken"),
+        dispatch,
+        navigate,
+        id,
+        setComment
       );
-      const { accessValid, accessExpired, accessInvalid } = accessTokenValidate(
-        commentRes
-      );
-      if (accessValid) {
-        toast.success("댓글이 등록되었습니다!");
-        setComment("");
-        dispatch(setCurrentPost(await getCurrentPost(id)));
-        return;
-      }
-      if (accessExpired) {
-        const commentNextRes = await postComment(
-          post,
-          comment,
-          getCookie("refreshToken")
-        );
-        const {
-          refreshValid,
-          refreshExpired,
-          refreshInvalid,
-        } = refreshTokenValidate(commentNextRes);
-        if (refreshValid) {
-          setCookie("jwtToken", commentNextRes.data.data);
-          const response = await postComment(
-            post,
-            comment,
-            commentNextRes.data.data
-          );
-          const { newAccessValid } = newAccessTokenValidate(response);
-          if (newAccessValid) {
-            toast.success("댓글이 등록되었습니다!");
-            setComment("");
-            dispatch(setCurrentPost(await getCurrentPost(id)));
-            return;
-          }
-        }
-        if (refreshExpired || refreshInvalid) {
-          wrongRequest(dispatch, navigate);
-          toast.error("잘못된 접근입니다. 다시 로그인해주세요.");
-          return;
-        }
-      }
-      if (accessInvalid) {
-        toast.error("로그인 후 시도해주세요.");
-        return;
-      }
-    } catch (err) {
-      throw new Error(err);
+    } catch {
+      toast.error("댓글 작성에 실패하였습니다. 다시 시도해주세요.");
     }
   };
   const onDeleteComment = async (contentId) => {
     try {
-      const deleteCommentRes = await postDeleteComment(
+      await postDeleteComment(
         contentId,
-        getCookie("jwtToken")
+        getCookie("jwtToken"),
+        dispatch,
+        navigate,
+        id
       );
-      const { accessValid, accessExpired, accessInvalid } = accessTokenValidate(
-        deleteCommentRes
-      );
-      if (accessValid) {
-        toast.success("댓글이 삭제되었습니다.");
-        dispatch(setCurrentPost(await getCurrentPost(id)));
-        return;
-      }
-      if (accessExpired) {
-        const deleteCommentNextRes = await postDeleteComment(
-          contentId,
-          getCookie("refreshToken")
-        );
-        const {
-          refreshValid,
-          refreshExpired,
-          refreshInvalid,
-        } = refreshTokenValidate(deleteCommentNextRes);
-        if (refreshValid) {
-          setCookie("jwtToken", deleteCommentNextRes.data.data);
-          toast.error("댓글이 삭제되었습니다.");
-          dispatch(setCurrentPost(await getCurrentPost(id)));
-          return;
-        }
-        if (refreshExpired || refreshInvalid) {
-          wrongRequest(dispatch, navigate);
-          toast.error("잘못된 접근입니다. 다시 로그인해주세요.");
-          return;
-        }
-      }
-      if (accessInvalid) {
-        wrongRequest(dispatch, navigate);
-        toast.error("잘못된 접근입니다. 다시 로그인해주세요.");
-        return;
-      }
-    } catch (err) {
-      throw new Error(err);
+    } catch {
+      toast.error("댓글 삭제에 실패하였습니다. 다시 시도해주세요.");
     }
   };
   const handleEditPost = () => {
@@ -362,7 +232,7 @@ function Study() {
                       </StudyCommentHeadDate>
                     </StudyCommentHeadNameDateBox>
                   </StudyCommentHeadBox>
-                  {user.length && post && user.data.id === content.user.id && (
+                  {post && user.data.id === content.user.id && (
                     <AiOutlineCloseCircle
                       className="studyCommentDelete"
                       onClick={() => onDeleteComment(content.id)}

@@ -6,7 +6,6 @@ export default async function postDupCheckNick(form, setFormReg) {
   const dupCheck = await axios.post(API_URL + "/dupUsername", {
     nickName: form.nickName,
   });
-
   const isDupCheckSuccess = dupCheck.data.code === -1;
   const isDupCheckFail = dupCheck.data.code === 1;
   if (isDupCheckSuccess) {

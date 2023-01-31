@@ -1,8 +1,7 @@
 import axios from "axios";
 import { API_URL } from "./API_URL";
 import { toast } from "react-toastify";
-import { setCurrentPost } from "../slice/userSlice";
-import getCurrentPost from "./getCurrentPost";
+import { fetchCurrentPost } from "../slice/userSlice";
 
 export default async function postDeadline(id, getCookie, dispatch, navigate) {
   const deadlineRes = await axios.post(API_URL + `/end/${id}`, null, {
@@ -15,7 +14,7 @@ export default async function postDeadline(id, getCookie, dispatch, navigate) {
   if (isDeadlineSuccess) {
     toast.success("마감되었습니다.");
     navigate("/");
-    dispatch(setCurrentPost(await getCurrentPost(id)));
+    dispatch(fetchCurrentPost(id));
     return;
   }
   if (isDeadlineFail) {

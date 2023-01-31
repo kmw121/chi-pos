@@ -28,6 +28,7 @@ const initialState = {
     comments: [],
   },
   editingPost: {},
+  loading: "",
 };
 
 export const fetchUser = createAsyncThunk("user/fetchUser", async (decoded) => {
@@ -36,8 +37,17 @@ export const fetchUser = createAsyncThunk("user/fetchUser", async (decoded) => {
       Authorization: getCookie("jwtToken"),
     },
   });
+  console.log("res : ", res);
   return res.data;
 });
+
+export const fetchCurrentPost = createAsyncThunk(
+  "user/fetchCurrentPost",
+  async (id) => {
+    const res = await axios.get(API_URL + `/post/${id}`);
+    return res.data.data;
+  }
+);
 
 export const userSlice = createSlice({
   name: "user",
@@ -63,6 +73,16 @@ export const userSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(fetchUser.rejected, (state) => {
+        state.loading = rejected;
+      })
+      .addCase(fetchCurrentPost.pending, (state) => {
+        state.loading = pending;
+      })
+      .addCase(fetchCurrentPost.fulfilled, (state, action) => {
+        state.loading = fulfilled;
+        state.currentPost = action.payload;
+      })
+      .addCase(fetchCurrentPost.rejected, (state) => {
         state.loading = rejected;
       });
   },

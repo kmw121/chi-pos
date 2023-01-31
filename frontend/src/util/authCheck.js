@@ -1,8 +1,7 @@
 import { getCookie, setCookie } from "./cookie";
-import { fetchUser } from "../slice/userSlice";
 import getUserInfo from "./getUserInfo";
 import wrongRequest from "./wrongRequest";
-import jwt_decode from "jwt-decode";
+import { accessTokenValidate, refreshTokenValidate } from "./tokenValidation";
 
 export default async function authCheck(dispatch, navigate, user) {
   if (!user.code || user.code !== 1) {
@@ -10,22 +9,29 @@ export default async function authCheck(dispatch, navigate, user) {
   } else {
     try {
       const getUser = await getUserInfo(user.data, getCookie("jwtToken"));
-      if (getUser.data.code === -1) {
+      const { accessExpired, accessInvalid } = accessTokenValidate(getUser);
+      if (accessInvalid) {
         wrongRequest(dispatch, navigate);
-      } else if (getUser.data.code === 2) {
+        return;
+      }
+      if (accessExpired) {
         const nextGetUser = await getUserInfo(
           user.data,
           getCookie("refreshToken")
         );
-        if (nextGetUser.data.code === 2 || nextGetUser.data.code === -1) {
+        const {
+          refreshValid,
+          refreshExpired,
+          refreshInvalid,
+        } = refreshTokenValidate(nextGetUser);
+        if (refreshExpired || refreshInvalid) {
           wrongRequest(dispatch, navigate);
-        } else if (nextGetUser.data.code === 1) {
-          setCookie("jwtToken", nextGetUser.data.data);
-          const decoded = jwt_decode(nextGetUser.data.data);
-          fetchUser(decoded);
+          return;
         }
-      } else if (getUser.data.code === 1) {
-        console.log("정보 VALID 합니다. auth Check 통과 ! ");
+        if (refreshValid) {
+          setCookie("jwtToken", nextGetUser.data.data);
+          return;
+        }
       }
     } catch (err) {
       throw new Error(err);

@@ -6,6 +6,10 @@ import { setUser } from "../slice/userSlice";
 import deleteAuthCookies from "../util/deleteAuthCookies";
 import wrongRequest from "../util/wrongRequest";
 import { toast } from "react-toastify";
+import {
+  accessTokenValidate,
+  refreshTokenValidate,
+} from "../util/tokenValidation";
 
 export default function useGetMyPost(dispatch, navigate) {
   const [post, setPost] = useState([]);
@@ -17,28 +21,36 @@ export default function useGetMyPost(dispatch, navigate) {
             Authorization: `${getCookie("jwtToken")}`,
           },
         });
-        const isAccessTokenValid = res.data.code === 1;
-        const isAccessTokenExpired = res.data.code === 2;
-        const isAccessTokenInvalid = res.data.code === -1;
-        if (isAccessTokenValid) {
+        const {
+          accessValid,
+          accessExpired,
+          accessInvalid,
+        } = accessTokenValidate(res);
+        if (accessValid) {
           setPost(res.data.data);
           return;
         }
-        if (isAccessTokenExpired) {
+        if (accessInvalid) {
+          wrongRequest(dispatch, navigate);
+          return;
+        }
+        if (accessExpired) {
           const nextRes = await axios.get(API_URL + "/myPost", {
             headers: { Authorization: `${getCookie("refreshToken")}` },
           });
-          const isRefreshTokenValid = nextRes.data.code === 1;
-          const isRefreshTokenExpired = nextRes.data.code === 2;
-          const isRefreshTokenInvalid = nextRes.data.code === -1;
-          if (isRefreshTokenExpired || isRefreshTokenInvalid) {
+          const {
+            refreshValid,
+            refreshExpired,
+            refreshInvalid,
+          } = refreshTokenValidate(nextRes);
+          if (refreshExpired || refreshInvalid) {
             deleteAuthCookies();
             dispatch(setUser([]));
             toast.error("잘못된 접근입니다. 다시 로그인 해주세요.");
             navigate("/");
             return;
           }
-          if (isRefreshTokenValid) {
+          if (refreshValid) {
             setCookie("jwtToken", nextRes.data.data);
             setCookie();
             const response = await axios.get(API_URL + "/myPost", {
@@ -60,9 +72,6 @@ export default function useGetMyPost(dispatch, navigate) {
             }
           }
           return;
-        }
-        if (isAccessTokenInvalid) {
-          wrongRequest(dispatch, navigate);
         }
       } catch (err) {
         toast.error(err);
