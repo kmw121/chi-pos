@@ -13,6 +13,7 @@ export default function GoogleSocialLoginButton() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const onSuccess = async (response) => {
+    console.log("success res ", response);
     try {
       await handleGoogleAuth(response, dispatch, navigate);
     } catch {
