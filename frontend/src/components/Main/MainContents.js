@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import FadeLoader from "react-spinners/FadeLoader";
 import "../../App.css";
 import {
@@ -39,10 +39,6 @@ import {
   MainContentsAppStudyInfoUserImg,
   MainLoadingBox,
 } from "./mainComponents";
-import {
-  StudyPendingCOntainer,
-  StudyPendingImg,
-} from "../Study/studyComponents";
 import getGenerateRandomKey from "../../util/getGenerateRandomKey";
 import { useSelector } from "react-redux";
 import { useIntersect } from "../../hooks/useIntersect";
@@ -56,10 +52,9 @@ function MainContents({
   setList,
   isEnd,
 }) {
-  const { user, loading } = useSelector((state) => {
+  const { user } = useSelector((state) => {
     return state.user;
   });
-  console.log(loading);
   const [isChecked, setIsChecked] = useState(false);
   const [categorySelected, setCategorySelected] = useState([
     {
@@ -107,7 +102,7 @@ function MainContents({
   };
   const handleOnlyFavorited = () => {
     if (!user.code || user.code !== 1) {
-      toast.error("로그인 후 이용할 수 있는 기능입니다.");
+      toast.error("로그인 후 이용할 수 있습니다.");
       return;
     }
     if (user && user.code === 1) {
@@ -250,9 +245,6 @@ function MainContents({
             ))}
           {loadingStatus && (
             <>
-              <StudyPendingCOntainer>
-                <StudyPendingImg src="/c-pos/ms-icon-310x310.png" alt="logo" />
-              </StudyPendingCOntainer>
               <MainContentsAppStudyEmptyBox>
                 <MainContentsAppStudyEmtpyBoxInner></MainContentsAppStudyEmtpyBoxInner>
               </MainContentsAppStudyEmptyBox>
