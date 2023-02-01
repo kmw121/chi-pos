@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export const StudyContainer = styled.div`
   max-width: 900px;
@@ -285,4 +285,29 @@ export const StudyCommentMainText = styled.p`
   @media (max-width: 500px) {
     font-size: 1rem;
   }
+`;
+
+export const StudyPendingCOntainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  overflow: hidden;
+  background: white;
+  z-index: 9999;
+  opacity: 0.5;
+`;
+export const rotate_image = keyframes`
+100% {
+  transform: rotate(360deg)
+}
+`;
+export const StudyPendingImg = styled.img`
+  animation: ${rotate_image} 1s linear infinite;
+  transform-origin: 50% 50%;
+  width: 250px;
+  height: 250px;
+  position: absolute;
+  top: 20%;
+  left: 40%;
+  // transform: translate(-50%, -50%);
 `;

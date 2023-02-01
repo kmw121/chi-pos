@@ -39,6 +39,10 @@ import {
   MainContentsAppStudyInfoUserImg,
   MainLoadingBox,
 } from "./mainComponents";
+import {
+  StudyPendingCOntainer,
+  StudyPendingImg,
+} from "../Study/studyComponents";
 import getGenerateRandomKey from "../../util/getGenerateRandomKey";
 import { useSelector } from "react-redux";
 import { useIntersect } from "../../hooks/useIntersect";
@@ -52,9 +56,10 @@ function MainContents({
   setList,
   isEnd,
 }) {
-  const { user } = useSelector((state) => {
+  const { user, loading } = useSelector((state) => {
     return state.user;
   });
+  console.log(loading);
   const [isChecked, setIsChecked] = useState(false);
   const [categorySelected, setCategorySelected] = useState([
     {
@@ -245,6 +250,9 @@ function MainContents({
             ))}
           {loadingStatus && (
             <>
+              <StudyPendingCOntainer>
+                <StudyPendingImg src="/c-pos/ms-icon-310x310.png" alt="logo" />
+              </StudyPendingCOntainer>
               <MainContentsAppStudyEmptyBox>
                 <MainContentsAppStudyEmtpyBoxInner></MainContentsAppStudyEmtpyBoxInner>
               </MainContentsAppStudyEmptyBox>

@@ -29,9 +29,10 @@ import postSignUpAndSettingChange from "../../util/postSignUpAndSettingChange";
 const reg_password = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{5,15}$/;
 
 function Setting() {
-  const { user } = useSelector((state) => {
+  const { user, loading } = useSelector((state) => {
     return state.user;
   });
+  console.log(loading);
   const { googleId, kakaoId } = user.data;
   const notSocial = !kakaoId && !googleId;
   const [stack, setStack] = useState(
