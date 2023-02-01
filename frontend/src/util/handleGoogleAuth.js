@@ -21,10 +21,10 @@ export default async function handleGoogleAuth(response, dispatch, navigate) {
   if (isAlreadySignedUp) {
     const { accessToken, refreshToken } = googleResponse.data.data;
     const decoded = jwt_decode(accessToken);
+    settingAuthCookies(accessToken, refreshToken, { path: "/" });
     dispatch(fetchUser(decoded));
     navigate("/");
     toast.success("구글로 로그인 되었습니다.");
-    settingAuthCookies(accessToken, refreshToken, { path: "/" });
     return;
   }
 }

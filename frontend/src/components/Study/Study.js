@@ -53,8 +53,7 @@ import { toast } from "react-toastify";
 import postDelete from "../../util/postDelete";
 import postComment from "../../util/postComment";
 import postDeleteComment from "../../util/postDeleteComment";
-import { fulfilled, pending } from "../../constant";
-import { useGetPreventScrolling } from "../../hooks/useGetPreventScrolling";
+import { fulfilled } from "../../constant";
 
 function Study() {
   const dispatch = useDispatch();
