@@ -92,6 +92,7 @@ export const MainContentsToggleInput = styled.input`
   border-radius: 15px;
   width: 50px;
   height: 26px;
+  cursor: pointer;
   &:checked + ${MainContentsToggleLabel} {
     background: #ffcd00;
     &::after {

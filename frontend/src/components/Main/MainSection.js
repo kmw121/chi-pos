@@ -71,9 +71,9 @@ function MainSection({ setSearchConfig, setList }) {
     setSectionStack(
       [...stacks].filter((a) =>
         category.category === "모두보기"
-          ? a.name !== ""
+          ? a.name
           : category.category === "인기"
-          ? a.isPopular === true
+          ? a.isPopular
           : a.category.includes(category.name)
       )
     );

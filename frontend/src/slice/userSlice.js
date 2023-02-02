@@ -37,8 +37,6 @@ export const fetchUser = createAsyncThunk("user/fetchUser", async (decoded) => {
       Authorization: getCookie("jwtToken"),
     },
   });
-  console.log(getCookie("jwtToken"));
-  console.log("res : ", res);
   return res.data;
 });
 

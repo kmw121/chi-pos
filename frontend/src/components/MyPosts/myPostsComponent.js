@@ -70,3 +70,23 @@ export const MyPostsContentsAppStudyInfoRightDetail = styled.div`
   grid-gap: 6px;
   gap: 6px;
 `;
+export const MyPostsEmptyBox = styled.div`
+  width: 100%;
+  height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+`;
+export const MyPostsNothingText = styled.div`
+  font-size: 3rem;
+  color: #868e96;
+`;
+export const MyPostsNothingGoText = styled.div`
+  font-size: 2rem;
+  color: #ced4da;
+  cursor: pointer;
+  &:hover {
+    color: #868e96;
+  }
+`;

@@ -1,9 +1,10 @@
 import { setEditingPost, setUser } from "../slice/userSlice";
 import { toast } from "react-toastify";
 import deleteAuthCookies from "./deleteAuthCookies";
+import { userInitialState } from "./userInitialState";
 
 export const logout = (dispatch, navigate) => {
-  dispatch(setUser([]));
+  dispatch(setUser(userInitialState));
   document.cookie = "jwtToken=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/;";
   document.cookie =
     "refreshToken=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/;";

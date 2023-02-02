@@ -93,7 +93,7 @@ export const IdInput = styled.input`
   outline: none;
   padding-left: 10px;
   background-color: rgb(233, 233, 233);
-  margin-bottom: 30px;
+  margin-bottom: 15px;
   text-align: center;
   @media (max-width: 500px) {
     margin-bottom: 15px;
@@ -111,7 +111,7 @@ export const PwInput = styled.input`
   padding-left: 10px;
   background-color: rgb(233, 233, 233);
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 15px;
   @media (max-width: 500px) {
     margin-bottom: 15px;
     font-size: 13px;
@@ -195,4 +195,9 @@ export const ModalBtnKakaoIcon = styled.img`
     width: 250px;
     height: 40px;
   }
+`;
+export const ModalInputValueInvalid = styled.div`
+  margin-bottom: 15px;
+  color: #ffa8a8;
+  font-weight: bold;
 `;

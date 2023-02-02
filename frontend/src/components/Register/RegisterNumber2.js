@@ -5,9 +5,10 @@ import {
   RegisterNumber2TitleText,
   RegisterNumber2TitleCircle,
   RegisterNumber2NameLabel,
+  RegisterWarningBox,
 } from "./registerComponents";
 
-function RegisterNumber2({ titleText, setTitleText }) {
+function RegisterNumber2({ titleText, setTitleText, dataFormReg }) {
   const onChangeInputV = (e) => {
     setTitleText(e.target.value);
   };
@@ -25,6 +26,9 @@ function RegisterNumber2({ titleText, setTitleText }) {
         value={titleText || ""}
         placeholder="글 제목을 입력해주세요!"
       />
+      {!titleText && dataFormReg.title && (
+        <RegisterWarningBox>제목을 입력해 주세요 !</RegisterWarningBox>
+      )}
     </section>
   );
 }

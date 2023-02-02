@@ -130,4 +130,5 @@ export const SettingWarningMessage = styled.div`
   width: 100%;
   color: #ffa8a8;
   margin-left: 20px;
+  font-weight: bold;
 `;

@@ -12,7 +12,7 @@ const handleTop = () => {
     behavior: "smooth",
   });
 };
-function MainPage() {
+function MainPage({ toggleModal, modalOpen }) {
   const {
     list,
     loadingStatus,
@@ -23,7 +23,7 @@ function MainPage() {
   } = usePostsSearch();
   return (
     <>
-      <MainHead />
+      <MainHead toggleModal={toggleModal} modalOpen={modalOpen} />
       <MainBanner />
       <MainSection
         setSearchConfig={setSearchConfig}

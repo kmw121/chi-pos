@@ -21,7 +21,7 @@ function RegisterContainer() {
   const { editingPost, user } = useSelector((state) => {
     return state.user;
   });
-  const [dataForm, steDataForm] = useState({
+  const [dataForm, setDataForm] = useState({
     category: editingPost.categoryType,
     people: editingPost.people,
     howto: editingPost.howto,
@@ -44,6 +44,15 @@ function RegisterContainer() {
       // ?
       new Date(),
     //: new Date(currentPost.startDate),
+  });
+  const [dataFormReg, setDataFormReg] = useState({
+    categoryType: false,
+    people: false,
+    duration: false,
+    howto: false,
+    title: false,
+    contactAddress: false,
+    detail: false,
   });
   const [titleText, setTitleText] = useState(editingPost.title);
   const [editorValue, setEditorValue] = useState(editingPost.detail);
@@ -78,7 +87,8 @@ function RegisterContainer() {
           submitForm,
           getCookie("jwtToken"),
           dispatch,
-          navigate
+          navigate,
+          setDataFormReg
         );
         return;
       }
@@ -106,7 +116,8 @@ function RegisterContainer() {
             submitForm,
             nextUserInfo.data.data,
             dispatch,
-            navigate
+            navigate,
+            setDataFormReg
           );
           return;
         }
@@ -115,9 +126,22 @@ function RegisterContainer() {
   };
   return (
     <RegisterContainerDiv>
-      <RegisterNumber1 dataForm={dataForm} setDataForm={steDataForm} />
-      <RegisterNumber2 titleText={titleText} setTitleText={setTitleText} />
-      <Editor editorValue={editorValue} setEditorValue={setEditorValue} />
+      <RegisterNumber1
+        dataFormReg={dataFormReg}
+        setDataFormReg={setDataFormReg}
+        dataForm={dataForm}
+        setDataForm={setDataForm}
+      />
+      <RegisterNumber2
+        dataFormReg={dataFormReg}
+        titleText={titleText}
+        setTitleText={setTitleText}
+      />
+      <Editor
+        dataFormReg={dataFormReg}
+        editorValue={editorValue}
+        setEditorValue={setEditorValue}
+      />
       <RegisterBottomBtn onSubmit={onSubmit} />
     </RegisterContainerDiv>
   );

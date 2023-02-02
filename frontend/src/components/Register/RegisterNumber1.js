@@ -11,6 +11,7 @@ import {
   RegisterNumber1Title,
   RegisterNumber1TitleText,
   RegisterNumber1Label,
+  RegisterWarningBox,
 } from "./registerComponents";
 import { getYear, getMonth } from "date-fns";
 import DatePicker from "react-datepicker";
@@ -34,7 +35,12 @@ const months = [
   "12월",
 ];
 
-function RegisterNumber1({ dataForm, setDataForm }) {
+function RegisterNumber1({
+  dataForm,
+  setDataForm,
+  dataFormReg,
+  setDataFormReg,
+}) {
   const handleChangeForm = (value, e) => {
     setDataForm({ ...dataForm, [e.name]: value.value });
   };
@@ -56,6 +62,8 @@ function RegisterNumber1({ dataForm, setDataForm }) {
       return { ...prev, contactAddress: e.target.value };
     });
   };
+  console.log(dataForm);
+  console.log(dataFormReg);
   return (
     <section>
       <RegisterNumber1Title>
@@ -79,6 +87,9 @@ function RegisterNumber1({ dataForm, setDataForm }) {
               }
             }
           />
+          {!dataForm.category && dataFormReg.categoryType && (
+            <RegisterWarningBox>모집 구분을 설정해 주세요</RegisterWarningBox>
+          )}
         </RegisterNumber1Li>
         <RegisterNumber1Li>
           <RegisterNumber1Label>모집 인원</RegisterNumber1Label>
@@ -94,6 +105,9 @@ function RegisterNumber1({ dataForm, setDataForm }) {
               }
             }
           />
+          {!dataForm.people && dataFormReg.people && (
+            <RegisterWarningBox>모집 인원을 설정해 주세요</RegisterWarningBox>
+          )}
         </RegisterNumber1Li>
       </RegisterNumber1Ul>
       <RegisterNumber1Ul>
@@ -111,6 +125,9 @@ function RegisterNumber1({ dataForm, setDataForm }) {
               }
             }
           />
+          {!dataForm.howto && dataFormReg.howto && (
+            <RegisterWarningBox>진행 방식을 설정해 주세요</RegisterWarningBox>
+          )}
         </RegisterNumber1Li>
         <RegisterNumber1Li>
           <RegisterNumber1Label>진행 기간</RegisterNumber1Label>
@@ -126,6 +143,9 @@ function RegisterNumber1({ dataForm, setDataForm }) {
               }
             }
           />
+          {!dataForm.duration && dataFormReg.duration && (
+            <RegisterWarningBox>진행 기간을 선택해 주세요</RegisterWarningBox>
+          )}
         </RegisterNumber1Li>
       </RegisterNumber1Ul>
       <RegisterNumber1Ul>
@@ -232,6 +252,9 @@ function RegisterNumber1({ dataForm, setDataForm }) {
             name="contact???"
             onChange={onChangeContactAddress}
           />
+          {!dataForm.contactAddress && dataFormReg.contactAddress && (
+            <RegisterWarningBox>연락 방법을 입력해 주세요</RegisterWarningBox>
+          )}
         </RegisterNumber1Li>
         <RegisterNumber1Li>
           <RegisterNumber1Label></RegisterNumber1Label>

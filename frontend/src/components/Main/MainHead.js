@@ -15,8 +15,10 @@ import SignInForm from "../SignIn/SignInForm";
 import { logout } from "../../util/logout";
 import { useDispatch, useSelector } from "react-redux";
 import { setEditingPost } from "../../slice/userSlice";
+import postLogin from "../../util/postLogin";
+import { toast } from "react-toastify";
 
-function MainHead() {
+function MainHead({ toggleModal, modalOpen }) {
   const { user } = useSelector((state) => {
     return state.user;
   });
@@ -35,17 +37,28 @@ function MainHead() {
   const onGoToPosts = () => {
     navigate("/myPosts");
   };
-  const [modalOpen, setModalOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const toggleModal = () => {
-    setModalOpen(!modalOpen);
-  };
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
+  const handleTestAccount = async () => {
+    try {
+      await postLogin(
+        {
+          username: "test@chi.pos",
+          password: "12345",
+        },
+        dispatch,
+        navigate,
+        false
+      );
+    } catch (err) {
+      toast.error("테스트 계정으로 로그인이 실패하였습니다.");
+      throw new Error(err);
+    }
+  };
   return (
     <>
-      {" "}
       <MainHeadNav>
         <a href="/">
           <MainHeadNavLeftImg alt="LOGO" src={"/c-pos/ms-icon-310x310.png"} />
@@ -53,7 +66,10 @@ function MainHead() {
         <MainHeadNavRight>
           {user && user.code !== undefined && user.code === 1 ? (
             <>
-              <MainHeadNavBtn onClick={onGoToRegister}>
+              <MainHeadNavBtn
+                toggleModal={toggleModal}
+                onClick={onGoToRegister}
+              >
                 새 글 쓰기
               </MainHeadNavBtn>
               <MainHeadNavBtn onClick={toggleDropdown}>
@@ -86,6 +102,9 @@ function MainHead() {
             </>
           ) : (
             <>
+              <MainHeadNavBtn onClick={handleTestAccount}>
+                둘러보기
+              </MainHeadNavBtn>
               <MainHeadNavBtn onClick={onGoToSignUp}>회원가입</MainHeadNavBtn>
               <MainHeadNavBtn onClick={toggleModal}>로그인</MainHeadNavBtn>
             </>
