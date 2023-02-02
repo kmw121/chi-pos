@@ -1,11 +1,11 @@
 import SignUpForm from "./SignUpForm";
 import MainHead from "../Main/MainHead";
 
-function SignUpPage() {
+function SignUpPage({ toggleModal, modalOpen }) {
   return (
     <>
-      <MainHead />
-      <SignUpForm />
+      <MainHead modalOpen={modalOpen} toggleModal={toggleModal} />
+      <SignUpForm modalOpen={modalOpen} toggleModal={toggleModal} />
     </>
   );
 }

@@ -53,6 +53,7 @@ function Setting() {
     basicImg: false,
   });
   const [formReg, setFormReg] = useState({
+    nick: false,
     prePassword: false,
     newPassword: false,
     newPasswordAgain: false,
@@ -112,15 +113,18 @@ function Setting() {
           "/changeInfo",
           getCookie("jwtToken"),
           dispatch,
-          navigate
+          navigate,
+          setFormReg
         );
-      } catch {
+      } catch (err) {
         toast.error("알 수 없는 오류로 정보 변경에 실패하였습니다.");
+        throw new Error(err);
       }
     } else {
-      toast.error("정보를 정확히 입력해 주세요.");
+      toast.error("변경할 비밀번호를 확인하여 주세요.");
     }
   };
+  console.log(formReg);
   useEffect(() => {
     if (form.newPassword.length) {
       setFormReg((prev) => {
@@ -185,6 +189,12 @@ function Setting() {
             name="nick"
           />
         </SettingTitleBox>
+        {formReg.nick && (
+          <SettingWarningMessage>
+            이미 존재하는 닉네임입니다. 다른 닉네임을 사용해주세요.
+          </SettingWarningMessage>
+        )}
+
         <SettingDescription>
           '프로젝트 이름'에서 사용되는 닉네임입니다.
         </SettingDescription>
@@ -217,6 +227,11 @@ function Setting() {
                 name="prePassword"
               />
             </SettingTitleBox>
+            {formReg.prePassword && (
+              <SettingWarningMessage>
+                기존 비밀번호가 일치하지 않습니다.
+              </SettingWarningMessage>
+            )}
             <SettingDescription>
               정보 변경을 위하여 기존 비밀번호를 입력해 주세요.&nbsp;
               <strong className="colorRed">(필수)</strong>

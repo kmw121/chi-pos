@@ -18,6 +18,7 @@ import {
   ModalBottomCancelBtn,
   ModalBottomOkBtn,
   ModalBtnKakaoIcon,
+  ModalInputValueInvalid,
 } from "./signInComponents";
 import { useDispatch } from "react-redux";
 import { KAKAO_AUTH_URL } from "../../util/kakaoAuth";
@@ -25,14 +26,20 @@ import { gapi } from "gapi-script";
 import GoogleSocialLoginButton from "../Google/GoogleSocialLoginButton";
 import postLogin from "../../util/postLogin";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const clientId =
   "410536498654-65qpckepv8mo646k8dap7ufhscovs0h3.apps.googleusercontent.com";
 
 function SignInForm({ onToggle }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   useGetPreventScrolling();
   const [loginForm, setLoginForm] = useState({
+    username: "",
+    password: "",
+  });
+  const [loginFormReg, setLoginFormReg] = useState({
     username: "",
     password: "",
   });
@@ -53,11 +60,19 @@ function SignInForm({ onToggle }) {
   };
   const onLogin = async () => {
     try {
-      await postLogin(loginForm, dispatch, onToggle);
+      await postLogin(
+        loginForm,
+        dispatch,
+        navigate,
+        true,
+        onToggle,
+        setLoginFormReg
+      );
     } catch {
       toast.error("로그인에 실패하였습니다.");
     }
   };
+  console.log("login reg : ", loginFormReg);
   useEffect(() => {
     function start() {
       gapi.client.init({
@@ -83,6 +98,11 @@ function SignInForm({ onToggle }) {
               value={loginForm.username}
               placeholder="E-MAIL"
             />
+            {loginFormReg.username && (
+              <ModalInputValueInvalid>
+                등록되지 않은 회원입니다.
+              </ModalInputValueInvalid>
+            )}
             <PwInput
               onChange={onPwValue}
               onKeyDown={onPwPress}
@@ -90,6 +110,12 @@ function SignInForm({ onToggle }) {
               placeholder="PASSWORD"
               type="password"
             />
+            {loginFormReg.password && (
+              <ModalInputValueInvalid>
+                {" "}
+                비밀번호를 확인해 주세요.
+              </ModalInputValueInvalid>
+            )}
           </ModalInnerBox>
           <ModalBottomSection>
             <ModalBottomCancelBtn onClick={onToggle}>취소</ModalBottomCancelBtn>

@@ -30,12 +30,12 @@ const reg_username = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2
 const reg_password = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{5,15}$/;
 const reg_nickName = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$/;
 
-function SignUpForm() {
+function SignUpForm({ toggleModal, modalOpen }) {
   const [formReg, setFormReg] = useState({
-    username: false,
-    password: false,
-    passwordAgain: false,
-    nickName: false,
+    username: true,
+    password: true,
+    passwordAgain: true,
+    nickName: true,
     dupCheckUsername: false,
     dupCheckNickName: false,
   });
@@ -65,6 +65,18 @@ function SignUpForm() {
     });
   };
   const onSubmit = async () => {
+    setFormReg((prev) => {
+      return {
+        ...prev,
+        username: reg_username.test(form.username),
+        password: reg_password.test(form.password),
+        passwordAgain:
+          form.password !== "" &&
+          form.passwordAgain !== "" &&
+          form.password === form.passwordAgain,
+        nickName: reg_nickName.test(form.nickName),
+      };
+    });
     if (
       formReg.username &&
       formReg.nickName &&
@@ -83,7 +95,7 @@ function SignUpForm() {
         formdata.append("password", form.password);
         formdata.append("nickName", form.nickName);
         formdata.append("stack", form.stack);
-        await postSubmit(formdata, navigate);
+        await postSubmit(formdata, navigate, toggleModal, setFormReg);
       } catch {
         toast.error(`알 수 없는 오류로 회원가입에 실패하였습니다.`);
       }
@@ -92,7 +104,8 @@ function SignUpForm() {
     }
   };
   const onDupCheckEmail = async () => {
-    if (formReg.username) {
+    const isRegEmail = reg_username.test(form.username);
+    if (isRegEmail) {
       try {
         await postDupCheckEmail(form, setFormReg);
       } catch {
@@ -103,7 +116,8 @@ function SignUpForm() {
     }
   };
   const onDupCheckNickName = async () => {
-    if (formReg.nickName) {
+    const isRegNickName = reg_nickName.test(form.nickName);
+    if (isRegNickName) {
       try {
         await postDupCheckNick(form, setFormReg);
       } catch {
@@ -124,20 +138,6 @@ function SignUpForm() {
       };
     });
   };
-  useEffect(() => {
-    setFormReg((prev) => {
-      return {
-        ...prev,
-        username: reg_username.test(form.username),
-        password: reg_password.test(form.password),
-        passwordAgain:
-          form.password !== "" &&
-          form.passwordAgain !== "" &&
-          form.password === form.passwordAgain,
-        nickName: reg_nickName.test(form.nickName),
-      };
-    });
-  }, [form.username, form.nickName, form.password, form.passwordAgain]);
   return (
     <RegisterContainerDiv>
       <SignUpFormTitle>
@@ -163,10 +163,10 @@ function SignUpForm() {
             value={form.username}
             onChange={handleChange}
             placeholder="ex ) ABCD1234@naver.com"
-            disabled={form.dupCheckUsername}
+            disabled={formReg.dupCheckUsername}
             name="username"
           />
-          {form.username && !formReg.username && (
+          {!formReg.username && (
             <SignUpFormRegWarning>
               이메일 형식을 확인해주세요.
             </SignUpFormRegWarning>
@@ -183,10 +183,10 @@ function SignUpForm() {
             onChange={handleChange}
             value={form.nickName}
             placeholder=""
-            disabled={form.dupCheckNickName}
+            disabled={formReg.dupCheckNickName}
             name="nickName"
           />
-          {form.nickName && !formReg.nickName && (
+          {!formReg.nickName && (
             <SignUpFormRegWarning>
               닉네임 형식을 확인해주세요.
             </SignUpFormRegWarning>
@@ -204,7 +204,7 @@ function SignUpForm() {
             placeholder=""
             name="password"
           />
-          {form.password && !formReg.password && (
+          {!formReg.password && (
             <SignUpFormRegWarning>
               비밀번호 형식을 확인해주세요.
             </SignUpFormRegWarning>
@@ -220,7 +220,7 @@ function SignUpForm() {
             placeholder=""
             name="passwordAgain"
           />
-          {form.passwordAgain && !formReg.passwordAgain && (
+          {!formReg.passwordAgain && (
             <SignUpFormRegWarning>
               비밀번호가 일치하지 않습니다.
             </SignUpFormRegWarning>

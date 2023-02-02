@@ -11,7 +11,8 @@ export default async function postSignUpAndSettingChange(
   address,
   token,
   dispatch,
-  navigate
+  navigate,
+  setFormReg
 ) {
   const changeInfoResponse = await axios({
     method: "POST",
@@ -20,6 +21,7 @@ export default async function postSignUpAndSettingChange(
     headers: { "Content-Type": "multipart/form-data", Authorization: token },
     data: formdata,
   });
+  console.log("res : ", changeInfoResponse);
   const { accessValid, accessExpired, accessInvalid } = accessTokenValidate(
     changeInfoResponse
   );
@@ -30,6 +32,16 @@ export default async function postSignUpAndSettingChange(
     return;
   }
   if (accessInvalid) {
+    const isAlreadyNickName =
+      changeInfoResponse.data.message === "이미 존재하는 닉네임입니다.";
+    const isPrePasswordInvalid =
+      changeInfoResponse.data.message === "기존 비밀번호가 올바르지 않습니다.";
+    if (isAlreadyNickName) {
+      setFormReg({ nick: true });
+    }
+    if (isPrePasswordInvalid) {
+      setFormReg({ prePassword: true });
+    }
     toast.error(changeInfoResponse.data.message);
     return;
   }

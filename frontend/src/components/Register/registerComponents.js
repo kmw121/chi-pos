@@ -170,3 +170,9 @@ export const RegisterNumber2NameInput = styled.input`
   font-weight: 500;
   color: #333;
 `;
+export const RegisterWarningBox = styled.div`
+  text-align: center;
+  color: #ffa8a8;
+  margin-top: 8px;
+  font-weight: bold;
+`;

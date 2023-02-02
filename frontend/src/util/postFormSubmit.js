@@ -7,11 +7,13 @@ export default async function postFormSubmit(
   submitForm,
   token,
   dispatch,
-  navigate
+  navigate,
+  setDataFormReg
 ) {
   const response = await axios.post(API_URL + "/post", submitForm, {
     headers: { Authorization: token },
   });
+  console.log(response);
   const isRegisterSuccess = response.data.code === 1;
   const isRegisterFail = response.data.code === -1;
   if (isRegisterSuccess) {
@@ -19,8 +21,7 @@ export default async function postFormSubmit(
     toast.success("등록이 완료되었습니다.");
     navigate("/");
   } else if (isRegisterFail) {
-    dispatch(setEditingPost({}));
-    toast.error("알 수 없는 오류로 등록에 실패하였습니다.");
-    navigate("/");
+    setDataFormReg(response.data.data);
+    toast.error("빈 칸이 없도록 입력하신 정보를 확인해 주세요!");
   }
 }

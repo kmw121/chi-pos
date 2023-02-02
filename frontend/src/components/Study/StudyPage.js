@@ -1,10 +1,10 @@
 import MainHead from "../Main/MainHead";
 import Study from "./Study";
 
-function StudyPage() {
+function StudyPage({ modalOpen, toggleModal }) {
   return (
     <>
-      <MainHead />
+      <MainHead modalOpen={modalOpen} toggleModal={toggleModal} />
       <Study />
     </>
   );
