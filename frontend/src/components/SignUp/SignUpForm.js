@@ -25,12 +25,14 @@ import postSubmit from "../../util/postSubmit";
 import { toast } from "react-toastify";
 import postDupCheckNick from "../../util/postDupCheckNick";
 import postDupCheckEmail from "../../util/postDupCheckEmail";
+import { useDispatch, useSelector } from "react-redux";
+import { setModalOpen } from "../../slice/userSlice";
 
 const reg_username = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
 const reg_password = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{5,15}$/;
 const reg_nickName = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$/;
 
-function SignUpForm({ toggleModal, modalOpen }) {
+function SignUpForm() {
   const [formReg, setFormReg] = useState({
     username: true,
     password: true,
@@ -48,6 +50,13 @@ function SignUpForm({ toggleModal, modalOpen }) {
     files: [],
     imgPreview: "",
   });
+  const dispatch = useDispatch();
+  const { modalOpen } = useSelector((state) => {
+    return state.user;
+  });
+  const toggleModal = () => {
+    dispatch(setModalOpen(!modalOpen));
+  };
   const navigate = useNavigate();
   const onGoBack = () => {
     navigate(-1);

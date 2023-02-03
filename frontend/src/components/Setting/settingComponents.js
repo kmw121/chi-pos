@@ -12,6 +12,10 @@ export const SettingContainer = styled.div`
     width: 90%;
     margin-top: 10px;
   }
+  @media (min-width: 501px) and (max-width: 800px) {
+    margin-top: 10px;
+    width: 90%;
+  }
 `;
 export const SettingImgBox = styled.div`
   display: flex;
@@ -83,7 +87,7 @@ export const SettingTitleBoxInput = styled.input`
   height: 2.5rem;
   outline: none;
   box-sizing: border-box;
-  @media (max-width: 500px) {
+  @media (max-width: 800px) {
     font-size: 12px;
     width: 100%;
   }

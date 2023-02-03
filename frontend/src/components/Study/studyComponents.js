@@ -10,12 +10,18 @@ export const StudyContainer = styled.div`
   @media (max-width: 500px) {
     width: 80%;
   }
+  @media (min-width: 501px) and (max-width: 800px) {
+    width: 80%;
+  }
 `;
 export const StudyHeadSection = styled.section`
   display: flex;
   flex-direction: column;
   margin-top: 3rem;
   @media (max-width: 500px) {
+    margin-top: 20px;
+  }
+  @media (min-width: 501px) and (max-width: 800px) {
     margin-top: 20px;
   }
 `;
@@ -28,6 +34,10 @@ export const StudyHeadTitle = styled.div`
   color: #000;
   @media (max-width: 500px) {
     font-size: 1.5rem;
+    margin-top: 20px;
+  }
+  @media (min-width: 501px) and (max-width: 800px) {
+    font-size: 1.6rem;
     margin-top: 20px;
   }
 `;
@@ -57,6 +67,11 @@ export const StudyHeadUserBoxImg = styled.img`
     height: 2rem;
     margin-right: 12px;
   }
+  @media (min-width: 501px) and (max-width: 800px) {
+    width: 2rem;
+    height: 2rem;
+    margin-right: 12px;
+  }
 `;
 export const StudyHeadUserName = styled.div`
   color: #333;
@@ -68,11 +83,17 @@ export const StudyHeadUserName = styled.div`
   @media (max-width: 500px) {
     font-size: 1rem;
   }
+  @media (min-width: 501px) and (max-width: 800px) {
+    font-size: 1rem;
+  }
 `;
 export const StudyHeadRegisterDate = styled.div`
   font-size: 18px;
   color: #717171;
   @media (max-width: 500px) {
+    font-size: 1rem;
+  }
+  @media (min-width: 501px) and (max-width: 800px) {
     font-size: 1rem;
   }
 `;
@@ -84,6 +105,11 @@ export const StudyInfoGridUl = styled.ul`
   margin-top: 60px;
   list-style: none;
   @media (max-width: 500px) {
+    grid-template-columns: repeat(1, 6fr);
+    padding: 0;
+    row-gap: 12px;
+  }
+  @media (min-width: 501px) and (max-width: 800px) {
     grid-template-columns: repeat(1, 6fr);
     padding: 0;
     row-gap: 12px;
@@ -309,5 +335,4 @@ export const StudyPendingImg = styled.img`
   position: absolute;
   top: 20%;
   left: 40%;
-  // transform: translate(-50%, -50%);
 `;

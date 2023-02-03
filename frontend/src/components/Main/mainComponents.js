@@ -8,6 +8,9 @@ export const Banner = styled.img`
   @media (max-width: 500px) {
     height: 180px;
   }
+  @media (min-width: 501px) and (max-width: 800px) {
+    height: 220px;
+  }
 `;
 export const MainContentsMain = styled.main`
   max-width: 1200px;
@@ -45,6 +48,10 @@ export const MainContentsCategoryItem = styled.div`
     margin-right: 10px;
     font-size: 16px;
   }
+  @media (min-width: 501px) and (max-width: 800px) {
+    margin-right: 12px;
+    font-size: 18px;
+  }
 `;
 export const MainContentsToggle = styled.div`
   display: flex;
@@ -54,6 +61,9 @@ export const MainContentsToggle = styled.div`
   @media (max-width: 500px) {
     display: none;
   }
+  @media (min-width: 501px) and (max-width: 800px) {
+    display: none;
+  }
 `;
 export const MainContentsToggleText = styled.span`
   color: #444;
@@ -61,9 +71,9 @@ export const MainContentsToggleText = styled.span`
   font-weight: 700;
   letter-spacing: -0.03em;
   margin-right: 20px;
-  // @media (max-width: 500px) {
-  //   font-size: 12px;
-  // }
+  @media (max-width: 500px) {
+    font-size: 12px;
+  }
 `;
 export const MainContentsToggleLabel = styled.label`
   position: absolute;
@@ -116,6 +126,8 @@ export const MainContentsAppStudyUl = styled.ul`
   flex-wrap: wrap;
   padding: 0;
   list-style: none;
+  align-items: center;
+  justify-content: center;
 `;
 export const MainContentsAppStudyA = styled.a`
   display: flex;
@@ -264,7 +276,6 @@ export const MainHeadNav = styled.nav`
   align-items: center;
   height: 85px;
   padding: 0 10px;
-
   @media (max-width: 500px) {
     height: 50px;
     padding: 0 3px;
@@ -282,6 +293,11 @@ export const MainHeadNavLeftImg = styled.img`
     height: 2.7rem;
     margin-right: 10px;
   }
+  @media (min-width: 501px) and (max-width: 800px) {
+    width 3rem;
+  height: 3rem;    
+  }
+
 `;
 export const MainHeadNavRight = styled.div`
   display: flex;
@@ -290,6 +306,9 @@ export const MainHeadNavRight = styled.div`
   position: relative;
   @media (max-width: 500px) {
     gap: 12px;
+  }
+  @media (min-width: 501px) and (max-width: 800px) {
+    gap: 18x;
   }
 `;
 export const MainHeadRightImg = styled.img`
@@ -306,6 +325,9 @@ export const MainHeadNavBtn = styled.button`
   background-color: #fff;
   @media (max-width: 500px) {
     font-size: 0.78rem;
+  }
+  @media (min-width: 501px) and (max-width: 800px) {
+    font-size: 0.93rem;
   }
 `;
 export const SectionContainer = styled.section`
@@ -348,7 +370,10 @@ export const CategoryLi = styled.li`
     `}
   @media(max-width:500px){
     font-size:0.7rem;
-  }    
+  }
+  @media (min-width: 501px) and (max-width: 800px) {
+    font-size : 0.9rem;
+  }
   `;
 export const CategoryLiAfter = styled.div`
   content: "";
@@ -373,6 +398,10 @@ export const StackBtnUl = styled.ul`
     gap: 10px;
     width: 90%;
   }
+  @media (min-width: 501px) and (max-width: 800px) {
+    padding: 8px;
+    width: 95%;
+  }
 `;
 export const StackImgStyle = styled.img`
   width: 30px;
@@ -380,6 +409,10 @@ export const StackImgStyle = styled.img`
   @media (max-width: 500px) {
     width: 15px;
     height: 15px;
+  }
+  @media (min-width: 501px) and (max-width: 800px) {
+    width: 20px;
+    height: 20px;
   }
 `;
 export const StackBtnLi = styled.li`
@@ -398,6 +431,9 @@ export const StackBtnLi = styled.li`
   @media (max-width: 500px) {
     height: 10px;
   }
+  @media (min-width: 501px) and (max-width: 800px) {
+    height: 12px;
+  }
 `;
 export const StackBtnSpan = styled.span`
   font-size: 11px;
@@ -411,6 +447,9 @@ export const SelectedStackContainer = styled.div`
   @media (max-width: 500px) {
     gap: 0px;
   }
+  @media (min-width: 501px) and (max-width: 800px) {
+    gap: 1px;
+  }
 `;
 export const SelectedStackUl = styled.ul`
   display: flex;
@@ -421,6 +460,10 @@ export const SelectedStackUl = styled.ul`
   @media (max-width: 500px) {
     margin-right: 10px;
     margin-left: 0px;
+    padding: 0;
+  }
+  @media (min-width: 501px) and (max-width: 800px) {
+    margin-right: 12px;
     padding: 0;
   }
 `;
@@ -444,6 +487,10 @@ export const SelectedStackLi = styled.li`
     height: 17px;
     padding: 3px 8px;
   }
+  @media (min-width: 501px) and (max-width: 800px) {
+    font-size: 12px;
+    height: 18px;
+  }
 `;
 export const SelectedStackImgStyle = styled.img`
   width: 25px;
@@ -452,6 +499,10 @@ export const SelectedStackImgStyle = styled.img`
     width: 18px;
     height: 18px;
   }
+  @media (min-width: 501px) and (max-width: 800px) {
+    width: 20px;
+    height: 20px;
+  }
 `;
 export const SelectedFilterClear = styled.span`
   font-size: 24px;
@@ -459,6 +510,9 @@ export const SelectedFilterClear = styled.span`
   cursor: pointer;
   @media (max-width: 500px) {
     font-size: 12px;
+  }
+  @media (min-width: 501px) and (max-width: 800px) {
+    font-size: 14px;
   }
 `;
 export const MainHeadDropdownContainer = styled.div`

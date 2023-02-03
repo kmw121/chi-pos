@@ -45,6 +45,10 @@ export const RegisterContainerDiv = styled.div`
     width: 90%;
     padding: 30px 5px;
   }
+  @media (min-width: 501px) and (max-width: 800px) {
+    width: 90%;
+    padding: 30px 5px;
+  }
 `;
 export const RegisterNumber1Title = styled.div`
   display: flex;
@@ -60,6 +64,9 @@ export const RegisterNumber1TitleText = styled.h2`
   letter-spacing: -0.05em;
   margin: 0;
   @media (max-width: 500px) {
+    font-size: 18px;
+  }
+  @media (min-width: 501px) and (max-width: 800px) {
     font-size: 18px;
   }
 `;
@@ -83,7 +90,7 @@ export const RegisterNumber1Ul = styled.ul`
   grid-gap: 15px;
   gap: 15px;
   list-style: none;
-  @media (max-width: 500px) {
+  @media (max-width: 800px) {
     flex-direction: column;
     padding: 5px;
   }

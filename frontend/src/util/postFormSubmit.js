@@ -13,7 +13,6 @@ export default async function postFormSubmit(
   const response = await axios.post(API_URL + "/post", submitForm, {
     headers: { Authorization: token },
   });
-  console.log(response);
   const isRegisterSuccess = response.data.code === 1;
   const isRegisterFail = response.data.code === -1;
   if (isRegisterSuccess) {

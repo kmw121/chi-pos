@@ -7,7 +7,6 @@ function App() {
   useEffect(() => {
     injectStyle();
   }, []);
-  const a = "hello world";
   return (
     <>
       <AllRoute />

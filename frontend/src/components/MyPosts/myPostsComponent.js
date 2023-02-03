@@ -5,12 +5,18 @@ export const MyPostsContainer = styled.section`
   @media (max-width: 500px) {
     padding-top: 0px;
   }
+  @media (min-width: 501px) and (max-width: 800px) {
+    padding-top: 0px;
+  }
 `;
 export const MyPostsBlock = styled.div`
   margin: 0 auto;
   min-height: 100vh;
   width: 1200px;
   @media (max-width: 500px) {
+    width: 90%;
+  }
+  @media (min-width: 501px) and (max-width: 800px) {
     width: 90%;
   }
 `;
@@ -32,6 +38,9 @@ export const MyPostsTitleCategoryItem = styled.div`
   font-size: 1.5rem;
   flex-direction: column;
   width: 90%;
+  @media (max-width: 800px) {
+    font-size: 0.9rem;
+  }
 `;
 export const MyPostsTitleTextDiv = styled.div`
   display: flex;

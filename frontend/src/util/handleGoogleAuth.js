@@ -10,7 +10,6 @@ export default async function handleGoogleAuth(response, dispatch, navigate) {
   const googleResponse = await axios.get(
     API_URL + `/ouath/google?code=${response.accessToken}`
   );
-  console.log("googleResponse : ", googleResponse);
   const isGoogleResponseSuccess = googleResponse.data.code === 2;
   const isAlreadySignedUp = googleResponse.data.code === 1;
   if (isGoogleResponseSuccess) {

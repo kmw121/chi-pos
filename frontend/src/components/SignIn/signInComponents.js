@@ -20,7 +20,6 @@ export const ModalBackground = styled.div`
 `;
 export const ModalContainer = styled.div`
   width: 800px;
-  // height: 550px;
   box-shadow: 0 2px 12px 0 rgb(0 0 0 / 9%);
   position: absolute;
   display: flex;
@@ -34,6 +33,9 @@ export const ModalContainer = styled.div`
   @media (max-width: 550px) {
     width: 300px;
   }
+  @media (min-width: 501px) and (max-width: 800px) {
+    width: 400px;
+  }
 `;
 export const ModalHeader = styled.div`
   background: #f8f9fa;
@@ -46,6 +48,10 @@ export const ModalHeader = styled.div`
   @media (max-width: 550px) {
     padding: 0 5 px;
     height: 45px;
+  }
+  @media (min-width: 501px) and (max-width: 800px) {
+    padding: 0 5px;
+    height: 50px;
   }
 `;
 export const ModalLogoImg = styled.img`
@@ -70,6 +76,9 @@ export const ModalWelcome = styled.h1`
   font-weight: bold;
   @media (max-width: 500px) {
     font-size: 20px;
+  }
+  @media (min-width: 501px) and (max-width: 800px) {
+    font-size: 22px;
   }
 `;
 export const ModalInnerBox = styled.div`
@@ -98,6 +107,11 @@ export const IdInput = styled.input`
   @media (max-width: 500px) {
     margin-bottom: 15px;
     font-size: 13px;
+    width: 70%;
+    height: 30px;
+  }
+  @media (min-width: 501px) and (max-width: 800px) {
+    font-size: 13px;
     height: 30px;
   }
 `;
@@ -116,6 +130,10 @@ export const PwInput = styled.input`
     margin-bottom: 15px;
     font-size: 13px;
     height: 30px;
+  }
+  @media (min-width: 501px) and (max-width: 800px) {
+    height: 30px;
+    font-size: 13px;
   }
 `;
 export const ModalBottomSection = styled.section`

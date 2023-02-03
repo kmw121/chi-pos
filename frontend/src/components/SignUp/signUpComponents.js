@@ -13,6 +13,10 @@ export const SignUpInput = styled.input`
     font-size: 12px;
     height: 20px;
   }
+  @media (max-width: 800px) {
+    font-size: 13px;
+    height: 25px;
+  }
 `;
 export const SignUpInputContainer = styled.div`
   display: flex;
@@ -40,6 +44,9 @@ export const SignUpFormTitle = styled.div`
   @media (max-width: 500px) {
     padding: 5px;
   }
+  @media (min-width: 501px) and (max-width: 800px) {
+    padding: 5px;
+  }
 `;
 export const SignUpFormLabel = styled.div`
   display: flex;
@@ -57,6 +64,16 @@ export const SignUpFormUl = styled.ul`
   @media (max-width: 500px) {
     padding: 0 5px;
     gap: 10px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  @media (min-width: 501px) and (max-width: 800px) {
+    flex-direction: column;
+    gap: 0px;
+    padding: 0px;
+    justify-content: center;
+    align-items: center;
   }
 `;
 export const SignUpFormLi = styled.li`
@@ -65,6 +82,13 @@ export const SignUpFormLi = styled.li`
   flex: 1 1;
   margin: 0;
   width: 50%;
+  @media (max-width: 500px) {
+    width: 90%;
+  }
+  @media (min-width: 501px) and (max-width: 800px) {
+    width: 90%;
+    flex-direction: column;
+  }
 `;
 export const SignUpFormRegWarning = styled.span`
   color : #ffa8a8
