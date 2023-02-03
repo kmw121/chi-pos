@@ -27,8 +27,6 @@ export default async function postSubmit(
   if (isSignUpFail) {
     setFormReg(res.data.data);
     toast.error(`${res.data.message}으로 인하여 회원가입에 실패하였습니다.`);
-    // navigate("/");
-    // toggleModal();
     return;
   }
 }

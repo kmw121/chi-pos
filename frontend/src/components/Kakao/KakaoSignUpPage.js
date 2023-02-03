@@ -1,10 +1,10 @@
 import MainHead from "../Main/MainHead";
 import KakaoSignUp from "./KakaoSignUp";
 
-function KakaoSignUpPage({ toggleModal, modalOpen }) {
+function KakaoSignUpPage() {
   return (
     <>
-      <MainHead toggleModal={toggleModal} modalOpen={modalOpen} />
+      <MainHead />
       <KakaoSignUp />
     </>
   );

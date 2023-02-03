@@ -20,20 +20,24 @@ import {
   ModalBtnKakaoIcon,
   ModalInputValueInvalid,
 } from "./signInComponents";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { KAKAO_AUTH_URL } from "../../util/kakaoAuth";
 import { gapi } from "gapi-script";
 import GoogleSocialLoginButton from "../Google/GoogleSocialLoginButton";
 import postLogin from "../../util/postLogin";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { setModalOpen } from "../../slice/userSlice";
 
 const clientId =
   "410536498654-65qpckepv8mo646k8dap7ufhscovs0h3.apps.googleusercontent.com";
 
-function SignInForm({ onToggle }) {
+function SignInForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const onClickModal = () => {
+    dispatch(setModalOpen(false));
+  };
   useGetPreventScrolling();
   const [loginForm, setLoginForm] = useState({
     username: "",
@@ -43,6 +47,12 @@ function SignInForm({ onToggle }) {
     username: "",
     password: "",
   });
+  const { modalOpen } = useSelector((state) => {
+    return state.user;
+  });
+  const onToggle = () => {
+    dispatch(setModalOpen(!modalOpen));
+  };
   const onEmailValue = (e) => {
     setLoginForm((prev) => {
       return { ...prev, username: e.target.value };
@@ -72,7 +82,6 @@ function SignInForm({ onToggle }) {
       toast.error("로그인에 실패하였습니다.");
     }
   };
-  console.log("login reg : ", loginFormReg);
   useEffect(() => {
     function start() {
       gapi.client.init({
@@ -84,11 +93,11 @@ function SignInForm({ onToggle }) {
   });
   return (
     <>
-      <ModalBackground onClick={onToggle} />
+      <ModalBackground onClick={onClickModal} />
       <ModalContainer>
         <ModalHeader onClick={(e) => e.stopPropagation()}>
           <ModalLogoImg alt="logo here" src={"/c-pos/ms-icon-310x310.png"} />
-          <AiOutlineClose onClick={onToggle} className="signInClose" />
+          <AiOutlineClose onClick={onClickModal} className="signInClose" />
         </ModalHeader>
         <ModalMain>
           <ModalWelcome>취포스에 오신 것을 환영합니다!</ModalWelcome>
@@ -118,13 +127,15 @@ function SignInForm({ onToggle }) {
             )}
           </ModalInnerBox>
           <ModalBottomSection>
-            <ModalBottomCancelBtn onClick={onToggle}>취소</ModalBottomCancelBtn>
+            <ModalBottomCancelBtn onClick={onClickModal}>
+              취소
+            </ModalBottomCancelBtn>
             <ModalBottomOkBtn onClick={onLogin}>로그인</ModalBottomOkBtn>
           </ModalBottomSection>
           <ModalBtnContainer>
             <ModalBtnBox>
               <GoogleSocialLoginButton />
-              <ModalBtnKakao onToggle={onToggle} href={KAKAO_AUTH_URL}>
+              <ModalBtnKakao onToggle={onClickModal} href={KAKAO_AUTH_URL}>
                 <ModalBtnKakaoIcon
                   src={"/logo/kakao_login_btn.png"}
                   alt="kakao"

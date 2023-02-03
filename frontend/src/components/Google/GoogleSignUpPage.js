@@ -1,10 +1,10 @@
 import MainHead from "../Main/MainHead";
 import GoogleSignUp from "./GoogleSignUp";
 
-function GoogleSignUpPage({ modalOpen, toggleModal }) {
+function GoogleSignUpPage() {
   return (
     <>
-      <MainHead modalOpen={modalOpen} toggleModal={toggleModal} />
+      <MainHead />
       <GoogleSignUp />
     </>
   );

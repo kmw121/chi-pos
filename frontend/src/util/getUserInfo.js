@@ -7,6 +7,5 @@ export default async function getUserInfo(decoded, token) {
       Authorization: token,
     },
   });
-  console.log("getUser res : ", res);
   return res;
 }

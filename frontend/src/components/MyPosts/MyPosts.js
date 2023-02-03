@@ -38,7 +38,6 @@ function MyPosts() {
   useEffect(() => {
     authCheck(dispatch, navigate, user);
   }, []);
-  console.log("post : ", post);
   return (
     <MyPostsContainer>
       {!post.length ? (

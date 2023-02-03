@@ -10,16 +10,16 @@ import {
   MainHeadNavLeftImg,
   MainHeadRightImg,
 } from "./mainComponents";
-import ModalPortal from "../../Portal/ModalPortal";
 import SignInForm from "../SignIn/SignInForm";
+import ModalPortal from "../../Portal/ModalPortal";
 import { logout } from "../../util/logout";
 import { useDispatch, useSelector } from "react-redux";
-import { setEditingPost } from "../../slice/userSlice";
+import { setEditingPost, setModalOpen } from "../../slice/userSlice";
 import postLogin from "../../util/postLogin";
 import { toast } from "react-toastify";
 
-function MainHead({ toggleModal, modalOpen }) {
-  const { user } = useSelector((state) => {
+function MainHead() {
+  const { user, modalOpen } = useSelector((state) => {
     return state.user;
   });
   const navigate = useNavigate();
@@ -56,6 +56,9 @@ function MainHead({ toggleModal, modalOpen }) {
       toast.error("테스트 계정으로 로그인이 실패하였습니다.");
       throw new Error(err);
     }
+  };
+  const toggleModal = () => {
+    dispatch(setModalOpen(!modalOpen));
   };
   return (
     <>
@@ -113,7 +116,7 @@ function MainHead({ toggleModal, modalOpen }) {
       </MainHeadNav>
       {modalOpen && (
         <ModalPortal>
-          <SignInForm onToggle={toggleModal} />
+          <SignInForm />
         </ModalPortal>
       )}
     </>

@@ -21,7 +21,6 @@ export default async function postSignUpAndSettingChange(
     headers: { "Content-Type": "multipart/form-data", Authorization: token },
     data: formdata,
   });
-  console.log("res : ", changeInfoResponse);
   const { accessValid, accessExpired, accessInvalid } = accessTokenValidate(
     changeInfoResponse
   );
@@ -37,10 +36,13 @@ export default async function postSignUpAndSettingChange(
     const isPrePasswordInvalid =
       changeInfoResponse.data.message === "기존 비밀번호가 올바르지 않습니다.";
     if (isAlreadyNickName) {
-      setFormReg({ nick: true });
-    }
-    if (isPrePasswordInvalid) {
-      setFormReg({ prePassword: true });
+      setFormReg((prev) => {
+        return { ...prev, nick: true };
+      });
+    } else if (isPrePasswordInvalid) {
+      setFormReg((prev) => {
+        return { ...prev, prePassword: true };
+      });
     }
     toast.error(changeInfoResponse.data.message);
     return;

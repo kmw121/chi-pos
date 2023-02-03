@@ -29,6 +29,7 @@ const initialState = {
   },
   editingPost: {},
   loading: "",
+  modalOpen: false,
 };
 
 export const fetchUser = createAsyncThunk("user/fetchUser", async (decoded) => {
@@ -57,6 +58,9 @@ export const userSlice = createSlice({
     },
     setUser: (state, action) => {
       state.user = action.payload;
+    },
+    setModalOpen: (state, action) => {
+      state.modalOpen = action.payload;
     },
     setEditingPost: (state, action) => {
       state.editingPost = action.payload;
@@ -87,5 +91,10 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setCurrentPost, setUser, setEditingPost } = userSlice.actions;
+export const {
+  setCurrentPost,
+  setUser,
+  setEditingPost,
+  setModalOpen,
+} = userSlice.actions;
 export default userSlice.reducer;
