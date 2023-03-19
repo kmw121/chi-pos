@@ -8,6 +8,7 @@ module.exports = function (app) {
     createProxyMiddleware({
           target: "http://18.221.86.250:8080",
       changeOrigin: true,
+        //
     })
   );
 };
