@@ -43,21 +43,21 @@ dependencies {
 	implementation 'com.google.code.gson:gson:2.8.7'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
-
-def frontendDir = "$projectDir/frontend"
-
-sourceSets {
-	main {
-		resources { srcDirs = ["$projectDir/src/main/resources"]
-		}
-	}
-}
-
+//tasks.named('test') {
+//	useJUnitPlatform()
+//}
+//
+//def frontendDir = "$projectDir/frontend"
+//
+//sourceSets {
+//	main {
+//		resources { srcDirs = ["$projectDir/src/main/resources"]
+//		}
+//	}
+//}
+//
 //processResources { dependsOn "copyReactBuildFiles" }
-
+//
 //task installReact(type: Exec) {
 //	workingDir "$frontendDir"
 //	inputs.dir "$frontendDir"
